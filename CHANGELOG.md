@@ -7,6 +7,74 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2025-07-23
+
+### Added
+- Official stable release of DocMagic
+- Full multi-language support for resume and letter generation
+- User account dashboard with document management
+- Export to Google Drive and Dropbox integration
+
+### Enhanced
+- Finalized UI/UX polish and accessibility improvements
+- Advanced analytics for document performance and usage
+- Improved onboarding and help documentation
+
+### Improved
+- Optimized server performance for high-traffic usage
+- Enhanced security for user data and document storage
+
+### Technical Enhancements
+- Production-ready deployment scripts and CI/CD pipelines
+- Comprehensive end-to-end and integration test coverage
+
+### Credits
+- **Release by**: [Xenonesis](https://github.com/Xenonesis)
+
+## [0.9.0] - 2025-07-23
+
+### Added
+- AI-powered cover letter generator
+- Customizable export themes for resumes and letters
+- User notification system for document status and updates
+
+### Enhanced
+- Improved ATS Analyzer with keyword suggestions
+- Enhanced mobile editing experience
+
+### Improved
+- Faster PDF/DOCX export with new rendering engine
+- More robust error handling for failed exports
+
+### Technical Enhancements
+- Refactored API endpoints for scalability
+- Improved logging and monitoring
+
+### Credits
+- **Developed by**: [Xenonesis](https://github.com/Xenonesis)
+
+## [0.8.0] - 2025-07-23
+
+### Added
+- Bulk document upload and parsing
+- Resume version history and restore feature
+- In-app feedback and support chat widget
+
+### Enhanced
+- Improved guided resume builder with contextual tips
+- Enhanced template customization options
+
+### Improved
+- Smoother drag-and-drop for document cards
+- Reduced initial load time for dashboard
+
+### Technical Enhancements
+- Upgraded dependencies for security and performance
+- Improved TypeScript types for new features
+
+### Credits
+- **Enhanced by**: [Xenonesis](https://github.com/Xenonesis)
+
 ## [0.7.0] - 2025-07-28
 
 ### Added
