@@ -10,7 +10,10 @@ import { useAuth } from "@/components/auth-provider";
 import {
   Sheet,
   SheetContent,
-  SheetTrigger
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription
 } from "@/components/ui/sheet";
 import {
   DropdownMenu,
@@ -51,6 +54,10 @@ export function SiteHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="professional-card border-r w-[280px] sm:w-[320px]">
+              <SheetHeader>
+                <SheetTitle>DocMagic Navigation</SheetTitle>
+                <SheetDescription>Access all sections of the application</SheetDescription>
+              </SheetHeader>
               <div className="flex flex-col gap-6 pt-6">
                 <Link href="/" className="flex items-center space-x-2">
                   <div className="relative">

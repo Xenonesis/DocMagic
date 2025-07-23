@@ -9,6 +9,11 @@ export function HeroSection() {
       data-scroll-section
     >
       {/* Enhanced animated background elements */}
+
+      <div className="absolute inset-0 aurora-borealis opacity-20"></div>
+      <div className="absolute inset-0 mesh-gradient-alt opacity-10"></div>
+      
+
       <div className="absolute inset-0 mesh-gradient opacity-40"></div>
       <div className="absolute inset-0 mesh-gradient-alt opacity-20"></div>
 
@@ -24,6 +29,7 @@ export function HeroSection() {
         style={{ animationDelay: "1s" }}
       ></div>
 
+
       {/* Grid pattern overlay */}
       <div
         className="absolute inset-0 opacity-[0.02]"
@@ -35,7 +41,7 @@ export function HeroSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mx-auto max-w-4xl text-center">
           {/* Enhanced Animated Badge */}
-          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full gradient-border mb-6 sm:mb-8 shimmer relative animate-bounce-in will-change-transform">
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full gradient-border mb-6 sm:mb-8 subtle-shimmer relative animate-fade-in-down will-change-transform">
             <div className="relative z-10 flex items-center gap-2">
               <Sparkles
                 className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500 animate-text-glow"
@@ -52,11 +58,15 @@ export function HeroSection() {
           </div>
 
           {/* Animated modern main heading */}
+
+          <h1 className="modern-display text-3xl sm:text-4xl md:text-5xl lg:text-7xl mb-6 sm:mb-8 animate-fade-in-down delay-100 will-change-transform text-shadow-professional">
+
           <h1
             className="modern-display text-3xl sm:text-4xl md:text-5xl lg:text-7xl mb-6 sm:mb-8 animate-slide-in-left will-change-transform"
             data-scroll
             data-scroll-speed="2"
           >
+
             Create professional documents with{" "}
             <span className="bolt-gradient-text relative inline-block">
               AI Magic
@@ -67,12 +77,16 @@ export function HeroSection() {
           </h1>
 
           {/* Animated Modern Professional Subtitle */}
+
+          <p className="modern-body mt-4 sm:mt-6 text-base sm:text-lg lg:text-xl text-muted-foreground max-w-xl sm:max-w-2xl mx-auto px-4 sm:px-0 animate-fade-in-up delay-200 will-change-opacity">
+
           <p
             className="modern-body mt-4 sm:mt-6 text-base sm:text-lg lg:text-xl text-muted-foreground max-w-xl sm:max-w-2xl mx-auto px-4 sm:px-0 animate-slide-in-right delay-200 will-change-opacity"
             data-scroll
             data-scroll-speed="1"
             data-scroll-delay="0.15"
           >
+
             Transform your ideas into polished{" "}
             <span
               className="font-semibold hover:text-amber-600 transition-colors"
@@ -105,10 +119,17 @@ export function HeroSection() {
           </p>
 
           {/* Animated CTA Buttons */}
+
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-x-6 px-4 sm:px-0 animate-fade-in-up delay-300 will-change-transform">
+            <Button 
+              asChild 
+              size="lg" 
+
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-x-6 px-4 sm:px-0 animate-scale-in delay-400 will-change-transform">
             <Button
               asChild
               size="lg"
+
               className="bolt-gradient text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full hover:scale-105 transition-all duration-300 bolt-glow w-full sm:w-auto relative overflow-hidden"
               style={{ animation: "gradient-shift 4s ease infinite" }}
             >
@@ -142,6 +163,19 @@ export function HeroSection() {
 
           {/* Animated Professional Stats */}
           <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-0">
+
+            <div className="card-coral hover-glow-coral p-4 sm:p-6 rounded-2xl hover:scale-105 transition-all duration-300 sunset-glow animate-fade-in-up delay-400 will-change-transform">
+              <div className="bolt-gradient-text text-2xl sm:text-3xl font-bold animate-text-glow text-shadow-professional">10K+</div>
+              <div className="text-muted-foreground text-sm sm:text-base">Documents Created</div>
+            </div>
+            <div className="card-sky hover-glow-sky p-4 sm:p-6 rounded-2xl hover:scale-105 transition-all duration-300 bolt-glow animate-fade-in-up delay-500 will-change-transform">
+              <div className="bolt-gradient-text text-2xl sm:text-3xl font-bold animate-text-glow text-shadow-professional">98%</div>
+              <div className="text-muted-foreground text-sm sm:text-base">Success Rate</div>
+            </div>
+            <div className="card-mint hover-glow-mint p-4 sm:p-6 rounded-2xl hover:scale-105 transition-all duration-300 ocean-glow animate-fade-in-up delay-600 will-change-transform">
+              <div className="bolt-gradient-text text-2xl sm:text-3xl font-bold animate-text-glow text-shadow-professional">5★</div>
+              <div className="text-muted-foreground text-sm sm:text-base">User Rating</div>
+
             <div className="card-coral hover-coral p-4 sm:p-6 rounded-2xl hover:scale-105 transition-all duration-300 sunset-glow animate-scale-in delay-600 will-change-transform">
               <div className="bolt-gradient-text text-2xl sm:text-3xl font-bold animate-text-glow">
                 10K+
@@ -165,6 +199,7 @@ export function HeroSection() {
               <div className="text-muted-foreground text-sm sm:text-base">
                 User Rating
               </div>
+
             </div>
           </div>
         </div>

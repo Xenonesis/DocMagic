@@ -577,26 +577,13 @@ const frontendTechnologies = [
   { name: "TypeScript", version: "5.8.3" },
   { name: "Tailwind CSS", version: "3.4.17" },
   { name: "Radix UI", version: "Latest" },
-  { name: "Framer Motion", version: "12.23.6" }
+  { name: "Framer Motion", version: "12.23.6" },
+  { name: "DocMagic", version: "0.7.0" }
 ];
 
-const backendTech = [
-  { name: "Supabase", version: "Latest" },
-  { name: "Google Gemini AI", version: "2.0 Flash" },
-  { name: "Stripe", version: "14.25.0" },
-  { name: "Next.js API", version: "15.4.0" },
-  { name: "PostgreSQL", version: "Latest" },
-  { name: "JWT Auth", version: "Latest" }
-];
+// Backend technologies defined below
 
-const infrastructureTech = [
-  { name: "Netlify", version: "Hosting" },
-  { name: "Vercel", version: "Alternative" },
-  { name: "Docker", version: "Container" },
-  { name: "GitHub Actions", version: "CI/CD" },
-  { name: "ESLint", version: "Linting" },
-  { name: "Prettier", version: "Formatting" }
-];
+// Infrastructure technologies defined below
 
 const roadmapItems = [
   {
