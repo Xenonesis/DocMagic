@@ -15,7 +15,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Open Source](https://img.shields.io/badge/Open%20Source-❤️-red?style=for-the-badge)](https://github.com/docmagic-ai/docmagic)
 [![Netlify Status](https://img.shields.io/badge/Netlify-Deployed-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://docmagic1.netlify.app)
-[![Version](https://img.shields.io/badge/Version-0.5.0-brightgreen?style=for-the-badge)](https://github.com/docmagic-ai/docmagic/releases)
+[![Version](https://img.shields.io/badge/Version-0.7.0-brightgreen?style=for-the-badge)](https://github.com/docmagic-ai/docmagic/releases)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
 [![Contributors](https://img.shields.io/badge/Contributors-Welcome-orange?style=for-the-badge)](./CONTRIBUTING.md)
 
@@ -48,12 +48,13 @@
 ## ✨ Core Features & Capabilities
 
 ### 🤖 **AI-Powered Document Generation**
-- **🎯 Smart Resume Builder**: Create professional resumes with Gemini AI 2.0 Flash
+- **🎯 Smart Resume Builder**: Create professional resumes with Gemini AI 2.0 Flash and 9-step guided workflow
 - **📊 Presentation Generator**: Generate complete slide decks with outlines and themes
 - **📄 CV Creator**: Build comprehensive curriculum vitae with intelligent formatting
 - **✉️ Letter Composer**: Draft professional letters for any purpose
-- **🔍 ATS Resume Analyzer**: Optimize resumes for Applicant Tracking Systems
-- **🎨 Template Selection**: Multiple professional templates for each document type
+- **🔍 ATS Resume Analyzer**: Advanced ATS compatibility scoring with detailed optimization feedback
+- **🎨 Professional Templates**: ATS-optimized templates with modern glass morphism design
+- **📈 Progress Tracking**: Visual progress indicators and step-by-step completion tracking
 
 ### 🎨 **Modern UI/UX Design**
 - **✨ Glass Morphism Interface**: Modern glass-effect components with subtle transparency and blur effects
@@ -75,11 +76,13 @@
   - ✉️ **Business Letters** with perfect tone and formatting
 
 ### 🛠️ **Professional Tools & Features**
-- **ATS Analyzer**: Real-time resume scanning for Applicant Tracking System compatibility
-- **Template Library**: Curated collection of professional, modern templates
-- **Smart Editing**: Intuitive WYSIWYG editor with real-time preview
-- **Multi-Format Export**: Download as PDF, DOCX, or PPTX with one click
+- **Advanced ATS Analyzer**: Comprehensive resume scanning with detailed scoring and optimization suggestions
+- **Professional Template Library**: Curated collection of ATS-optimized, modern templates with glass morphism design
+- **Guided Resume Builder**: 9-step workflow with progress tracking and intelligent navigation
+- **Smart Editing**: Intuitive WYSIWYG editor with real-time preview and mobile-first design
+- **Enhanced Export Options**: Download as PDF, DOCX, or PPTX with improved formatting and ATS compatibility
 - **Chart Integration**: Automatic data visualization for presentations using Recharts
+- **Mobile-Responsive Navigation**: Touch-optimized interface that works perfectly on all devices
 - **📄 Comprehensive About Page**: Detailed information about features, technology, security, and roadmap accessible at `/about`
 - **🧭 Intuitive Navigation**: Clean header with easy access to Resume, Presentation, Letter tools, and About page
 - **Image Integration**: Professional stock photos from Pexels API
