@@ -8,21 +8,17 @@ export function HeroSection() {
       className="relative overflow-hidden bg-background py-16 sm:py-24 lg:py-32"
       data-scroll-section
     >
-      {/* Enhanced animated background elements */}
-      <div className="absolute inset-0 mesh-gradient opacity-40"></div>
-      <div className="absolute inset-0 mesh-gradient-alt opacity-20"></div>
+      {/* Enhanced animated background elements - Simplified for performance */}
+      {/* <div className="absolute inset-0 mesh-gradient opacity-40"></div>
+      <div className="absolute inset-0 mesh-gradient-alt opacity-20"></div> */}
 
-      {/* Animated colorful floating orbs */}
-      <div className="floating-orb w-48 h-48 sm:w-72 sm:h-72 sunset-gradient opacity-25 top-10 -left-24 sm:-left-36 animate-float-gentle will-change-transform"></div>
-      <div className="floating-orb w-64 h-64 sm:w-96 sm:h-96 ocean-gradient opacity-20 -top-20 -right-32 sm:-right-48 animate-glow-pulse will-change-transform"></div>
+      {/* Animated colorful floating orbs - Disabled for performance */}
+      {/* <div className="floating-orb w-48 h-48 sm:w-72 sm:h-72 sunset-gradient opacity-20 top-10 -left-24 sm:-left-36 animate-float-gentle will-change-transform"></div>
+      <div className="floating-orb w-64 h-64 sm:w-96 sm:h-96 ocean-gradient opacity-15 -top-20 -right-32 sm:-right-48 animate-glow-pulse will-change-transform"></div>
       <div
-        className="floating-orb w-40 h-40 sm:w-64 sm:h-64 forest-gradient opacity-30 bottom-10 left-1/4 sm:left-1/3 animate-float-gentle will-change-transform"
+        className="floating-orb w-40 h-40 sm:w-64 sm:h-64 forest-gradient opacity-20 bottom-10 left-1/4 sm:left-1/3 animate-float-gentle will-change-transform"
         style={{ animationDelay: "2s" }}
-      ></div>
-      <div
-        className="floating-orb w-32 h-32 sm:w-48 sm:h-48 cosmic-gradient opacity-25 top-1/3 right-1/4 animate-glow-pulse will-change-transform"
-        style={{ animationDelay: "1s" }}
-      ></div>
+      ></div> */}
 
       {/* Grid pattern overlay */}
       <div

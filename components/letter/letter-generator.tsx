@@ -20,6 +20,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { generateWordDocument, formatLetterForWord } from "@/lib/word-export";
+import { FeedbackForm } from "@/components/feedback-form";
 
 export function LetterGenerator() {
   const [prompt, setPrompt] = useState("");
@@ -557,6 +558,9 @@ ${letterData.content || ''}
                   Send via Email
                 </Button>
               </div>
+              
+              {/* Feedback Form */}
+              <FeedbackForm documentType="letter" />
             </div>
           )}
         </div>

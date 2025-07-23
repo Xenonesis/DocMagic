@@ -16,6 +16,7 @@ import { useSubscription } from "@/hooks/use-subscription";
 import { generateWordDocument, formatResumeForWord } from "@/lib/word-export";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { FeedbackForm } from "@/components/feedback-form";
 
 export function ResumeGenerator() {
   const [prompt, setPrompt] = useState("");
@@ -462,6 +463,9 @@ export function ResumeGenerator() {
                       </Button>
                     )}
                   </div>
+                  
+                  {/* Feedback Form */}
+                  <FeedbackForm documentType="resume" />
                 </div>
               )}
             </div>
