@@ -1,6 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'locomotive-scroll/dist/locomotive-scroll.css';
+
+html, body {
+  overflow: hidden;
+}
+
 
 :root {
   --foreground-rgb: 0, 0, 0;

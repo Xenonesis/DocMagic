@@ -87,6 +87,7 @@
     "html2canvas": "^1.4.1",
     "input-otp": "^1.2.4",
     "jspdf": "^2.5.2",
+    "locomotive-scroll": "^4.1.4",
     "lucide-react": "^0.446.0",
     "mammoth": "^1.9.1",
     "next": "^15.4.0",
@@ -113,6 +114,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/locomotive-scroll": "^4.1.4",
     "@types/next": "^8.0.7",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.1.8",
