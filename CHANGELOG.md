@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.5.0] - 2025-01-22
+## [0.8.0] - 2025-07-23
+
+### Fixed
+- Implemented smooth scrolling using Lenis.
+- Fixed errors related to issue #52.
+
+
+## [0.80] - 2025-07-23
 
 ### Added
 - **Comprehensive About Page Enhancement** - Significantly expanded `/about` page with detailed information
@@ -31,7 +38,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Credits
 - **Designed by**: [Xenonesis](https://github.com/Xenonesis)
 
-## [0.4.0] - 2025-01-27
+## [0.7.0] - 2025-07-22
+
+### Added
+- Features and improvements for version 0.7.0
+
+## [0.6.0] - 2025-07-22
+
+### Added
+- Features and improvements for version 0.6.0
+
+## [0.5.0] - 2025-07-22
+
+### Added
+- Features and improvements for version 0.5.0
+## [0.4.0] - 2025-07-22
 
 ### Changed
 - **Theme Toggle Improvement**: Simplified dark mode toggle to a single-click switch by @xenonesis
