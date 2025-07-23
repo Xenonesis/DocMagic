@@ -1,22 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "components/ui/button";
-import { Card, CardContent } from "components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
-import { Textarea } from "components/ui/textarea";
-import { Input } from "components/ui/input";
-import { Label } from "components/ui/label";
-import { ResumePreview } from "components/resume/resume-preview";
-import { ResumeTemplates } from "components/resume/resume-templates";
-import { GuidedResumeGenerator } from "components/resume/guided-resume-generator";
-import { useToast } from "hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ResumePreview } from "@/components/resume/resume-preview";
+import { ResumeTemplates } from "@/components/resume/resume-templates";
+import { GuidedResumeGenerator } from "@/components/resume/guided-resume-generator";
+import { useToast } from "@/hooks/use-toast";
 import { File as FileIcon, Loader2, Sparkles, Maximize2, Minimize2, Download, User, Mail, Wand2, Palette, Brain, Target, Zap, FileText } from "lucide-react";
-import { useSubscription } from "hooks/use-subscription";
-import { generateWordDocument, formatResumeForWord } from "lib/word-export";
+import { useSubscription } from "@/hooks/use-subscription";
+import { generateWordDocument, formatResumeForWord } from "@/lib/word-export";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { FeedbackForm } from "components/feedback-form";
+import { FeedbackForm } from "@/components/feedback-form";
 
 export function ResumeGenerator() {
   const [prompt, setPrompt] = useState("");
@@ -250,7 +250,7 @@ export function ResumeGenerator() {
                 <Zap className="h-4 w-4 text-blue-500" />
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold mb-3 bolt-gradient-text">
-                Build Your ATS' Friendly Resume
+                Build Your ATS&apos; Friendly Resume
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Our AI-powered guided builder creates resumes that pass Applicant Tracking Systems
