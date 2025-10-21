@@ -2,11 +2,11 @@
 
 ## 🤔 General
 
-### What is DocMagic?
-DocMagic is an open-source, AI-powered document creation platform that helps users generate professional documents like resumes, presentations, CVs, and letters using natural language descriptions.
+### What is docverse?
+docverse is an open-source, AI-powered document creation platform that helps users generate professional documents like resumes, presentations, CVs, and letters using natural language descriptions.
 
-### Is DocMagic really free?
-Yes! DocMagic is 100% open source and free to use. You can self-host it or use our hosted version. Some advanced features may require API keys for services like Gemini AI.
+### Is docverse really free?
+Yes! docverse is 100% open source and free to use. You can self-host it or use our hosted version. Some advanced features may require API keys for services like Gemini AI.
 
 ### How do I get started?
 1. Visit our [live demo](https://docmagic1.netlify.app)
@@ -17,15 +17,15 @@ Yes! DocMagic is 100% open source and free to use. You can self-host it or use o
 
 ## 🛠 Technical
 
-### What technologies power DocMagic?
-DocMagic is built with:
+### What technologies power docverse?
+docverse is built with:
 - Frontend: Next.js 15, React 18, TypeScript, Tailwind CSS
 - Backend: Supabase, Node.js
 - AI: Google's Gemini
 - Styling: Framer Motion, Shadcn UI
 - Hosting: Vercel/Netlify
 
-### How do I self-host DocMagic?
+### How do I self-host docverse?
 See our [Self-Hosting Guide](https://github.com/docmagic-ai/docmagic#-self-hosting) in the README for detailed instructions on setting up your own instance.
 
 ### What are the system requirements?
@@ -38,7 +38,7 @@ See our [Self-Hosting Guide](https://github.com/docmagic-ai/docmagic#-self-hosti
 ## 🔒 Security & Privacy
 
 ### Is my data secure?
-Yes! DocMagic runs entirely in your browser. Your documents are never stored on our servers unless you choose to save them to your account.
+Yes! docverse runs entirely in your browser. Your documents are never stored on our servers unless you choose to save them to your account.
 
 ### What happens to my documents?
 Documents are processed in your browser and can be downloaded directly to your device. If you create an account, you can choose to save documents to your private library.
@@ -96,14 +96,14 @@ Try these tips:
 
 ## 📈 Enterprise & Business
 
-### Can I use DocMagic for my business?
-Absolutely! DocMagic is open source under the MIT license, so you can use it for personal or commercial projects.
+### Can I use docverse for my business?
+Absolutely! docverse is open source under the MIT license, so you can use it for personal or commercial projects.
 
 ### Do you offer enterprise support?
 While we don't offer official enterprise support, our community is very active and helpful. For custom development needs, you can hire from our community of contributors.
 
-### Can I integrate DocMagic with my existing tools?
-Yes! DocMagic provides an API that you can use to integrate with other tools in your workflow. Check out our [API documentation](./API.md) for more details.
+### Can I integrate docverse with my existing tools?
+Yes! docverse provides an API that you can use to integrate with other tools in your workflow. Check out our [API documentation](./API.md) for more details.
 
 ---
 

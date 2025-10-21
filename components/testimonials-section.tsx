@@ -25,7 +25,7 @@ export function TestimonialsSection() {
           </h2>
 
           <p className="modern-body text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Join thousands of satisfied users who have transformed their document creation process with DocMagic's AI-powered platform.
+            Join thousands of satisfied users who have transformed their document creation process with docverse&apos;s AI-powered platform.
           </p>
 
           {/* Social proof stats */}
@@ -80,7 +80,7 @@ export function TestimonialsSection() {
                 <CardContent className="relative flex-1 p-6 pt-0">
                   <Quote className="absolute -top-2 -left-2 h-10 w-10 text-blue-400/20" />
                   <p className="relative z-10 text-base leading-relaxed text-muted-foreground group-hover:text-foreground/80 transition-colors">
-                    "{testimonial.content}"
+                    &quot;{testimonial.content}&quot;
                   </p>
                 </CardContent>
 
@@ -119,14 +119,14 @@ const testimonials = [
     name: "Priya Sharma",
     title: "Product Manager",
     company: "TechCorp Inc.",
-    content: "DocMagic has revolutionized how I create product proposals. The AI understands context perfectly and generates professional documents that impress stakeholders every time.",
+    content: "docverse has revolutionized how I create product proposals. The AI understands context perfectly and generates professional documents that impress stakeholders every time.",
     avatar: "https://images.pexels.com/photos/1758531/pexels-photo-1758531.jpeg?auto=compress&cs=tinysrgb&w=600"
   },
   {
     name: "Johnathan Lee",
     title: "Senior Writer",
     company: "Creative Agency",
-    content: "As a professional writer, I'm amazed by DocMagic's ability to generate compelling content. It's like having a writing partner that never runs out of ideas.",
+    content: "As a professional writer, I'm amazed by docverse's ability to generate compelling content. It's like having a writing partner that never runs out of ideas.",
     avatar: "https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=600"
   },
   {
@@ -140,7 +140,7 @@ const testimonials = [
     name: "Emily White",
     title: "HR Director",
     company: "Global Solutions",
-    content: "DocMagic streamlines our HR processes. From offer letters to policy documents, everything is professional, consistent, and created in minutes instead of hours.",
+    content: "docverse streamlines our HR processes. From offer letters to policy documents, everything is professional, consistent, and created in minutes instead of hours.",
     avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600"
   },
   {
@@ -154,7 +154,7 @@ const testimonials = [
     name: "Olivia Martinez",
     title: "Graduate Student",
     company: "Stanford University",
-    content: "DocMagic has been essential for my academic work. It helps me create professional presentations and research documents that meet university standards.",
+    content: "docverse has been essential for my academic work. It helps me create professional presentations and research documents that meet university standards.",
     avatar: "https://images.pexels.com/photos/1065084/pexels-photo-1065084.jpeg?auto=compress&cs=tinysrgb&w=600"
   }
 ];

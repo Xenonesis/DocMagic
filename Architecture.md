@@ -1,10 +1,10 @@
-# DocMagic System Architecture
+# docverse System Architecture
 
-This document provides a detailed technical overview of the DocMagic project. It outlines the system's architecture, core components, data flows, and the engineering rationale behind key technology choices, intended for developers and contributors.
+This document provides a detailed technical overview of the docverse project. It outlines the system's architecture, core components, data flows, and the engineering rationale behind key technology choices, intended for developers and contributors.
 
 ## 1. High-Level Architecture 🏛️
 
-DocMagic operates on a serverless, client-server model. This modern architecture separates the user interface (frontend) from the backend services, which are managed by a third-party Backend-as-a-Service (BaaS) provider. This enhances scalability, simplifies development, and allows for independent evolution of the frontend and backend components.
+docverse operates on a serverless, client-server model. This modern architecture separates the user interface (frontend) from the backend services, which are managed by a third-party Backend-as-a-Service (BaaS) provider. This enhances scalability, simplifies development, and allows for independent evolution of the frontend and backend components.
 
 - **Frontend (Next.js Client):** A modern, interactive web application responsible for all user interactions, rendering the UI, and communicating with the backend and AI services.
 
@@ -48,7 +48,7 @@ graph TD;
 
 ## 2. Technology Stack & Rationale 🛠️
 
-The technology stack for DocMagic was carefully selected to prioritize performance, developer experience, and maintainability.
+The technology stack for docverse was carefully selected to prioritize performance, developer experience, and maintainability.
 
 ### Frontend
 

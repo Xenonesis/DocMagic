@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# PWA Feature Test Script for DocMagic
+# PWA Feature Test Script for docverse
 # This script helps verify PWA implementation
 
-echo "🚀 DocMagic PWA Feature Test"
+echo "🚀 docverse PWA Feature Test"
 echo "============================="
 
 # Check if required files exist

@@ -1,15 +1,38 @@
-import { createClientComponentClient, createServerComponentClient, createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { type Database } from '@/types/supabase';
 
-export const createClient = createClientComponentClient<Database>();
-
-export const createServer = () => {
-  const cookieStore = cookies();
-  return createServerComponentClient<Database>({ cookies: () => cookieStore });
+// Client-side Supabase client
+export const createClient = () => {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    throw new Error('Missing Supabase environment variables');
+  }
+  
+  return createSupabaseClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
 };
 
+// Server-side Supabase client (for server components)
+export const createServer = () => {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    throw new Error('Missing Supabase environment variables');
+  }
+  
+  return createSupabaseClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+};
+
+// Route handler Supabase client (for API routes)
 export const createRoute = () => {
-  const cookieStore = cookies();
-  return createRouteHandlerClient<Database>({ cookies: () => cookieStore });
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    throw new Error('Missing Supabase environment variables');
+  }
+  
+  return createSupabaseClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
 };

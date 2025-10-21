@@ -1,13 +1,13 @@
-# DocMagic Authentication Flow
+# docverse Authentication Flow
 
 ## 🔐 **New Authentication System Overview**
 
-DocMagic now implements a **progressive authentication system** that allows users to browse and explore the application freely, but requires authentication for specific activities. This provides a better user experience by letting users see what's available before committing to sign up.
+docverse now implements a **progressive authentication system** that allows users to browse and explore the application freely, but requires authentication for specific activities. This provides a better user experience by letting users see what's available before committing to sign up.
 
 ## 🎯 **Key Features**
 
 ### ✅ **Browsable Pages** (No Authentication Required)
-Users can freely access these pages to explore DocMagic:
+Users can freely access these pages to explore docverse:
 - **Home Page** (`/`) - Full access to browse and learn
 - **About Page** (`/about`) - Company information
 - **Contact Page** (`/contact`) - Contact information
@@ -149,7 +149,7 @@ const handleAction = () => {
 ## 🚀 **Benefits**
 
 ### **For Users**
-- **Explore First**: See what DocMagic offers before signing up
+- **Explore First**: See what docverse offers before signing up
 - **Reduced Friction**: No immediate sign-up pressure
 - **Clear Value**: Understand benefits before committing
 - **Smooth Experience**: Seamless flow from browsing to using
@@ -166,4 +166,4 @@ const handleAction = () => {
 - **API Security**: Backend still validates all requests
 - **Session Management**: Proper token handling and refresh
 
-This new authentication system provides the perfect balance between accessibility and security, allowing users to discover DocMagic's value while protecting user data and premium features.
+This new authentication system provides the perfect balance between accessibility and security, allowing users to discover docverse's value while protecting user data and premium features.

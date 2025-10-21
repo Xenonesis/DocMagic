@@ -48,11 +48,11 @@ export default function Register() {
   useEffect(() => {
     const calculateStrength = (pass: string) => {
       let strength = 0;
-      if (pass.length >= 6) strength += 1;
       if (pass.length >= 8) strength += 1;
+      if (pass.length >= 12) strength += 1;
       if (/[A-Z]/.test(pass)) strength += 1;
+      if (/[a-z]/.test(pass)) strength += 1;
       if (/[0-9]/.test(pass)) strength += 1;
-      if (/[^A-Za-z0-9]/.test(pass)) strength += 1;
       return strength;
     };
     setPasswordStrength(calculateStrength(password));
@@ -70,10 +70,19 @@ export default function Register() {
       return;
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       toast({
         title: "Password too short",
-        description: "Password must be at least 6 characters long.",
+        description: "Password must be at least 8 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+      toast({
+        title: "Password too weak",
+        description: "Password must contain at least one uppercase letter, one lowercase letter, and one number.",
         variant: "destructive",
       });
       return;
@@ -154,7 +163,8 @@ export default function Register() {
     password.trim() &&
     confirmPassword.trim() &&
     password === confirmPassword &&
-    password.length >= 6;
+    password.length >= 8 &&
+    /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden py-8">
@@ -223,7 +233,7 @@ export default function Register() {
               <h1 className="modern-display text-2xl sm:text-3xl font-bold mb-2 text-shadow-professional animate-fade-in-up">
                 Create Your{" "}
                 <span className="bolt-gradient-text animate-text-glow">
-                  DocMagic
+                  docverse
                 </span>{" "}
                 Account
               </h1>
@@ -383,7 +393,7 @@ export default function Register() {
                     onChange={(e) => setPassword(e.target.value)}
                     onFocus={() => setFocusedField("password")}
                     onBlur={() => setFocusedField(null)}
-                    placeholder="Create a password (min. 6 characters)"
+                    placeholder="Create a password (min. 8 characters)"
                     required
                     className="glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20 pl-4 pr-12 py-3 text-sm sm:text-base transition-all duration-300 hover:border-yellow-400/50 group-hover:shadow-lg"
                     disabled={isLoading}
@@ -546,7 +556,7 @@ export default function Register() {
                     ) : (
                       <p className="text-xs text-red-500 flex items-center gap-1 animate-bounce">
                         <Shield className="h-3 w-3" />
-                        Passwords don't match
+                        Passwords don&apos;t match
                       </p>
                     )}
                   </div>
@@ -565,7 +575,7 @@ export default function Register() {
                   type="submit"
                   disabled={isLoading || !isFormValid}
                   className="w-full bolt-gradient text-white font-semibold py-4 sm:py-5 rounded-xl relative text-lg sm:text-xl disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:scale-105 transition-all duration-300 focus:ring-4 focus:ring-blue-300 focus:outline-none"
-                  aria-label="Create your DocMagic account"
+                  aria-label="Create your docverse account"
                 >
                   <div className="flex items-center justify-center gap-3 relative z-20">
                     {isLoading ? (

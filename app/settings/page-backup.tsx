@@ -47,7 +47,7 @@ export default function SettingsPage() {
                 className="w-full bg-gradient-to-r from-yellow-400 to-blue-600 text-white font-semibold"
                 size="lg"
               >
-                Sign In to DocMagic
+                Sign In to docverse
               </Button>
             </div>
           </div>
@@ -67,7 +67,7 @@ export default function SettingsPage() {
           </div>
           
           <h1 className="text-3xl font-bold mb-2">
-            Your DocMagic Account
+            Your docverse Account
           </h1>
           <p className="text-muted-foreground">
             Manage your profile, subscription, and preferences

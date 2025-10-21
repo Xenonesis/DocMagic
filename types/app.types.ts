@@ -1,6 +1,6 @@
 import { User } from '@supabase/supabase-js';
 
-export type TemplateType = 'document' | 'email' | 'presentation' | 'spreadsheet' | 'form' | 'other';
+export type TemplateType = 'document' | 'email' | 'presentation' | 'spreadsheet' | 'form' | 'other' | 'resume' | 'cv' | 'letter';
 
 export interface Template {
   id: string;

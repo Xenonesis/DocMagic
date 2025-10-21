@@ -1,13 +1,13 @@
-# PWA Implementation Guide for DocMagic
+# PWA Implementation Guide for docverse
 
 ## Overview
 
-DocMagic now supports Progressive Web App (PWA) functionality, allowing users to install the application like a native app on their devices. This provides enhanced user experience with offline capabilities, faster loading times, and native app-like behavior.
+docverse now supports Progressive Web App (PWA) functionality, allowing users to install the application like a native app on their devices. This provides enhanced user experience with offline capabilities, faster loading times, and native app-like behavior.
 
 ## Features Implemented
 
 ### 1. Web App Manifest (`/public/manifest.json`)
-- **App Name**: DocMagic - AI Document Creation Platform
+- **App Name**: docverse - AI Document Creation Platform
 - **Icons**: Multiple sizes (192x192, 512x512, 180x180, 32x32, 16x16)
 - **Display Mode**: Standalone (fullscreen app experience)
 - **Theme Colors**: Blue theme matching the brand
@@ -103,13 +103,13 @@ export function PWABanner() {
 4. The app will appear in your apps menu/desktop
 
 #### Mobile (iOS Safari)
-1. Open DocMagic in Safari
+1. Open docverse in Safari
 2. Tap the Share button (⬆️)
 3. Scroll down and tap "Add to Home Screen"
 4. Tap "Add" to confirm
 
 #### Mobile (Chrome Android)
-1. Open DocMagic in Chrome
+1. Open docverse in Chrome
 2. Look for the "Add to Home Screen" prompt
 3. Or tap the three dots menu → "Add to Home Screen"
 4. Tap "Add" to confirm

@@ -249,4 +249,4 @@ const DEBUG_CURSOR = process.env.NODE_ENV === 'development';
 
 ## 📄 License
 
-This implementation is part of the DocMagic project and follows the same licensing terms.
+This implementation is part of the docverse project and follows the same licensing terms.

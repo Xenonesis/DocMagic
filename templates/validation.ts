@@ -1,4 +1,4 @@
-// Template Validation and Quality Assurance for DocMagic
+// Template Validation and Quality Assurance for docverse
 // This module provides validation functions to ensure template quality and consistency
 
 export interface ValidationResult {

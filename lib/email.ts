@@ -37,14 +37,14 @@ async function createTransporter() {
 export async function sendWelcomeEmail(to: string, name?: string) {
   const transporter = await createTransporter();
 
-  const subject = 'Welcome to DocMagic!';
+  const subject = 'Welcome to docverse!';
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2>Welcome${name ? `, ${name}` : ''}!</h2>
-      <p>Thank you for joining <strong>DocMagic</strong>, your AI-powered document creation platform.</p>
+      <p>Thank you for joining <strong>docverse</strong>, your AI-powered document creation platform.</p>
       <p>We're excited to help you create professional resumes, presentations, CVs, and letters in seconds.</p>
       <p>If you have any questions, just reply to this email—we're always happy to help.</p>
-      <p style="margin-top: 30px;">Cheers,<br/>The DocMagic Team</p>
+      <p style="margin-top: 30px;">Cheers,<br/>The docverse Team</p>
     </div>
   `;
 

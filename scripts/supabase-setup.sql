@@ -1,4 +1,4 @@
--- DocMagic Complete Database Setup
+-- docverse Complete Database Setup
 -- Run this script in the Supabase SQL Editor
 
 -- Create users table (extends Supabase auth.users)

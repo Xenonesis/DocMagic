@@ -44,10 +44,10 @@ export default function Home() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold bolt-gradient-text mb-4">
-                Explore DocMagic
+                Explore docverse
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Discover all the powerful features and tools available in DocMagic
+                Discover all the powerful features and tools available in docverse
               </p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
@@ -84,7 +84,7 @@ export default function Home() {
                   <span className="text-sm font-medium text-center">Pricing</span>
                 </Link>
               </TooltipWithShortcut>
-              <TooltipWithShortcut content="Learn more about DocMagic">
+              <TooltipWithShortcut content="Learn more about docverse">
                 <Link
                   href="/about"
                   className="group flex flex-col items-center p-4 rounded-xl glass-effect border border-amber-200/30 hover:scale-105 transition-all duration-300"

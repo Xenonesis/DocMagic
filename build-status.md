@@ -1,4 +1,4 @@
-# Build Status - DocMagic v0.8.0
+# Build Status - docverse v0.8.0
 
 ## ✅ Issues Fixed
 

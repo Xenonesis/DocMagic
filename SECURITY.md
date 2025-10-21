@@ -1,6 +1,6 @@
-# Security Guide for DocMagic
+# Security Guide for docverse
 
-This document outlines the security measures implemented in DocMagic and best practices for maintaining a secure deployment.
+This document outlines the security measures implemented in docverse and best practices for maintaining a secure deployment.
 
 ## 🔒 Security Features Implemented
 

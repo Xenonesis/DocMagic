@@ -145,7 +145,7 @@ export default function PricingPage() {
               {/* Modern subtitle matching landing page style */}
               <p className="modern-body text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-0">
                 Transform your document workflow with{" "}
-                <span className="font-semibold text-yellow-600">DocMagic</span>{" "}
+                <span className="font-semibold text-yellow-600">docverse</span>{" "}
                 Start free and scale as you grow with{" "}
                 <span className="font-semibold bolt-gradient-text">magical precision</span>
               </p>

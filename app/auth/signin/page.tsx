@@ -74,7 +74,7 @@ export default function SignIn() {
         const activityDescription = activity ? ` You can now ${activity.replace('_', ' ')}.` : '';
         toast({
           title: "Welcome back! ✨",
-          description: `You've successfully signed in to DocMagic.${activityDescription}`,
+          description: `You've successfully signed in to docverse.${activityDescription}`,
         });
 
         // Redirect to the intended page or home
@@ -160,7 +160,7 @@ export default function SignIn() {
               <h1 className="modern-display text-2xl sm:text-3xl font-bold mb-2 text-shadow-professional animate-fade-in-up">
                 Sign In to{" "}
                 <span className="bolt-gradient-text animate-text-glow">
-                  DocMagic
+                  docverse
                 </span>
               </h1>
               <p className="modern-body text-muted-foreground text-sm sm:text-base animate-fade-in-up delay-100">
@@ -377,7 +377,7 @@ export default function SignIn() {
             >
               <div className="glass-effect p-4 rounded-xl border border-yellow-400/10 hover:border-yellow-400/20 transition-all duration-300 group hover:scale-105">
                 <p className="professional-text text-sm text-muted-foreground mb-3">
-                  Don't have an account?
+                  Don&apos;t have an account?
                 </p>
                 <Link
                   href="/auth/register"

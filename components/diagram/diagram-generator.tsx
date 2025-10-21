@@ -203,8 +203,8 @@ export function DiagramGenerator() {
   const shareDiagram = async () => {
     try {
       const shareData = {
-        title: 'DocMagic Diagram',
-        text: 'Check out this diagram I created with DocMagic!',
+        title: 'docverse Diagram',
+        text: 'Check out this diagram I created with docverse!',
         url: window.location.href
       };
       

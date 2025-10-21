@@ -1,6 +1,6 @@
-# 🛠️ Mac and Linux Development Setup Guide for DocMagic
+# 🛠️ Mac and Linux Development Setup Guide for docverse
 
-Welcome to the **DocMagic** contributor community! 🎉  
+Welcome to the **docverse** contributor community! 🎉  
 This guide is designed for **beginners** who may have never contributed to an open-source project before. It will walk you through **every step** required to set up the development environment on **macOS** and **Linux**, so you can start contributing confidently to this AI-powered document generation platform.
 
 ---
@@ -172,13 +172,13 @@ sudo snap install code --classic
 
 ### Step 6.1: Fork the Repository
 
-Go to [https://github.com/Muneerali199/DocMagic](https://github.com/Muneerali199/DocMagic) and click the **Fork** button.
+Go to [https://github.com/Muneerali199/docverse](https://github.com/Muneerali199/docverse) and click the **Fork** button.
 
 ### Step 6.2: Clone Your Fork
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/DocMagic.git
-cd DocMagic
+git clone https://github.com/YOUR_USERNAME/docverse.git
+cd docverse
 ```
 
 > Replace `YOUR_USERNAME` with your actual GitHub username.
@@ -255,6 +255,6 @@ nvm use
 
 ---
 
-Made with ❤️ by the [DocMagic](https://github.com/Muneerali199/DocMagic) community.
+Made with ❤️ by the [docverse](https://github.com/Muneerali199/docverse) community.
 
 Happy coding and welcome aboard! 🚀

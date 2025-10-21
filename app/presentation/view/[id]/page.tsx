@@ -67,12 +67,12 @@ export async function generateMetadata({ params }: PresentationViewPageProps) {
 
   if (!data || !data.content?.isPublic) {
     return {
-      title: 'Presentation - DocMagic',
+      title: 'Presentation - docverse',
     };
   }
 
   return {
-    title: `${data.title} - DocMagic`,
-    description: `View this presentation created with DocMagic`,
+    title: `${data.title} - docverse`,
+    description: `View this presentation created with docverse`,
   };
 }

@@ -8,7 +8,7 @@ The 404 error you're seeing indicates that the `documents` table doesn't exist i
 Go to your Supabase Dashboard → SQL Editor and run this script:
 
 ```sql
--- Create documents table for DocMagic
+-- Create documents table for docverse
 CREATE TABLE IF NOT EXISTS documents (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid NOT NULL,

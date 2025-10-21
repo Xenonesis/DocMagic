@@ -215,7 +215,7 @@ export function HeroSection() {
               </div>
             </TooltipWithShortcut>
 
-            <TooltipWithShortcut content="98% of our users successfully achieve their goals with DocMagic-generated documents">
+            <TooltipWithShortcut content="98% of our users successfully achieve their goals with docverse-generated documents">
               <div className="group relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
                 <div className="relative card-sky hover-glow-sky p-6 sm:p-8 rounded-3xl hover:scale-105 transition-all duration-300 bolt-glow animate-fade-in-up delay-500 will-change-transform cursor-pointer border border-blue-200/30">

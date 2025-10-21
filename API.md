@@ -1,5 +1,5 @@
 
-## A complete reference for all backend API endpoints available in the DocMagic project.
+## A complete reference for all backend API endpoints available in the docverse project.
 
 # Table of Contents
 
@@ -20,7 +20,7 @@
 
 ## Authentication
 
-Most endpoints in DocMagic require authentication via Supabase Bearer tokens. Include this HTTP header for authenticated requests:
+Most endpoints in docverse require authentication via Supabase Bearer tokens. Include this HTTP header for authenticated requests:
 
 ```
 Authorization: Bearer 
@@ -328,7 +328,7 @@ Required.
 `POST /api/send-email`
 
 **Description:**  
-Sends an email using DocMagic’s email service.
+Sends an email using docverse’s email service.
 
 **Authentication:**  
 Required.
@@ -339,7 +339,7 @@ Required.
 {
   "to": "recipient@example.com",
   "subject": "Welcome!",
-  "body": "Thank you for joining DocMagic!"
+  "body": "Thank you for joining docverse!"
 }
 ```
 
@@ -417,10 +417,9 @@ Required.
 ## Links and References
 
 - [Supabase Authentication Docs](https://supabase.com/docs/guides/auth)
-- [DocMagic GitHub Issues](https://github.com/Muneerali199/DocMagic/issues)
-- [DocMagic Project README](https://github.com/Muneerali199/DocMagic#readme)
+- [docverse GitHub Issues](https://github.com/Xenonesis/Docverse/issues)
+- [docverse Project README](https://github.com/Xenonesis/Docverse#readme)
 
 ---
 
-This documentation helps new and experienced contributors quickly understand and use DocMagic’s backend API endpoints effectively.
-```
+This documentation helps new and experienced contributors quickly understand and use docverse’s backend API endpoints effectively.

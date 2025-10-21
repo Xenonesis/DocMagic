@@ -54,7 +54,7 @@ export default function NotFound() {
       <form onSubmit={handleSearch} className="flex w-full max-w-md mb-6">
         <input
           type="text"
-          placeholder="Search DocMagic..."
+          placeholder="Search docverse..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"

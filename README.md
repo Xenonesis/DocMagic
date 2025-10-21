@@ -1,4 +1,4 @@
-# 🪄 DocMagic - AI Document Creation Platform
+# 🪄 docverse - AI Document Creation Platform
 
 <div align="center">
 
@@ -13,19 +13,19 @@
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-Animations-0055FF?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Open Source](https://img.shields.io/badge/Open%20Source-❤️-red?style=for-the-badge)](https://github.com/docmagic-ai/docmagic)
-[![Netlify Status](https://img.shields.io/badge/Netlify-Deployed-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://docmagic1.netlify.app)
-[![Version](https://img.shields.io/badge/Version-0.8.0-brightgreen?style=for-the-badge)](https://github.com/docmagic-ai/docmagic/releases)
+[![Open Source](https://img.shields.io/badge/Open%20Source-❤️-red?style=for-the-badge)](https://github.com/Xenonesis/Docverse)
+[![Netlify Status](https://img.shields.io/badge/Netlify-Deployed-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://docverse-psi.vercel.app)
+[![Version](https://img.shields.io/badge/Version-0.8.0-brightgreen?style=for-the-badge)](https://github.com/Xenonesis/Docverse/releases)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
 [![Contributors](https://img.shields.io/badge/Contributors-Welcome-orange?style=for-the-badge)](./CONTRIBUTING.md)
 
 <br />
 
-![DocMagic Hero](screenshots/DocMagicHero.png)
+![docverse Hero](screenshots/docverseHero.png)
 
 ### 🚀 **Transform Ideas into Professional Documents with AI Magic**
 
-**DocMagic** is a **100% open source**, cutting-edge AI-powered document creation platform that revolutionizes how professionals create stunning documents. Built by the community, for the community - simply describe what you need, and watch as our advanced AI transforms your ideas into polished resumes, captivating presentations, comprehensive CVs, and professional letters in seconds.
+**docverse** is a **100% open source**, cutting-edge AI-powered document creation platform that revolutionizes how professionals create stunning documents. Built by the community, for the community - simply describe what you need, and watch as our advanced AI transforms your ideas into polished resumes, captivating presentations, comprehensive CVs, and professional letters in seconds.
 
 <br />
 
@@ -35,9 +35,9 @@
 
 <br />
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_DocMagic-667eea?style=for-the-badge&logoColor=white)](https://docmagic1.netlify.app)
-[![About Page](https://img.shields.io/badge/📖_About_Page-Learn_More-9333EA?style=for-the-badge&logoColor=white)](https://docmagic1.netlify.app/about)
-[![Fork on GitHub](https://img.shields.io/badge/🍴_Fork-on_GitHub-black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/docmagic-ai/docmagic/fork)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_docverse-667eea?style=for-the-badge&logoColor=white)](https://docverse-psi.vercel.app)
+[![About Page](https://img.shields.io/badge/📖_About_Page-Learn_More-9333EA?style=for-the-badge&logoColor=white)](https://docverse-psi.vercel.app/about)
+[![Fork on GitHub](https://img.shields.io/badge/🍴_Fork-on_GitHub-black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Xenonesis/Docverse/fork)
 [![Documentation](https://img.shields.io/badge/📚_Documentation-Read_Docs-4ECDC4?style=for-the-badge&logoColor=white)](./CONTRIBUTING.md)
 [![API Reference](https://img.shields.io/badge/🔗_API_Reference-Explore_API-FF6B6B?style=for-the-badge&logoColor=white)](./API.md)
 
@@ -93,7 +93,7 @@
 
 ### 🛠️ **Professional Tools & Features**
 
-- **Progressive Web App (PWA)**: Install DocMagic as a native app on any device with offline support and enhanced performance
+- **Progressive Web App (PWA)**: Install docverse as a native app on any device with offline support and enhanced performance
 - **Advanced ATS Analyzer**: Comprehensive resume scanning with detailed scoring and optimization suggestions
 - **Professional Template Library**: Curated collection of ATS-optimized, modern templates with glass morphism design
 - **Guided Resume Builder**: 9-step workflow with progress tracking and intelligent navigation
@@ -180,7 +180,7 @@
 
 ### ✨ **Modern Glass Morphism Interface**
 
-DocMagic features a cutting-edge design system built around glass morphism principles, creating a sophisticated and intuitive user experience:
+docverse features a cutting-edge design system built around glass morphism principles, creating a sophisticated and intuitive user experience:
 
 - **Glass Effects**: Subtle transparency and backdrop-blur effects throughout the interface
 - **Dynamic Gradients**: Custom "bolt gradients" that create visual depth and energy
@@ -217,7 +217,7 @@ DocMagic features a cutting-edge design system built around glass morphism princ
 
 ### 🏠 **Landing Page with Glass Morphism Design**
 
-<img src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600" alt="DocMagic Landing Page" width="90%"/>
+<img src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600" alt="docverse Landing Page" width="90%"/>
 <p><em>Hero section with floating animations and gradient effects</em></p>
 
 ### 📄 **AI Resume Generator Interface**
@@ -297,7 +297,7 @@ graph LR
 ## 📁 Project Structure
 
 ```
-docmagic/
+docverse/
 ├── app/                      # Next.js app directory
 │   ├── api/                  # API routes
 │   │   ├── analyze/          # Resume analysis endpoints
@@ -367,13 +367,13 @@ Visit our comprehensive **About Page** at [https://docmagic1.netlify.app/about](
 
 - 🎯 **Mission & Vision** - Our commitment to democratizing document creation
 - ⚡ **Core Features** - AI-powered tools and capabilities
-- 🛠️ **Technology Stack** - Modern tech powering DocMagic
+- 🛠️ **Technology Stack** - Modern tech powering docverse
 - 🎨 **Design Philosophy** - "Magical Professionalism" approach
 - 🔒 **Security & Quality** - Enterprise-grade security measures
 - 🗺️ **Product Roadmap** - Exciting features coming in 2025-2026
 - 👥 **Community** - Join our open source community
 
-## 🪟 DocMagic: Windows Local Development Setup
+## 🪟 docverse: Windows Local Development Setup
 
 Make sure to install these before setting up the project:
 
@@ -386,10 +386,10 @@ Make sure to install these before setting up the project:
 
 ### Step 2: Clone the Repository
 
-After installing the prerequisites, open your Command Prompt, PowerShell, or Windows Terminal and run the following commands to clone the DocMagic repository and navigate into the project folder:
+After installing the prerequisites, open your Command Prompt, PowerShell, or Windows Terminal and run the following commands to clone the docverse repository and navigate into the project folder:
 
-    git clone https://github.com/Muneerali199/DocMagic.git
-    cd DocMagic
+    git clone https://github.com/Muneerali199/docverse.git
+    cd docverse
 
 This will download the project's source code to your local machine and prepare you to install dependencies in the next step.
 
@@ -401,7 +401,7 @@ Using npm:
 
     npm install
 
-This command will download and install all the required dependencies for the DocMagic project.
+This command will download and install all the required dependencies for the docverse project.
 
 ### Step 4: Configure Environment Variables
 
@@ -425,7 +425,7 @@ Using npm:
 
     npm run dev
 
-🎉 **That's it !** Open [http://localhost:3000](http://localhost:3000) to see DocMagic in action.
+🎉 **That's it !** Open [http://localhost:3000](http://localhost:3000) to see docverse in action.
 
 ---
 
@@ -639,7 +639,7 @@ For complete API documentation, see [API.md](./API.md).
 
 ### 🌐 **Netlify (Recommended)**
 
-DocMagic is optimized for Netlify deployment:
+docverse is optimized for Netlify deployment:
 
 ```bash
 # Automatic deployment
@@ -798,7 +798,7 @@ The application is deployed on Netlify. To deploy your own instance:
 
 ## 🤝 **Contributing to Open Source**
 
-**DocMagic is proudly open source!** We believe in the power of community-driven development and welcome contributions from developers, designers, and users worldwide. Whether you're a seasoned developer or just starting your open source journey, there's a place for you in our community!
+**docverse is proudly open source!** We believe in the power of community-driven development and welcome contributions from developers, designers, and users worldwide. Whether you're a seasoned developer or just starting your open source journey, there's a place for you in our community!
 
 ### 🌟 **Ways to Contribute**
 
@@ -818,7 +818,7 @@ The application is deployed on Netlify. To deploy your own instance:
 
 - Improve documentation and tutorials
 - Help other users in discussions and issues
-- Create blog posts, videos, or tutorials about DocMagic
+- Create blog posts, videos, or tutorials about docverse
 - Translate the interface to new languages
 
 #### 🎨 **Design & UX**
@@ -856,15 +856,15 @@ For detailed guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ### 👥 Contributors
 
-[![Contributors](https://contrib.rocks/image?repo=Swara595/DocMagic)](https://github.com/Swara595/DocMagic/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=Swara595/docverse)](https://github.com/Swara595/docverse/graphs/contributors)
 
 Made with [contrib.rocks](https://contrib.rocks).
 
 ## 📜 **Open Source License**
 
-**DocMagic is free and open source software** licensed under the MIT License. This means you can:
+**docverse is free and open source software** licensed under the MIT License. This means you can:
 
-- ✅ **Use** DocMagic for any purpose (personal, commercial, educational)
+- ✅ **Use** docverse for any purpose (personal, commercial, educational)
 - ✅ **Modify** the source code to fit your needs
 - ✅ **Distribute** your own versions
 - ✅ **Contribute** back to the community
@@ -873,7 +873,7 @@ Made with [contrib.rocks](https://contrib.rocks).
 ```
 MIT License
 
-Copyright (c) 2025 DocMagic Contributors
+Copyright (c) 2025 docverse Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -1004,7 +1004,7 @@ Contact us at support@docmagic.com
 
 ## ❓ Frequently Asked Questions
 
-Got questions? Check out our comprehensive [FAQ](./FAQ.md) for answers to common questions about using and contributing to DocMagic.
+Got questions? Check out our comprehensive [FAQ](./FAQ.md) for answers to common questions about using and contributing to docverse.
 
 ## 📞 **Support & Contact**
 
@@ -1024,9 +1024,9 @@ Got questions? Check out our comprehensive [FAQ](./FAQ.md) for answers to common
 
 ### 🌐 **Social Media**
 
-- **Twitter**: [@DocMagicAI](https://twitter.com/DocMagicAI)
-- **LinkedIn**: [DocMagic Company](https://linkedin.com/company/docmagic)
-- **GitHub**: [DocMagic Organization](https://github.com/docmagic-ai)
+- **Twitter**: [@docverseAI](https://twitter.com/docverseAI)
+- **LinkedIn**: [docverse Company](https://linkedin.com/company/docmagic)
+- **GitHub**: [docverse Organization](https://github.com/docmagic-ai)
 
 ---
 
@@ -1040,13 +1040,13 @@ Got questions? Check out our comprehensive [FAQ](./FAQ.md) for answers to common
 
 <br />
 
-**Made with ❤️ by the DocMagic Team**
+**Made with ❤️ by the docverse Team**
 
 _Transforming ideas into professional documents, one AI generation at a time._
 
 <br />
 
-![Footer Image](https://via.placeholder.com/600x100/667eea/ffffff?text=✨+DocMagic+-+AI+Document+Creation+Platform+✨)
+![Footer Image](https://via.placeholder.com/600x100/667eea/ffffff?text=✨+docverse+-+AI+Document+Creation+Platform+✨)
 
 </div>
 
@@ -1071,7 +1071,7 @@ _Transforming ideas into professional documents, one AI generation at a time._
 
 ## 💳 Stripe Integration
 
-DocMagic uses Stripe for handling subscription payments. This section provides a comprehensive guide to setting up and managing the Stripe integration.
+docverse uses Stripe for handling subscription payments. This section provides a comprehensive guide to setting up and managing the Stripe integration.
 
 ### 🔑 Environment Variables
 
@@ -1274,7 +1274,7 @@ The Supabase database includes the following tables:
 
 ## 💰 Subscription Model
 
-DocMagic offers a freemium model:
+docverse offers a freemium model:
 
 - **Free tier**: Basic document generation with limited features
 - **Pro tier**: Unlimited documents, premium templates, and advanced features
@@ -1312,15 +1312,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <div align="center">
 ## 🌟 Top Contributors
 
-We sincerely thank the amazing individuals who have contributed to DocMagic. Your time, effort, and ideas make this project better every day.
+We sincerely thank the amazing individuals who have contributed to docverse. Your time, effort, and ideas make this project better every day.
 
 <!-- You can use GitHub's built-in contributors image -->
 
-[![Contributors](https://contrib.rocks/image?repo=Muneerali199/DocMagic)](https://github.com/Muneerali199/DocMagic/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=Muneerali199/docverse)](https://github.com/Muneerali199/docverse/graphs/contributors)
 
 > Want to contribute? Check out our [CONTRIBUTING.md](CONTRIBUTING.md) guide and submit your first PR!
 
-  <p>Built with ❤️ by the DocMagic Team</p>
+  <p>Built with ❤️ by the docverse Team</p>
   <p><strong>Designed by <a href="https://github.com/Xenonesis">Xenonesis</a></strong></p>
-  <p>© 2025 DocMagic. All rights reserved.</p>
+  <p>© 2025 docverse. All rights reserved.</p>
 </div>

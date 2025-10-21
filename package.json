@@ -1,5 +1,5 @@
 {
-  "name": "docmagic",
+  "name": "docverse",
   "version": "2.0.0",
   "description": "🪄 Open source AI-powered document creation platform - Create professional resumes, presentations, CVs, and letters in seconds",
   "keywords": [
@@ -14,13 +14,13 @@
     "gemini-ai",
     "supabase"
   ],
-  "homepage": "https://docmagic1.netlify.app",
+  "homepage": "https://docverse-psi.vercel.app",
   "repository": {
     "type": "git",
-    "url": "https://github.com/docmagic-ai/docmagic.git"
+    "url": "https://github.com/Xenonesis/Docverse.git"
   },
   "bugs": {
-    "url": "https://github.com/docmagic-ai/docmagic/issues"
+    "url": "https://github.com/Xenonesis/Docverse/issues"
   },
   "license": "MIT",
   "author": "Xenonesis",
@@ -38,11 +38,16 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "setup-db": "node scripts/setup-database.js",
+    "setup-db": "node scripts/setup-supabase.js",
+    "setup-db-legacy": "node scripts/setup-database.js",
     "security-audit": "node scripts/security-audit.js",
     "security-check": "npm audit && npm run security-audit",
     "test-pwa": "./scripts/test-pwa.sh",
-    "build-pwa": "npm run build && npm start"
+    "build-pwa": "npm run build && npm start",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status",
+    "supabase:reset": "supabase db reset"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -90,6 +95,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "docx": "^8.5.0",
+    "dotenv": "^17.2.3",
     "embla-carousel-react": "^8.3.0",
     "eslint": "^8.56.0",
     "framer-motion": "^12.23.12",

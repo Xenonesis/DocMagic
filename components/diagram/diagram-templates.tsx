@@ -191,7 +191,7 @@ const DIAGRAM_TEMPLATES: DiagramTemplate[] = [
     icon: <Sparkles className="h-5 w-5" />,
     preview: "Central Idea → Branches → Details",
     code: `mindmap
-  root((DocMagic Features))
+  root((docverse Features))
     Documents
       Resumes
       Presentations
@@ -339,7 +339,7 @@ export function DiagramTemplates({ onSelectTemplate }: DiagramTemplatesProps) {
               <li>• <code>flowchart TD</code> - Top-down flowchart</li>
               <li>• <code>A[Rectangle]</code> - Rectangle node</li>
               <li>• <code>B{"{Diamond}"}</code> - Decision node</li>
-              <li>• <code>A --> B</code> - Arrow connection</li>
+              <li>• <code>A --&gt; B</code> - Arrow connection</li>
             </ul>
           </div>
           <div>

@@ -1,4 +1,4 @@
--- Create documents table for DocMagic
+-- Create documents table for docverse
 -- Run this script in the Supabase SQL Editor
 
 -- Create documents table
