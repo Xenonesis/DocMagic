@@ -1,4 +1,4 @@
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { SECURITY_CONFIG, getSecurityHeaders, isAllowedOrigin, logSecurityEvent } from '@/lib/security';
@@ -106,7 +106,34 @@ export async function middleware(req: NextRequest) {
     // Skip authentication check in development with placeholder credentials
     if (!isUsingPlaceholders) {
       try {
-        const supabase = createMiddlewareClient({ req, res });
+        const response = NextResponse.next();
+        
+        const supabase = createServerClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+          {
+            cookies: {
+              get(name: string) {
+                return req.cookies.get(name)?.value;
+              },
+              set(name: string, value: string, options: CookieOptions) {
+                response.cookies.set({
+                  name,
+                  value,
+                  ...options,
+                });
+              },
+              remove(name: string, options: CookieOptions) {
+                response.cookies.set({
+                  name,
+                  value: '',
+                  ...options,
+                });
+              },
+            },
+          }
+        );
+        
         const { data: { session } } = await supabase.auth.getSession();
 
         if (!session) {
@@ -114,6 +141,8 @@ export async function middleware(req: NextRequest) {
           redirectUrl.searchParams.set('redirectTo', req.nextUrl.pathname);
           return NextResponse.redirect(redirectUrl);
         }
+        
+        return response;
       } catch (error) {
         console.error('Middleware auth error:', error);
         // If there's an error with Supabase, allow access in development
