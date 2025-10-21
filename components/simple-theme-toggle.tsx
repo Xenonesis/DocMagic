@@ -20,8 +20,8 @@ export function SimpleThemeToggle() {
 
   if (!mounted) {
     return (
-      <button className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center">
-        <Sun className="h-5 w-5" />
+      <button className="w-10 h-10 rounded-full border border-border bg-background/90 shadow-sm flex items-center justify-center">
+        <Sun className="h-5 w-5 text-yellow-500" />
       </button>
     );
   }
@@ -29,7 +29,7 @@ export function SimpleThemeToggle() {
   return (
     <button
       onClick={handleClick}
-      className="w-10 h-10 rounded-full border border-gray-300 hover:border-gray-400 flex items-center justify-center bg-white dark:bg-gray-800 transition-colors cursor-pointer"
+      className="w-10 h-10 rounded-full border border-border/80 hover:border-border flex items-center justify-center bg-background/90 hover:bg-accent/40 shadow-sm dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors cursor-pointer"
       style={{ 
         pointerEvents: 'auto',
         zIndex: 100,
@@ -40,7 +40,7 @@ export function SimpleThemeToggle() {
       {resolvedTheme === "dark" ? (
         <Sun className="h-5 w-5 text-yellow-500" />
       ) : (
-        <Moon className="h-5 w-5 text-gray-700" />
+        <Moon className="h-5 w-5 text-slate-600" />
       )}
     </button>
   );
