@@ -111,12 +111,6 @@
     scroll-behavior: smooth;
     overflow-x: hidden;
   }
-
-  @font-face {
-    font-family: "Poppins";
-    src: local("Poppins"), url("/fonts/Poppins.woff2") format("woff2");
-    font-display: swap;
-  }
 }
 
 .badge-bg {

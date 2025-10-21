@@ -179,72 +179,33 @@ export function PresentationGenerator() {
     setIsExporting(true);
 
     try {
-      // Dynamically create a new instance of PptxGen
-      const PptxGenJSModule = await import('pptxgenjs/dist/pptxgen.es.js');
-      const pptx = new PptxGenJSModule.default();
-      pptx.layout = 'LAYOUT_WIDE';
-
-      slides.forEach((slide, index) => {
-        const pptxSlide = pptx.addSlide();
-        const templateStyles = getTemplateColors(selectedTemplate);
-
-        // Set slide background
-        pptxSlide.background = { color: templateStyles.background };
-
-        // Add title
-        pptxSlide.addText(slide.title, {
-          x: 0.5,
-          y: 0.5,
-          w: 12,
-          h: 1.2,
-          fontSize: 32,
-          bold: true,
-          color: templateStyles.textColor,
-          fontFace: 'Arial'
-        });
-
-        // Add content
-        if (slide.content) {
-          pptxSlide.addText(slide.content, {
-            x: 0.5,
-            y: 2,
-            w: 12,
-            h: 2,
-            fontSize: 18,
-            color: templateStyles.textColor,
-            fontFace: 'Arial'
-          });
-        }
-
-        // Add bullets if available
-        if (slide.bullets) {
-          pptxSlide.addText(slide.bullets, {
-            x: 0.5,
-            y: 4,
-            w: 12,
-            h: 3,
-            fontSize: 16,
-            bullet: true,
-            color: templateStyles.textColor,
-            fontFace: 'Arial'
-          });
-        }
-
-        // Add slide number
-        pptxSlide.addText(`${index + 1}`, {
-          x: 12.5,
-          y: 6.8,
-          w: 0.5,
-          h: 0.3,
-          fontSize: 12,
-          color: templateStyles.accentColor,
-          align: 'center'
-        });
+      // Call server-side API to generate PPTX (avoids Node.js module bundling issues)
+      const response = await fetch('/api/generate/export-pptx', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          slides,
+          template: selectedTemplate,
+          fileName: `${prompt.slice(0, 30)}-presentation`
+        }),
       });
 
-      await pptx.writeFile({
-        fileName: `${prompt.slice(0, 30)}-presentation.pptx`
-      });
+      if (!response.ok) {
+        throw new Error('Failed to generate PPTX');
+      }
+
+      // Download the file
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${prompt.slice(0, 30)}-presentation.pptx`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
 
       toast({
         title: "📊 PowerPoint Exported!",
