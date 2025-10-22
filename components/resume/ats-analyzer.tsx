@@ -7,6 +7,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
+import { ExportAuthDialog } from "@/components/ui/export-auth-dialog";
+import { useRouter } from "next/navigation";
 import {
   AlertCircle,
   CheckCircle2,
@@ -15,6 +18,7 @@ import {
   Upload,
   XCircle,
   Sparkles,
+  Download,
 } from "lucide-react";
 
 export function ATSAnalyzer() {
@@ -22,7 +26,10 @@ export function ATSAnalyzer() {
   const [jobDescription, setJobDescription] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<any>(null);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const { toast } = useToast();
+  const { isAuthenticated } = useAuthGuard();
+  const router = useRouter();
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
@@ -44,6 +51,11 @@ export function ATSAnalyzer() {
     },
   });
 
+  const handleSignIn = () => {
+    const currentPath = window.location.pathname;
+    router.push(`/auth/signin?redirectTo=${encodeURIComponent(currentPath)}`);
+  };
+
   const analyzeResume = async () => {
     if (!file || !jobDescription.trim()) {
       toast({
@@ -51,6 +63,12 @@ export function ATSAnalyzer() {
         description: "Please upload a resume and enter the job description",
         variant: "destructive",
       });
+      return;
+    }
+
+    // Check authentication before analyzing
+    if (!isAuthenticated) {
+      setShowAuthDialog(true);
       return;
     }
 
@@ -94,6 +112,23 @@ export function ATSAnalyzer() {
 
   return (
     <div className="space-y-6">
+      {/* Info banner for free users */}
+      {!isAuthenticated && (
+        <Card className="glass-effect border-yellow-400/20 bg-yellow-50/10">
+          <CardContent className="pt-6">
+            <div className="flex items-start gap-3">
+              <Sparkles className="h-5 w-5 text-yellow-500 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="font-medium text-sm mb-1">Free ATS Analysis Preview</p>
+                <p className="text-sm text-muted-foreground">
+                  Upload your resume and job description to see how it works. Sign in to get your full detailed ATS analysis report.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* LEFT SIDE - Upload & Description */}
         <div className="space-y-4">
@@ -284,6 +319,13 @@ export function ATSAnalyzer() {
           )}
         </div>
       </div>
+
+      <ExportAuthDialog
+        open={showAuthDialog}
+        onOpenChange={setShowAuthDialog}
+        onSignIn={handleSignIn}
+        exportType="ats-analysis"
+      />
     </div>
   );
 }

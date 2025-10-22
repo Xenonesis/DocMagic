@@ -14,7 +14,7 @@ interface ExportAuthDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSignIn: () => void;
-  exportType: "resume" | "presentation" | "letter" | "diagram";
+  exportType: "resume" | "presentation" | "letter" | "diagram" | "ats-analysis" | "guided-resume";
 }
 
 export function ExportAuthDialog({
@@ -61,6 +61,26 @@ export function ExportAuthDialog({
         "Export diagrams in high-quality PNG and SVG formats",
         "Save your diagrams for future access",
         "Access advanced AI features and templates",
+        "Free to start - No credit card required",
+      ],
+    },
+    "ats-analysis": {
+      title: "Sign in for Full ATS Analysis",
+      description: "Get detailed ATS compatibility reports with personalized improvement suggestions.",
+      benefits: [
+        "Complete ATS compatibility score and analysis",
+        "Detailed keyword matching and recommendations",
+        "Section-by-section scoring and feedback",
+        "Free to start - No credit card required",
+      ],
+    },
+    "guided-resume": {
+      title: "Sign in to Generate ATS-Optimized Resume",
+      description: "Complete the 9-step guided workflow and generate your professional resume.",
+      benefits: [
+        "Generate ATS-optimized resumes with AI",
+        "Download in PDF and DOCX formats",
+        "Save your progress and resumes",
         "Free to start - No credit card required",
       ],
     },
@@ -126,7 +146,15 @@ export function ExportAuthDialog({
             className="bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300 flex-1"
           >
             <Sparkles className="mr-2 h-4 w-4" />
-            Sign In to {exportType === "resume" ? "Download" : exportType === "letter" ? "Download" : "Export"}
+            Sign In to {
+              exportType === "resume" || exportType === "letter" 
+                ? "Download" 
+                : exportType === "ats-analysis" 
+                ? "Analyze" 
+                : exportType === "guided-resume"
+                ? "Generate"
+                : "Export"
+            }
           </Button>
         </div>
       </DialogContent>

@@ -46,6 +46,32 @@ Successfully applied a consistent freemium model across all document generation 
 - ✅ Authentication required for PNG/SVG export
 - ✅ Reference implementation for other features
 
+### 5. **Guided Resume Generator (9-Step Workflow)** ✨
+- **Before**: Completely free, no auth checks
+- **After**:
+  - ✅ Fill out all 9 steps freely without login
+  - ✅ View guidance and tips at each step
+  - ✅ Authentication required to generate final ATS-optimized resume
+  - ✅ Seamless auth dialog with workflow benefits
+  - ✅ Progress saved for authenticated users
+
+**Files Modified:**
+- `components/resume/guided-resume-generator.tsx` - Added auth dialog and generation protection
+- `components/ui/export-auth-dialog.tsx` - Added guided-resume export type
+
+### 6. **ATS Resume Analyzer** ✨
+- **Before**: Completely free, no auth checks
+- **After**:
+  - ✅ Upload resume and job description freely
+  - ✅ See feature preview without login
+  - ✅ Authentication required for full ATS analysis report
+  - ✅ Info banner explaining freemium model
+  - ✅ Detailed scoring and recommendations for authenticated users
+
+**Files Modified:**
+- `components/resume/ats-analyzer.tsx` - Added auth dialog and analysis protection
+- `components/ui/export-auth-dialog.tsx` - Added ats-analysis export type
+
 ## 🎨 User Experience
 
 ### Freemium Flow:
@@ -100,6 +126,8 @@ const handleExport = () => {
 - `EXPORT_LETTER` - Download letter as PDF
 - `EXPORT_PRESENTATION` - Export presentation as PDF/PPTX
 - `EXPORT_DIAGRAM` - Export diagram as PNG/SVG
+- `GUIDED_RESUME_GENERATION` - Generate ATS-optimized resume from 9-step workflow
+- `ATS_ANALYSIS` - Get full ATS compatibility analysis report
 
 ### API Routes:
 - Resume generation API: **No auth required** ✅
@@ -131,6 +159,8 @@ const handleExport = () => {
 | **Presentation** | Generate, Preview | Export PDF/PPTX, Share |
 | **Diagram** | Generate, Preview | Export PNG/SVG |
 | **CV** | Generate, Preview | Download PDF/DOCX |
+| **Guided Resume** | Fill 9-step form, View tips | Generate ATS-optimized resume |
+| **ATS Analyzer** | Upload resume, View UI | Get full analysis report |
 
 ## 🚀 Next Steps (Optional Enhancements)
 
@@ -178,6 +208,8 @@ Successfully implemented a **consistent freemium pattern** across all major feat
 - **Letter Generator**: ✅ Updated  
 - **Presentation Generator**: ✅ Updated
 - **Diagram Generator**: ✅ Already implemented
+- **Guided Resume Generator**: ✅ Updated
+- **ATS Resume Analyzer**: ✅ Updated
 
 This creates a **zero-friction onboarding experience** while maintaining a **strategic conversion gate** at the point of maximum value (download/export).
 
@@ -185,6 +217,28 @@ This creates a **zero-friction onboarding experience** while maintaining a **str
 
 **Implementation Date**: 2024
 **Status**: ✅ COMPLETE
-**Files Modified**: 4
-**Lines Changed**: ~150
+**Files Modified**: 6
+**Lines Changed**: ~250
 **Pattern**: Freemium with strategic auth gates
+
+## 📋 Complete Feature Coverage
+
+All document generation and analysis features now follow the freemium pattern:
+
+### ✅ Generation Features:
+1. Resume Generator (Basic)
+2. Guided Resume Generator (9-step)
+3. Letter Generator
+4. Presentation Generator
+5. Diagram Generator
+6. CV Generator
+
+### ✅ Analysis Features:
+1. ATS Resume Analyzer
+
+### 🎯 Freemium Strategy:
+- **Try Before Sign-In**: Users can explore all features and create content
+- **Strategic Auth Gate**: Authentication required at the point of value (download/export/analysis)
+- **Zero Friction**: No barriers to entry, smooth onboarding experience
+- **Clear Value Prop**: Beautiful dialogs explain benefits of signing in
+- **Consistent UX**: Same pattern across all features for familiarity

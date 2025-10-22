@@ -8,6 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
+import { ExportAuthDialog } from "@/components/ui/export-auth-dialog";
+import { useRouter } from "next/navigation";
 import { 
   User, 
   Mail, 
@@ -50,7 +53,10 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
   const [stepGuidance, setStepGuidance] = useState<any>(null);
   const [targetRole, setTargetRole] = useState("");
   const [jobDescription, setJobDescription] = useState("");
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const { toast } = useToast();
+  const { isAuthenticated } = useAuthGuard();
+  const router = useRouter();
 
   // Form data state
   const [personalInfo, setPersonalInfo] = useState({
@@ -179,7 +185,18 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
     }
   };
 
+  const handleSignIn = () => {
+    const currentPath = window.location.pathname;
+    router.push(`/auth/signin?redirectTo=${encodeURIComponent(currentPath)}`);
+  };
+
   const generateResume = async () => {
+    // Check authentication before generating
+    if (!isAuthenticated) {
+      setShowAuthDialog(true);
+      return;
+    }
+
     if (!targetRole) {
       toast({
         title: "Target role required",
@@ -1176,6 +1193,13 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           </Button>
         )}
       </div>
+
+      <ExportAuthDialog
+        open={showAuthDialog}
+        onOpenChange={setShowAuthDialog}
+        onSignIn={handleSignIn}
+        exportType="guided-resume"
+      />
     </div>
   );
 }
