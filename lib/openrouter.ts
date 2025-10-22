@@ -149,16 +149,25 @@ export async function generateStructuredResponse<T = any>({
   maxTokens?: number;
   model?: string;
 }): Promise<T> {
-  const messages: OpenRouterMessage[] = [
-    { role: 'system', content: systemPrompt },
-    { role: 'user', content: userPrompt },
-  ];
+  const config = getOpenRouterConfig();
+  const selectedModel = model || config.model;
+  
+  // Some free models (like gemma-3n-e2b-it) don't support system prompts
+  // Combine system and user prompts for compatibility
+  const isFreeModel = selectedModel.includes('free') || selectedModel.includes('gemma-3n');
+  
+  const messages: OpenRouterMessage[] = isFreeModel
+    ? [{ role: 'user', content: `${systemPrompt}\n\n${userPrompt}` }]
+    : [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ];
 
   const response = await generateOpenRouterCompletion({
     messages,
     temperature,
     maxTokens,
-    model,
+    model: selectedModel,
   });
 
   // Extract JSON from markdown if present

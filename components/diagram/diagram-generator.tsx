@@ -6,6 +6,22 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { DiagramPreview } from "@/components/diagram/diagram-preview";
 import { DiagramTemplates } from "@/components/diagram/diagram-templates";
 import { useToast } from "@/hooks/use-toast";
@@ -88,6 +104,9 @@ export function DiagramGenerator() {
   const [isCopying, setIsCopying] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [activeTab, setActiveTab] = useState("editor");
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [diagramType, setDiagramType] = useState("flowchart");
+  const [showAiDialog, setShowAiDialog] = useState(false);
   const { toast } = useToast();
   const diagramRef = useRef<HTMLDivElement>(null);
 
@@ -97,35 +116,51 @@ export function DiagramGenerator() {
   };
 
   const generateDiagramFromPrompt = async () => {
+    if (!aiPrompt.trim()) {
+      toast({
+        title: "Prompt required",
+        description: "Please enter a description for your diagram",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsGenerating(true);
+    setShowAiDialog(false);
     
     try {
-      // Simulate AI generation - in real implementation, this would call your AI API
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // For demo purposes, we'll use a sample diagram
-      const aiGeneratedDiagram = `flowchart TD
-    A[User Request] --> B{Analyze Requirements}
-    B -->|Complex| C[Break Down Tasks]
-    B -->|Simple| D[Direct Implementation]
-    C --> E[Create Subtasks]
-    E --> F[Execute Tasks]
-    D --> F
-    F --> G{Quality Check}
-    G -->|Pass| H[Deploy]
-    G -->|Fail| I[Fix Issues]
-    I --> F
-    H --> J[Success!]`;
-      
-      setDiagramCode(aiGeneratedDiagram);
-      
-      toast({
-        title: "🎯 AI Diagram Generated!",
-        description: "Your diagram has been created based on your requirements",
+      const response = await fetch('/api/generate/diagram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: aiPrompt,
+          diagramType: diagramType,
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate diagram');
+      }
+
+      const data = await response.json();
+      
+      if (data.code) {
+        setDiagramCode(data.code);
+        setSelectedTemplate(diagramType);
+        
+        toast({
+          title: "🎯 AI Diagram Generated!",
+          description: data.title || "Your diagram has been created successfully",
+        });
+      } else {
+        throw new Error('Invalid response format');
+      }
     } catch (error) {
+      console.error('Diagram generation error:', error);
       toast({
-        title: "Error",
+        title: "Generation failed",
         description: "Failed to generate diagram. Please try again.",
         variant: "destructive",
       });
@@ -314,23 +349,130 @@ export function DiagramGenerator() {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-2">
-                  <Button
-                    onClick={generateDiagramFromPrompt}
-                    disabled={isGenerating}
-                    className="bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300"
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Generating...
-                      </>
-                    ) : (
-                      <>
-                        <Wand2 className="mr-2 h-4 w-4" />
-                        AI Generate
-                      </>
-                    )}
-                  </Button>
+                  <Dialog open={showAiDialog} onOpenChange={setShowAiDialog}>
+                    <DialogTrigger asChild>
+                      <Button
+                        disabled={isGenerating}
+                        className="bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300"
+                      >
+                        {isGenerating ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Generating...
+                          </>
+                        ) : (
+                          <>
+                            <Wand2 className="mr-2 h-4 w-4" />
+                            AI Generate
+                          </>
+                        )}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[600px] glass-effect border-yellow-400/30">
+                      <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2 text-2xl">
+                          <Sparkles className="h-6 w-6 text-yellow-500" />
+                          AI Diagram Generator
+                        </DialogTitle>
+                        <DialogDescription>
+                          Describe your diagram and let AI create the Mermaid code for you
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="diagram-type" className="text-sm font-medium flex items-center gap-2">
+                            <Workflow className="h-4 w-4 text-muted-foreground" />
+                            Diagram Type
+                          </Label>
+                          <Select value={diagramType} onValueChange={setDiagramType}>
+                            <SelectTrigger id="diagram-type" className="glass-effect border-yellow-400/30">
+                              <SelectValue placeholder="Select diagram type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="flowchart">
+                                <div className="flex items-center gap-2">
+                                  <Workflow className="h-4 w-4" />
+                                  Flowchart
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="sequence">
+                                <div className="flex items-center gap-2">
+                                  <Zap className="h-4 w-4" />
+                                  Sequence Diagram
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="class">
+                                <div className="flex items-center gap-2">
+                                  <Code className="h-4 w-4" />
+                                  Class Diagram
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="er">
+                                <div className="flex items-center gap-2">
+                                  <Database className="h-4 w-4" />
+                                  ER Diagram
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="gitGraph">
+                                <div className="flex items-center gap-2">
+                                  <GitBranch className="h-4 w-4" />
+                                  Git Graph
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="journey">
+                                <div className="flex items-center gap-2">
+                                  <Network className="h-4 w-4" />
+                                  User Journey
+                                </div>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="ai-prompt" className="text-sm font-medium flex items-center gap-2">
+                            <Sparkles className="h-4 w-4 text-yellow-500" />
+                            Describe Your Diagram
+                          </Label>
+                          <Textarea
+                            id="ai-prompt"
+                            value={aiPrompt}
+                            onChange={(e) => setAiPrompt(e.target.value)}
+                            placeholder="E.g., Create a flowchart for a user authentication process with login, signup, and password reset..."
+                            className="min-h-[120px] glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Be specific about the steps, decisions, and flow you want to visualize
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => setShowAiDialog(false)}
+                          className="glass-effect border-yellow-400/30"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={generateDiagramFromPrompt}
+                          disabled={isGenerating || !aiPrompt.trim()}
+                          className="bolt-gradient text-white font-semibold"
+                        >
+                          {isGenerating ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Generating...
+                            </>
+                          ) : (
+                            <>
+                              <Wand2 className="mr-2 h-4 w-4" />
+                              Generate Diagram
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                   
                   <Button
                     variant="outline"

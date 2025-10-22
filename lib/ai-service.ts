@@ -70,11 +70,18 @@ export async function generateAIResponse<T = any>({
         maxTokens,
       });
     } catch (error) {
-      console.error('OpenRouter failed, attempting fallback to Gemini:', error);
+      console.error('OpenRouter failed:', error);
       
-      // If Gemini is available, fall back to it
+      // Only fall back to Gemini if it's explicitly available and valid
+      // Don't fall back if OpenRouter is explicitly set as the provider
+      if (config.provider === 'openrouter') {
+        console.error('OpenRouter is the configured provider and failed. Not falling back to Gemini.');
+        throw error;
+      }
+      
+      // If Gemini is available and provider is not explicitly openrouter, try fallback
       if (config.geminiKey) {
-        console.log('Falling back to Gemini API...');
+        console.log('Attempting fallback to Gemini API...');
       } else {
         throw error;
       }
@@ -112,30 +119,14 @@ export async function validateAIConnection(): Promise<boolean> {
     return true;
   }
 
-  try {
-    if (config.useOpenRouter) {
-      await generateAIResponse({
-        systemPrompt: 'You are a test assistant.',
-        userPrompt: 'Respond with: {"status": "ok"}',
-        maxTokens: 50,
-      });
-      return true;
-    }
-
-    if (config.useGemini) {
-      const model = getGenAI().getGenerativeModel({ model: "gemini-2.0-flash" });
-      await model.generateContent("test");
-      return true;
-    }
-
-    return false;
-  } catch (error) {
-    console.error("AI Connection Test Failed:", error);
-    if (process.env.NODE_ENV === 'production' && !process.env.RUNTIME_ENV) {
-      return true;
-    }
-    throw new Error("Unable to connect to AI API.");
+  // Check if at least one API key is configured
+  if (!config.openRouterKey && !config.geminiKey) {
+    throw new Error("No AI provider configured. Please set either OPENROUTER_API_KEY or GEMINI_API_KEY.");
   }
+
+  // Simplified validation - just check if keys are present
+  // Actual validation will happen during the first API call
+  return true;
 }
 
 /**

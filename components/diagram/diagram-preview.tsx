@@ -65,8 +65,13 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
   }, []);
 
   useEffect(() => {
-    if (!mermaidLoaded || !code.trim()) {
+    if (!mermaidLoaded) {
+      return;
+    }
+
+    if (!code.trim()) {
       setIsLoading(false);
+      setError(null);
       return;
     }
 
@@ -90,7 +95,9 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
         );
         
         if (!hasValidDiagramType) {
-          throw new Error('Please start your diagram with a valid Mermaid diagram type (e.g., flowchart, sequenceDiagram, classDiagram, etc.)');
+          setError('Please start your diagram with a valid Mermaid diagram type (e.g., flowchart TD, sequenceDiagram, classDiagram, etc.)');
+          setIsLoading(false);
+          return;
         }
         
         if (containerRef.current) {
