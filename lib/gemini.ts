@@ -123,6 +123,16 @@ export async function generatePresentationOutline({
   try {
     await validateApiConnection();
     
+    // Check if using a free model with limited output tokens
+    const providerInfo = getAIProviderInfo();
+    const isFreeModel = providerInfo.model?.includes('free') || providerInfo.model?.includes('gemma-3n');
+    
+    // Limit slides for free models to avoid truncation
+    if (isFreeModel && pageCount > 5) {
+      console.warn(`Free model detected. Limiting slides from ${pageCount} to 5 to avoid truncation.`);
+      pageCount = 5;
+    }
+    
     const systemPrompt = `You are an expert presentation designer. Create a PROFESSIONAL presentation outline with ${pageCount} slides.
 
     CRITICAL REQUIREMENTS - EVERY SLIDE MUST HAVE:
@@ -202,7 +212,7 @@ export async function generatePresentationOutline({
       systemPrompt,
       userPrompt,
       temperature: 0.7,
-      maxTokens: 6000,
+      maxTokens: 12000,
     });
 
     // GUARANTEE every slide has professional images and proper chart distribution

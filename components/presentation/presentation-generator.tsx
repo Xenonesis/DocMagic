@@ -25,7 +25,7 @@ export function PresentationGenerator() {
   const [slides, setSlides] = useState<any[]>([]);
   const [slideOutlines, setSlideOutlines] = useState<any[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState("modern-business");
-  const [pageCount, setPageCount] = useState(8);
+  const [pageCount, setPageCount] = useState(5);
   const [isExporting, setIsExporting] = useState(false);
   const [currentStep, setCurrentStep] = useState<GenerationStep>('input');
   const [isSaving, setIsSaving] = useState(false);
@@ -33,11 +33,12 @@ export function PresentationGenerator() {
   const [presentationId, setPresentationId] = useState<string>('');
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const { toast } = useToast();
-  const { isAuthenticated, requireAuth } = useAuthGuard();
+  const { user, isAuthenticated, requireAuth } = useAuthGuard();
 
-  const MAX_FREE_PAGES = 8;
-  const MAX_PRO_PAGES = 100;
-  const isPro = false; // This would be connected to your auth/subscription system
+  // Subscription limits - currently showing free tier limits for all users
+  const MAX_FREE_PAGES = 5;
+  const MAX_PRO_PAGES = 30;
+  const isPro = false; // TODO: Connect to subscription system when ready
 
   const generateSlideOutlines = async () => {
     if (!prompt.trim()) {
@@ -68,11 +69,27 @@ export function PresentationGenerator() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt, pageCount }),
+        body: JSON.stringify({ 
+          prompt, 
+          pageCount,
+          userId: user?.id // Pass user ID for subscription check
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate outline');
+        const errorData = await response.json();
+        
+        // Handle subscription limit errors
+        if (response.status === 403 && errorData.upgradeRequired) {
+          toast({
+            title: "Upgrade Required",
+            description: errorData.error || `Free users can create up to ${MAX_FREE_PAGES} slides. Upgrade to create up to ${MAX_PRO_PAGES} slides!`,
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        throw new Error(errorData.error || 'Failed to generate outline');
       }
 
       const data = await response.json();
@@ -86,7 +103,7 @@ export function PresentationGenerator() {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to generate outline. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to generate outline. Please try again.",
         variant: "destructive",
       });
     } finally {

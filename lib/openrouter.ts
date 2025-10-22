@@ -70,7 +70,7 @@ export async function validateOpenRouterConnection(): Promise<boolean> {
 export async function generateOpenRouterCompletion({
   messages,
   temperature = 0.7,
-  maxTokens = 4000,
+  maxTokens = 8000,
   model,
 }: {
   messages: OpenRouterMessage[];
@@ -140,7 +140,7 @@ export async function generateStructuredResponse<T = any>({
   systemPrompt,
   userPrompt,
   temperature = 0.7,
-  maxTokens = 4000,
+  maxTokens = 8000,
   model,
 }: {
   systemPrompt: string;
@@ -156,6 +156,14 @@ export async function generateStructuredResponse<T = any>({
   // Combine system and user prompts for compatibility
   const isFreeModel = selectedModel.includes('free') || selectedModel.includes('gemma-3n');
   
+  // Free models often have lower token limits (2000-4000 tokens)
+  // Adjust maxTokens accordingly to avoid truncation
+  const adjustedMaxTokens = isFreeModel ? Math.min(maxTokens, 4000) : maxTokens;
+  
+  if (isFreeModel && maxTokens > 4000) {
+    console.warn(`Free model detected (${selectedModel}). Reducing maxTokens from ${maxTokens} to ${adjustedMaxTokens} to avoid truncation.`);
+  }
+  
   const messages: OpenRouterMessage[] = isFreeModel
     ? [{ role: 'user', content: `${systemPrompt}\n\n${userPrompt}` }]
     : [
@@ -166,7 +174,7 @@ export async function generateStructuredResponse<T = any>({
   const response = await generateOpenRouterCompletion({
     messages,
     temperature,
-    maxTokens,
+    maxTokens: adjustedMaxTokens,
     model: selectedModel,
   });
 
@@ -177,6 +185,14 @@ export async function generateStructuredResponse<T = any>({
     return JSON.parse(jsonText);
   } catch (error) {
     console.error('Failed to parse JSON response:', jsonText);
+    console.error('Response length:', response.length, 'characters');
+    console.error('JSON text length:', jsonText.length, 'characters');
+    
+    // Check if response was likely truncated
+    if (!jsonText.trim().endsWith('}') && !jsonText.trim().endsWith(']')) {
+      throw new Error('AI response was truncated. Try increasing maxTokens or reducing the request size.');
+    }
+    
     throw new Error('Failed to parse AI response as JSON');
   }
 }
