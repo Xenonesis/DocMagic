@@ -217,10 +217,16 @@ const CATEGORIES = ["All", "Process", "Architecture", "Development", "Database",
 export function DiagramTemplates({ onSelectTemplate }: DiagramTemplatesProps) {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [copiedTemplate, setCopiedTemplate] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredTemplates = selectedCategory === "All" 
-    ? DIAGRAM_TEMPLATES 
-    : DIAGRAM_TEMPLATES.filter(template => template.category === selectedCategory);
+  const filteredTemplates = DIAGRAM_TEMPLATES.filter(template => {
+    const matchesCategory = selectedCategory === "All" || template.category === selectedCategory;
+    const matchesSearch = searchQuery === "" || 
+      template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      template.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      template.category.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   const copyTemplateCode = async (template: DiagramTemplate) => {
     try {
@@ -238,93 +244,151 @@ export function DiagramTemplates({ onSelectTemplate }: DiagramTemplatesProps) {
         <h2 className="text-2xl sm:text-3xl font-bold mb-3 bolt-gradient-text">
           Professional Diagram Templates
         </h2>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
           Choose from our collection of professionally designed diagram templates. 
           Each template includes optimized Mermaid syntax and best practices.
         </p>
+        
+        {/* Search Bar */}
+        <div className="max-w-md mx-auto">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search templates..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 pl-10 glass-effect border border-yellow-400/30 rounded-lg focus:border-yellow-400/60 focus:ring-2 focus:ring-yellow-400/20 outline-none text-sm"
+            />
+            <Sparkles className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-yellow-500" />
+          </div>
+        </div>
       </div>
 
       {/* Category Filter */}
       <div className="flex flex-wrap justify-center gap-2">
-        {CATEGORIES.map((category) => (
-          <Button
-            key={category}
-            variant={selectedCategory === category ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSelectedCategory(category)}
-            className={selectedCategory === category ? "bolt-gradient text-white" : "glass-effect"}
-          >
-            {category}
-          </Button>
-        ))}
+        {CATEGORIES.map((category) => {
+          const count = category === "All" 
+            ? DIAGRAM_TEMPLATES.length 
+            : DIAGRAM_TEMPLATES.filter(t => t.category === category).length;
+          return (
+            <Button
+              key={category}
+              variant={selectedCategory === category ? "default" : "outline"}
+              size="sm"
+              onClick={() => setSelectedCategory(category)}
+              className={selectedCategory === category ? "bolt-gradient text-white shadow-lg" : "glass-effect hover:border-yellow-400/50"}
+            >
+              {category}
+              <Badge variant="secondary" className="ml-2 text-xs">
+                {count}
+              </Badge>
+            </Button>
+          );
+        })}
       </div>
+
+      {/* Results count */}
+      {searchQuery && (
+        <div className="text-center text-sm text-muted-foreground">
+          Found {filteredTemplates.length} template{filteredTemplates.length !== 1 ? 's' : ''} matching "{searchQuery}"
+        </div>
+      )}
 
       {/* Templates Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredTemplates.map((template) => (
-          <Card key={template.id} className="glass-effect border-yellow-400/20 hover:shadow-xl transition-all duration-300 group relative overflow-hidden hover:scale-105">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-lg bolt-gradient text-white">
-                    {template.icon}
+      {filteredTemplates.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="inline-block p-4 rounded-full bg-muted/30 mb-4">
+            <Sparkles className="h-8 w-8 text-muted-foreground" />
+          </div>
+          <p className="text-muted-foreground">No templates found matching your criteria</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setSearchQuery("");
+              setSelectedCategory("All");
+            }}
+            className="mt-4"
+          >
+            Clear Filters
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredTemplates.map((template, index) => (
+            <Card 
+              key={template.id} 
+              className="glass-effect border-yellow-400/20 hover:shadow-xl transition-all duration-300 group relative overflow-hidden hover:scale-105"
+              style={{
+                animationDelay: `${index * 50}ms`,
+                animation: 'fadeIn 0.5s ease-out forwards'
+              }}
+            >
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="p-2 rounded-lg bolt-gradient text-white group-hover:scale-110 transition-transform">
+                      {template.icon}
+                    </div>
+                    <Badge variant="outline" className="text-xs">
+                      {template.category}
+                    </Badge>
                   </div>
-                  <Badge variant="outline" className="text-xs">
-                    {template.category}
-                  </Badge>
                 </div>
-              </div>
-              <CardTitle className="text-lg group-hover:bolt-gradient-text transition-all">
-                {template.name}
-              </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                {template.description}
-              </p>
-            </CardHeader>
+                <CardTitle className="text-lg group-hover:bolt-gradient-text transition-all">
+                  {template.name}
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  {template.description}
+                </p>
+              </CardHeader>
 
-            <CardContent className="space-y-4">
-              {/* Preview */}
-              <div className="p-3 bg-muted/30 rounded-lg border border-border/50">
-                <p className="text-xs text-muted-foreground mb-1">Preview:</p>
-                <p className="text-sm font-mono">{template.preview}</p>
-              </div>
+              <CardContent className="space-y-4">
+                {/* Preview */}
+                <div className="p-3 bg-gradient-to-br from-muted/30 to-muted/20 rounded-lg border border-border/50 group-hover:border-yellow-400/30 transition-colors">
+                  <p className="text-xs text-muted-foreground mb-1 font-medium">Flow Preview:</p>
+                  <p className="text-sm font-mono text-foreground/80">{template.preview}</p>
+                </div>
 
-              {/* Actions */}
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => onSelectTemplate(template.id, template.code)}
-                  className="flex-1 bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300"
-                >
-                  <Eye className="mr-2 h-4 w-4" />
-                  Use Template
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => copyTemplateCode(template)}
-                  className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
-                >
-                  {copiedTemplate === template.id ? (
-                    <Check className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
+                {/* Actions */}
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => onSelectTemplate(template.id, template.code)}
+                    className="flex-1 bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300 hover:shadow-lg"
+                  >
+                    <Eye className="mr-2 h-4 w-4" />
+                    Use Template
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => copyTemplateCode(template)}
+                    className="glass-effect border-yellow-400/30 hover:border-yellow-400/60 hover:scale-110 transition-all"
+                    title="Copy code to clipboard"
+                  >
+                    {copiedTemplate === template.id ? (
+                      <Check className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
 
-              {/* Code Preview */}
-              <details className="group/details">
-                <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground transition-colors">
-                  View Code
-                </summary>
-                <pre className="mt-2 p-2 bg-muted/50 rounded text-xs overflow-x-auto">
-                  <code>{template.code}</code>
-                </pre>
-              </details>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                {/* Code Preview */}
+                <details className="group/details">
+                  <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+                    <span className="group-open/details:hidden">▶ View Code</span>
+                    <span className="hidden group-open/details:inline">▼ Hide Code</span>
+                  </summary>
+                  <pre className="mt-2 p-3 bg-muted/50 rounded-lg text-xs overflow-x-auto border border-border/30">
+                    <code className="text-foreground/80">{template.code}</code>
+                  </pre>
+                </details>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {/* Help Section */}
       <div className="glass-effect p-6 rounded-xl border border-yellow-400/20 bg-blue-50/10">

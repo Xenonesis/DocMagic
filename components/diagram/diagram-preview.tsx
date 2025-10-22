@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, ZoomIn, ZoomOut, Maximize2, Minimize2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface DiagramPreviewProps {
   code: string;
@@ -15,6 +16,8 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [mermaidLoaded, setMermaidLoaded] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
     // Dynamically import mermaid to avoid SSR issues
@@ -147,13 +150,37 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
     return () => clearTimeout(timeoutId);
   }, [code, mermaidLoaded, fullScreen]);
 
+  const handleZoomIn = () => {
+    setZoom(prev => Math.min(prev + 0.2, 3));
+  };
+
+  const handleZoomOut = () => {
+    setZoom(prev => Math.max(prev - 0.2, 0.5));
+  };
+
+  const handleResetZoom = () => {
+    setZoom(1);
+  };
+
+  const toggleFullScreen = () => {
+    setIsFullScreen(!isFullScreen);
+  };
+
   if (!code.trim()) {
     return (
       <Card className="h-full flex items-center justify-center min-h-[300px]">
-        <CardContent className="text-center">
-          <div className="text-muted-foreground">
-            <p className="font-medium">No diagram code provided</p>
-            <p className="text-sm mt-1">Enter Mermaid syntax to see your diagram</p>
+        <CardContent className="text-center py-12">
+          <div className="text-muted-foreground space-y-4">
+            <div className="inline-block p-4 rounded-full bg-muted/30 mb-2">
+              <Loader2 className="h-8 w-8 text-yellow-500" />
+            </div>
+            <p className="font-medium text-lg">No diagram code provided</p>
+            <p className="text-sm">Enter Mermaid syntax to see your diagram render in real-time</p>
+            <div className="pt-4 text-xs space-y-1">
+              <p className="font-mono text-muted-foreground/70">Try starting with:</p>
+              <code className="block bg-muted/50 px-3 py-2 rounded">flowchart TD</code>
+              <code className="block bg-muted/50 px-3 py-2 rounded">A[Start] --&gt; B[End]</code>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -161,33 +188,83 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
   }
 
   return (
-    <div className={`w-full ${fullScreen ? 'min-h-[600px]' : 'min-h-[300px]'} relative`}>
+    <div className={`w-full ${fullScreen || isFullScreen ? 'min-h-[600px]' : 'min-h-[300px]'} relative group`}>
+      {/* Zoom Controls */}
+      <div className="absolute top-4 right-4 z-20 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div className="glass-effect rounded-lg border border-yellow-400/20 p-1 flex flex-col gap-1">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={handleZoomIn}
+            className="h-8 w-8 p-0 hover:bg-yellow-500/10"
+            title="Zoom In (Ctrl +)"
+          >
+            <ZoomIn className="h-4 w-4" />
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={handleResetZoom}
+            className="h-8 w-8 p-0 hover:bg-yellow-500/10 text-xs"
+            title="Reset Zoom (Ctrl 0)"
+          >
+            {Math.round(zoom * 100)}%
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={handleZoomOut}
+            className="h-8 w-8 p-0 hover:bg-yellow-500/10"
+            title="Zoom Out (Ctrl -)"
+          >
+            <ZoomOut className="h-4 w-4" />
+          </Button>
+        </div>
+        {!fullScreen && (
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={toggleFullScreen}
+            className="glass-effect border border-yellow-400/20 h-8 w-8 p-0 hover:bg-yellow-500/10"
+            title="Toggle Fullscreen"
+          >
+            {isFullScreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+          </Button>
+        )}
+      </div>
+
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm z-10">
-          <div className="flex items-center gap-2">
-            <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
-            <span className="text-sm text-muted-foreground">Rendering diagram...</span>
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-yellow-500" />
+            <span className="text-sm text-muted-foreground font-medium">Rendering diagram...</span>
+            <span className="text-xs text-muted-foreground/70">This may take a moment</span>
           </div>
         </div>
       )}
       
       {error && (
         <div className="p-4">
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="border-red-300">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
+            <AlertDescription>
+              <strong className="block mb-1">Syntax Error</strong>
+              {error}
+            </AlertDescription>
           </Alert>
         </div>
       )}
       
       <div 
         ref={containerRef} 
-        className={`w-full ${fullScreen ? 'min-h-[600px]' : 'min-h-[300px]'} overflow-auto`}
+        className={`w-full ${fullScreen || isFullScreen ? 'min-h-[600px]' : 'min-h-[300px]'} overflow-auto transition-all duration-300`}
         style={{ 
           display: 'flex', 
           justifyContent: 'center', 
           alignItems: 'center',
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
+          transform: `scale(${zoom})`,
+          transformOrigin: 'center center'
         }}
       />
     </div>

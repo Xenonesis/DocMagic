@@ -42,7 +42,11 @@ import {
   Database,
   Network,
   Zap,
-  Lock
+  Lock,
+  Lightbulb,
+  BookOpen,
+  Save,
+  History
 } from "lucide-react";
 import { toPng, toSvg } from 'html-to-image';
 
@@ -112,9 +116,68 @@ export function DiagramGenerator() {
   const [showAiDialog, setShowAiDialog] = useState(false);
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [pendingExportFormat, setPendingExportFormat] = useState<'png' | 'svg' | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
+  const [history, setHistory] = useState<string[]>([DIAGRAM_EXAMPLES.flowchart]);
+  const [historyIndex, setHistoryIndex] = useState(0);
   const { toast } = useToast();
   const { isAuthenticated, requireAuth } = useAuthGuard();
   const diagramRef = useRef<HTMLDivElement>(null);
+
+  // Add to history when code changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (diagramCode !== history[historyIndex]) {
+        const newHistory = history.slice(0, historyIndex + 1);
+        newHistory.push(diagramCode);
+        // Keep only last 20 states
+        if (newHistory.length > 20) {
+          newHistory.shift();
+        }
+        setHistory(newHistory);
+        setHistoryIndex(newHistory.length - 1);
+      }
+    }, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [diagramCode]);
+
+  const handleUndo = () => {
+    if (historyIndex > 0) {
+      setHistoryIndex(historyIndex - 1);
+      setDiagramCode(history[historyIndex - 1]);
+    }
+  };
+
+  const handleRedo = () => {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(historyIndex + 1);
+      setDiagramCode(history[historyIndex + 1]);
+    }
+  };
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + Z for undo
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        handleUndo();
+      }
+      // Ctrl/Cmd + Shift + Z or Ctrl/Cmd + Y for redo
+      if (((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') || 
+          ((e.ctrlKey || e.metaKey) && e.key === 'y')) {
+        e.preventDefault();
+        handleRedo();
+      }
+      // Ctrl/Cmd + S to save/copy
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        copyToClipboard();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [historyIndex, history]);
 
   const handleTemplateSelect = (template: string) => {
     setSelectedTemplate(template);
@@ -358,24 +421,24 @@ export function DiagramGenerator() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="flex justify-center mb-6">
-          <TabsList className="glass-effect border border-yellow-400/20 p-1 h-auto">
+          <TabsList className="glass-effect border border-yellow-400/30 p-1.5 h-auto bg-white/80 dark:bg-gray-900/80 shadow-lg">
             <TabsTrigger
               value="editor"
-              className="data-[state=active]:bolt-gradient data-[state=active]:text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2"
+              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
             >
               <Code className="h-4 w-4" />
               Code Editor
             </TabsTrigger>
             <TabsTrigger
               value="templates"
-              className="data-[state=active]:bolt-gradient data-[state=active]:text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2"
+              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
             >
               <Workflow className="h-4 w-4" />
               Templates
             </TabsTrigger>
             <TabsTrigger
               value="preview"
-              className="data-[state=active]:bolt-gradient data-[state=active]:text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2"
+              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
             >
               <Eye className="h-4 w-4" />
               Preview
@@ -384,6 +447,60 @@ export function DiagramGenerator() {
         </div>
 
         <TabsContent value="editor" className="space-y-6">
+          {/* Quick Tips Bar */}
+          <div className="glass-effect p-3 rounded-lg border border-blue-400/20 bg-blue-50/30">
+            <div className="flex items-start gap-3">
+              <Lightbulb className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
+              <div className="flex-1 text-sm">
+                <p className="font-medium text-blue-900 mb-1">💡 Pro Tips</p>
+                <p className="text-blue-700 text-xs">
+                  Use <kbd className="px-1.5 py-0.5 bg-white/50 rounded border border-blue-300 font-mono text-xs">Ctrl+Z</kbd> to undo, 
+                  <kbd className="px-1.5 py-0.5 bg-white/50 rounded border border-blue-300 font-mono text-xs ml-1">Ctrl+S</kbd> to copy code.
+                  Preview updates automatically as you type!
+                </p>
+              </div>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowHelp(!showHelp)}
+                className="text-blue-700 hover:bg-blue-100/50"
+              >
+                <BookOpen className="h-4 w-4 mr-1" />
+                {showHelp ? 'Hide' : 'Help'}
+              </Button>
+            </div>
+          </div>
+
+          {/* Help Panel */}
+          {showHelp && (
+            <div className="glass-effect p-4 rounded-lg border border-yellow-400/20 bg-gradient-to-r from-yellow-50/30 to-orange-50/30">
+              <h3 className="text-base font-semibold mb-3 flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-yellow-500" />
+                Quick Reference Guide
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div className="space-y-2">
+                  <h4 className="font-medium text-xs uppercase text-muted-foreground">Node Shapes</h4>
+                  <div className="space-y-1 text-xs font-mono">
+                    <div><code className="bg-white/50 px-1 py-0.5 rounded">A[Rectangle]</code> - Standard node</div>
+                    <div><code className="bg-white/50 px-1 py-0.5 rounded">B(Rounded)</code> - Rounded edges</div>
+                    <div><code className="bg-white/50 px-1 py-0.5 rounded">C{"{Diamond}"}</code> - Decision</div>
+                    <div><code className="bg-white/50 px-1 py-0.5 rounded">D[["Subroutine"]]</code> - Process</div>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-medium text-xs uppercase text-muted-foreground">Connections</h4>
+                  <div className="space-y-1 text-xs font-mono">
+                    <div><code className="bg-white/50 px-1 py-0.5 rounded">A --&gt; B</code> - Arrow</div>
+                    <div><code className="bg-white/50 px-1 py-0.5 rounded">A --- B</code> - Line</div>
+                    <div><code className="bg-white/50 px-1 py-0.5 rounded">A -.&gt; B</code> - Dotted arrow</div>
+                    <div><code className="bg-white/50 px-1 py-0.5 rounded">A --&gt;|text| B</code> - Labeled arrow</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             {/* Left Side - Code Editor */}
             <div className="space-y-6">
@@ -403,9 +520,14 @@ export function DiagramGenerator() {
               <div className="space-y-4">
                 {/* Quick Template Buttons */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium flex items-center gap-2">
-                    <Workflow className="h-4 w-4 text-muted-foreground" />
-                    Quick Templates
+                  <Label className="text-sm font-medium flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <Workflow className="h-4 w-4 text-muted-foreground" />
+                      Quick Templates
+                    </span>
+                    <span className="text-xs text-muted-foreground font-normal">
+                      {Object.keys(DIAGRAM_EXAMPLES).length} templates
+                    </span>
                   </Label>
                   <div className="flex flex-wrap gap-2">
                     {Object.keys(DIAGRAM_EXAMPLES).map((template) => (
@@ -414,7 +536,11 @@ export function DiagramGenerator() {
                         variant={selectedTemplate === template ? "default" : "outline"}
                         size="sm"
                         onClick={() => handleTemplateSelect(template)}
-                        className="text-xs capitalize"
+                        className={`text-xs capitalize transition-all ${
+                          selectedTemplate === template 
+                            ? "bolt-gradient text-white shadow-lg" 
+                            : "glass-effect hover:border-yellow-400/50"
+                        }`}
                       >
                         {template === 'classDiagram' ? 'Class' : 
                          template === 'erDiagram' ? 'ER Diagram' :
@@ -427,17 +553,48 @@ export function DiagramGenerator() {
 
                 {/* Code Editor */}
                 <div className="space-y-2">
-                  <Label htmlFor="diagramCode" className="text-sm font-medium flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-yellow-500" />
-                    Mermaid Code
-                  </Label>
-                  <Textarea
-                    id="diagramCode"
-                    value={diagramCode}
-                    onChange={(e) => setDiagramCode(e.target.value)}
-                    placeholder="Enter your Mermaid diagram code here..."
-                    className="min-h-[300px] font-mono text-sm glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20 resize-none"
-                  />
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="diagramCode" className="text-sm font-medium flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-yellow-500" />
+                      Mermaid Code
+                    </Label>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={handleUndo}
+                        disabled={historyIndex === 0}
+                        className="h-7 px-2 text-xs hover:bg-yellow-500/10"
+                        title="Undo (Ctrl+Z)"
+                      >
+                        <History className="h-3 w-3 mr-1" />
+                        Undo
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={handleRedo}
+                        disabled={historyIndex === history.length - 1}
+                        className="h-7 px-2 text-xs hover:bg-yellow-500/10"
+                        title="Redo (Ctrl+Shift+Z)"
+                      >
+                        Redo
+                        <History className="h-3 w-3 ml-1 rotate-180" />
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <Textarea
+                      id="diagramCode"
+                      value={diagramCode}
+                      onChange={(e) => setDiagramCode(e.target.value)}
+                      placeholder="Enter your Mermaid diagram code here..."
+                      className="min-h-[300px] font-mono text-sm glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20 resize-none"
+                    />
+                    <div className="absolute bottom-2 right-2 text-xs text-muted-foreground bg-white/80 px-2 py-1 rounded">
+                      {diagramCode.split('\n').length} lines
+                    </div>
+                  </div>
                 </div>
 
                 {/* Action Buttons */}

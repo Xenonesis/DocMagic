@@ -1,7 +1,7 @@
 "use client";
 import { SiteHeader } from "@/components/site-header";
 import { DiagramGenerator } from "@/components/diagram/diagram-generator";
-import { Sparkles, Workflow, Zap, Star, Wand2, Share2 } from "lucide-react";
+import { Sparkles, Workflow, Zap, Star, Wand2, Share2, Eye, Download, Code } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DiagramGeneratorSkeleton } from "@/components/ui/skeleton";
 
@@ -10,7 +10,7 @@ export default function DiagramPage() {
 
   useEffect(() => {
     // Simulate loading
-    const timer = setTimeout(() => setIsLoading(false), 1500);
+    const timer = setTimeout(() => setIsLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -31,27 +31,27 @@ export default function DiagramPage() {
       />
 
       <SiteHeader />
-      <main className="flex-1 relative z-10 flex items-center justify-center">
-        <div className="container py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <main className="flex-1 relative z-10">
+        <div className="container py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           {/* Enhanced Header */}
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-effect mb-4 sm:mb-6 shimmer">
-              <Workflow className="h-4 w-4 text-yellow-500" />
-              <span className="text-sm font-medium">Diagram Studio</span>
-              <Share2 className="h-4 w-4 text-blue-500" />
+          <div className="text-center mb-6 sm:mb-8 md:mb-10 animate-in fade-in slide-in-from-top duration-700">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full glass-effect mb-3 sm:mb-4 md:mb-6 shimmer">
+              <Workflow className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500" />
+              <span className="text-xs sm:text-sm font-medium">Diagram Studio</span>
+              <Share2 className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500" />
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight ">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6 leading-tight px-4">
               Create Visual{" "}
               <span className="bolt-gradient-text relative inline-block">
                 Diagrams & Flowcharts
                 <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
-                  <Wand2 className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-yellow-500 animate-bounce" />
+                  <Wand2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 lg:h-8 lg:w-8 text-yellow-500 animate-bounce" />
                 </div>
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg lg:text-xl leading-7 sm:leading-8 text-muted-foreground max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-0">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-6 sm:leading-7 md:leading-8 text-muted-foreground max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-6 md:px-0">
               Design{" "}
               <span className="font-semibold text-yellow-600">
                 flowcharts
@@ -66,33 +66,39 @@ export default function DiagramPage() {
               </span>{" "}
               with{" "}
               <span className="font-semibold bolt-gradient-text">
-                Mermaid syntax and live preview
+                AI-powered Mermaid syntax
               </span>
             </p>
 
             {/* Stats bar */}
-            <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4 sm:gap-6">
-              <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Live
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Preview
+            <div className="mt-4 sm:mt-6 md:mt-8 flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 px-4">
+              <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
+                <Sparkles className="inline h-3 w-3 sm:h-4 sm:w-4 text-yellow-500 mr-1" />
+                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">
+                  AI-Powered
                 </span>
               </div>
-              <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
+              <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
+                <Eye className="inline h-3 w-3 sm:h-4 sm:w-4 text-blue-500 mr-1" />
+                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">
+                  Live Preview
+                </span>
+              </div>
+              <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
+                <Download className="inline h-3 w-3 sm:h-4 sm:w-4 text-green-500 mr-1" />
+                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">
                   Export
                 </span>
-                <span className="text-muted-foreground text-xs ml-1">
+                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">
                   SVG/PNG
                 </span>
               </div>
-              <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
+              <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
+                <Code className="inline h-3 w-3 sm:h-4 sm:w-4 text-purple-500 mr-1" />
+                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">
                   Mermaid
                 </span>
-                <span className="text-muted-foreground text-xs ml-1">
+                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">
                   Syntax
                 </span>
               </div>
