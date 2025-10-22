@@ -25,6 +25,7 @@ import {
 import { DiagramPreview } from "@/components/diagram/diagram-preview";
 import { DiagramTemplates } from "@/components/diagram/diagram-templates";
 import { useToast } from "@/hooks/use-toast";
+import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
 import { 
   Loader2, 
   Sparkles, 
@@ -40,7 +41,8 @@ import {
   GitBranch,
   Database,
   Network,
-  Zap
+  Zap,
+  Lock
 } from "lucide-react";
 import { toPng, toSvg } from 'html-to-image';
 
@@ -107,7 +109,10 @@ export function DiagramGenerator() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [diagramType, setDiagramType] = useState("flowchart");
   const [showAiDialog, setShowAiDialog] = useState(false);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const [pendingExportFormat, setPendingExportFormat] = useState<'png' | 'svg' | null>(null);
   const { toast } = useToast();
+  const { isAuthenticated, requireAuth } = useAuthGuard();
   const diagramRef = useRef<HTMLDivElement>(null);
 
   const handleTemplateSelect = (template: string) => {
@@ -191,6 +196,13 @@ export function DiagramGenerator() {
   };
 
   const exportDiagram = async (format: 'png' | 'svg') => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      setPendingExportFormat(format);
+      setShowAuthDialog(true);
+      return;
+    }
+
     if (!diagramRef.current) return;
     
     setIsExporting(true);
@@ -235,6 +247,11 @@ export function DiagramGenerator() {
     }
   };
 
+  const handleAuthDialogLogin = () => {
+    setShowAuthDialog(false);
+    requireAuth(PROTECTED_ACTIVITIES.EXPORT_DIAGRAM);
+  };
+
   const shareDiagram = async () => {
     try {
       const shareData = {
@@ -263,6 +280,81 @@ export function DiagramGenerator() {
 
   return (
     <div className="space-y-6">
+      {/* Authentication Required Dialog */}
+      <Dialog open={showAuthDialog} onOpenChange={setShowAuthDialog}>
+        <DialogContent className="sm:max-w-[500px] glass-effect border-yellow-400/30">
+          <DialogHeader>
+            <div className="mx-auto w-16 h-16 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full flex items-center justify-center mb-4">
+              <Lock className="h-8 w-8 text-white" />
+            </div>
+            <DialogTitle className="text-2xl text-center">
+              Sign in to Export Diagrams
+            </DialogTitle>
+            <DialogDescription className="text-center text-base">
+              Create diagrams freely, but sign in to export them as PNG or SVG files.
+              Join thousands of professionals using docverse!
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="glass-effect p-4 rounded-lg border border-yellow-400/20">
+              <h4 className="font-semibold mb-2 flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-yellow-500" />
+                Why sign in?
+              </h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span>Export diagrams in high-quality PNG and SVG formats</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span>Save your diagrams for future access</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span>Access advanced AI features and templates</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span>Free to start - No credit card required</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <Zap className="h-4 w-4 text-yellow-500" />
+                <span>10K+ users</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Sparkles className="h-4 w-4 text-blue-500" />
+                <span>AI-powered</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Check className="h-4 w-4 text-green-500" />
+                <span>Free plan</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setShowAuthDialog(false)}
+              className="glass-effect border-yellow-400/30 flex-1"
+            >
+              Continue Creating
+            </Button>
+            <Button
+              onClick={handleAuthDialogLogin}
+              className="bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300 flex-1"
+            >
+              <Sparkles className="mr-2 h-4 w-4" />
+              Sign In to Export
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="flex justify-center mb-6">
           <TabsList className="glass-effect border border-yellow-400/20 p-1 h-auto">
@@ -513,18 +605,27 @@ export function DiagramGenerator() {
                 <h3 className="text-lg font-medium mb-3 flex items-center gap-2">
                   <Download className="h-4 w-4 text-yellow-500" />
                   Export Options
+                  {!isAuthenticated && (
+                    <span className="ml-auto text-xs text-muted-foreground flex items-center gap-1">
+                      <Lock className="h-3 w-3" />
+                      Login required
+                    </span>
+                  )}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   <Button
                     variant="outline"
                     onClick={() => exportDiagram('png')}
                     disabled={isExporting}
-                    className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
+                    className="glass-effect border-yellow-400/30 hover:border-yellow-400/60 relative"
                   >
                     {isExporting ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
-                      <FileImage className="mr-2 h-4 w-4" />
+                      <>
+                        <FileImage className="mr-2 h-4 w-4" />
+                        {!isAuthenticated && <Lock className="ml-1 h-3 w-3 opacity-50" />}
+                      </>
                     )}
                     Export PNG
                   </Button>
@@ -532,12 +633,15 @@ export function DiagramGenerator() {
                     variant="outline"
                     onClick={() => exportDiagram('svg')}
                     disabled={isExporting}
-                    className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
+                    className="glass-effect border-yellow-400/30 hover:border-yellow-400/60 relative"
                   >
                     {isExporting ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
-                      <Download className="mr-2 h-4 w-4" />
+                      <>
+                        <Download className="mr-2 h-4 w-4" />
+                        {!isAuthenticated && <Lock className="ml-1 h-3 w-3 opacity-50" />}
+                      </>
                     )}
                     Export SVG
                   </Button>
@@ -593,14 +697,31 @@ export function DiagramGenerator() {
               <h3 className="text-xl font-medium mb-4 flex items-center gap-2">
                 <Download className="h-5 w-5 text-yellow-500" />
                 Export & Share
+                {!isAuthenticated && (
+                  <span className="ml-auto text-sm text-muted-foreground flex items-center gap-1">
+                    <Lock className="h-4 w-4" />
+                    Login required to export
+                  </span>
+                )}
               </h3>
+              {!isAuthenticated && (
+                <div className="mb-4 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                  <p className="text-sm text-muted-foreground flex items-start gap-2">
+                    <Lock className="h-4 w-4 mt-0.5 text-yellow-500 flex-shrink-0" />
+                    <span>
+                      <strong className="text-foreground">Sign in to export diagrams.</strong> You can create and edit diagrams freely, but exporting requires an account.
+                    </span>
+                  </p>
+                </div>
+              )}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Button
                   onClick={() => exportDiagram('png')}
                   disabled={isExporting}
                   className="bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300"
                 >
-                  <FileImage className="mr-2 h-4 w-4" />
+                  {!isAuthenticated && <Lock className="mr-2 h-4 w-4" />}
+                  {!isAuthenticated ? null : <FileImage className="mr-2 h-4 w-4" />}
                   PNG Export
                 </Button>
                 <Button
@@ -609,7 +730,8 @@ export function DiagramGenerator() {
                   variant="outline"
                   className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
                 >
-                  <Download className="mr-2 h-4 w-4" />
+                  {!isAuthenticated && <Lock className="mr-2 h-4 w-4" />}
+                  {!isAuthenticated ? null : <Download className="mr-2 h-4 w-4" />}
                   SVG Export
                 </Button>
                 <Button
