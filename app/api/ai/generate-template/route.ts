@@ -1,7 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+import { type NextRequest, NextResponse } from 'next/server';
+import { generateAIResponse } from '@/lib/ai-service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,8 +11,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     // Create type-specific prompts
     const systemPrompts = {
@@ -48,29 +44,21 @@ Make the template engaging and visually appealing.`
     };
 
     const systemPrompt = systemPrompts[type as keyof typeof systemPrompts];
-    const fullPrompt = `${systemPrompt}
-
-User request: ${prompt}
-
-Please return only valid JSON without any markdown formatting or additional text.`;
-
-    const result = await model.generateContent(fullPrompt);
-    const response = await result.response;
-    const text = response.text();
-
-    // Try to parse the JSON response
-    let generatedTemplate;
-    try {
-      // Remove any markdown formatting if present
-      const cleanedText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      generatedTemplate = JSON.parse(cleanedText);
-    } catch (parseError) {
-      console.error('Failed to parse AI response:', text);
+    if (!systemPrompt) {
       return NextResponse.json(
-        { error: 'Failed to generate valid template structure' },
-        { status: 500 }
+        { error: 'Invalid template type' },
+        { status: 400 }
       );
     }
+
+    const userPrompt = `User request: ${prompt}\n\nPlease return only valid JSON without any markdown formatting or additional text.`;
+
+    const generatedTemplate = await generateAIResponse({
+      systemPrompt,
+      userPrompt,
+      temperature: 0.7,
+      maxTokens: 3000,
+    });
 
     // Validate the response structure
     if (!generatedTemplate.title || !generatedTemplate.content) {

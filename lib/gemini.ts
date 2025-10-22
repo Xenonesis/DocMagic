@@ -1,4 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { generateAIResponse, validateAIConnection, getAIProviderInfo } from "./ai-service";
+import { extractJsonFromMarkdown } from "./openrouter";
 
 // Get API key with fallback for build time
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
@@ -21,29 +23,8 @@ function getGenAI(): GoogleGenerativeAI {
   return genAI;
 }
 
-function extractJsonFromMarkdown(text: string): string {
-  const jsonMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
-  return jsonMatch ? jsonMatch[1].trim() : text.trim();
-}
-
 async function validateApiConnection() {
-  try {
-    // Skip API validation during build time
-    if (process.env.NODE_ENV === 'production' && !process.env.RUNTIME_ENV) {
-      return true;
-    }
-    
-    const model = getGenAI().getGenerativeModel({ model: "gemini-2.0-flash" });
-    await model.generateContent("test");
-    return true;
-  } catch (error) {
-    console.error("API Connection Test Failed:", error);
-    // Don't throw during build time
-    if (process.env.NODE_ENV === 'production' && !process.env.RUNTIME_ENV) {
-      return true;
-    }
-    throw new Error("Unable to connect to Google Generative AI API.");
-  }
+  return await validateAIConnection();
 }
 
 // Basic resume generator function
@@ -58,70 +39,73 @@ export async function generateResume({
 }) {
   try {
     await validateApiConnection();
-    const model = getGenAI().getGenerativeModel({ model: "gemini-2.0-flash" });
     
-    const systemPrompt = `Create a professional resume for ${name} (${email}) based on: "${prompt}".
+    const systemPrompt = `You are an expert resume creator. Create a professional resume based on the provided information.
 
-    Return as JSON with this structure:
+Return ONLY valid JSON with this exact structure (no markdown, no extra text):
+{
+  "name": "${name}",
+  "email": "${email}",
+  "phone": "",
+  "location": "",
+  "summary": "Professional summary based on the prompt",
+  "experience": [
     {
-      "name": "${name}",
-      "email": "${email}",
-      "phone": "",
-      "location": "",
-      "summary": "Professional summary based on the prompt",
-      "experience": [
-        {
-          "title": "Job title",
-          "company": "Company name",
-          "location": "City, State",
-          "date": "MM/YYYY - MM/YYYY",
-          "description": [
-            "• Achievement with quantified results",
-            "• Technical accomplishment with relevant skills",
-            "• Leadership or collaboration example"
-          ]
-        }
-      ],
-      "education": [
-        {
-          "degree": "Degree type and field",
-          "institution": "University/College name",
-          "location": "City, State",
-          "date": "MM/YYYY",
-          "gpa": "",
-          "honors": ""
-        }
-      ],
-      "skills": {
-        "technical": ["relevant technical skills"],
-        "programming": ["programming languages/frameworks"],
-        "tools": ["software and tools"],
-        "soft": ["communication, leadership, problem-solving"]
-      },
-      "projects": [
-        {
-          "name": "Project name",
-          "description": "Brief description with technologies used",
-          "technologies": ["tech stack"],
-          "link": ""
-        }
-      ],
-      "certifications": [
-        {
-          "name": "Certification name",
-          "issuer": "Issuing organization",
-          "date": "MM/YYYY",
-          "credential": ""
-        }
+      "title": "Job title",
+      "company": "Company name",
+      "location": "City, State",
+      "date": "MM/YYYY - MM/YYYY",
+      "description": [
+        "• Achievement with quantified results",
+        "• Technical accomplishment with relevant skills",
+        "• Leadership or collaboration example"
       ]
     }
+  ],
+  "education": [
+    {
+      "degree": "Degree type and field",
+      "institution": "University/College name",
+      "location": "City, State",
+      "date": "MM/YYYY",
+      "gpa": "",
+      "honors": ""
+    }
+  ],
+  "skills": {
+    "technical": ["relevant technical skills"],
+    "programming": ["programming languages/frameworks"],
+    "tools": ["software and tools"],
+    "soft": ["communication, leadership, problem-solving"]
+  },
+  "projects": [
+    {
+      "name": "Project name",
+      "description": "Brief description with technologies used",
+      "technologies": ["tech stack"],
+      "link": ""
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Certification name",
+      "issuer": "Issuing organization",
+      "date": "MM/YYYY",
+      "credential": ""
+    }
+  ]
+}
 
-    Generate realistic and relevant content based on the prompt. Include quantifiable achievements and use professional language throughout.`;
+Generate realistic and relevant content based on the prompt. Include quantifiable achievements and use professional language throughout.`;
 
-    const result = await model.generateContent(systemPrompt);
-    const response = await result.response;
-    const jsonText = extractJsonFromMarkdown(response.text());
-    return JSON.parse(jsonText);
+    const userPrompt = `Create a professional resume for ${name} (${email}) based on: "${prompt}"`;
+
+    return await generateAIResponse({
+      systemPrompt,
+      userPrompt,
+      temperature: 0.7,
+      maxTokens: 4000,
+    });
   } catch (error) {
     console.error("Error generating resume:", error);
     throw new Error(`Failed to generate resume: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -138,9 +122,8 @@ export async function generatePresentationOutline({
 }) {
   try {
     await validateApiConnection();
-    const model = getGenAI().getGenerativeModel({ model: "gemini-2.0-flash" });
     
-    const systemPrompt = `Create a PROFESSIONAL presentation outline for: "${prompt}" with ${pageCount} slides.
+    const systemPrompt = `You are an expert presentation designer. Create a PROFESSIONAL presentation outline with ${pageCount} slides.
 
     CRITICAL REQUIREMENTS - EVERY SLIDE MUST HAVE:
     1. A HIGH-QUALITY PROFESSIONAL IMAGE from Pexels
@@ -213,10 +196,14 @@ export async function generatePresentationOutline({
     4. Proper visual hierarchy
     5. Charts/graphs where appropriate (minimum 30% of slides)`;
 
-    const result = await model.generateContent(systemPrompt);
-    const response = await result.response;
-    const jsonText = extractJsonFromMarkdown(response.text());
-    const outlines = JSON.parse(jsonText);
+    const userPrompt = `Create a professional presentation outline for: "${prompt}" with ${pageCount} slides.`;
+
+    const outlines = await generateAIResponse({
+      systemPrompt,
+      userPrompt,
+      temperature: 0.7,
+      maxTokens: 6000,
+    });
 
     // GUARANTEE every slide has professional images and proper chart distribution
     const enhancedOutlines = outlines.map((outline: any, index: number) => {
@@ -272,13 +259,10 @@ export async function generatePresentation({
 }) {
   try {
     await validateApiConnection();
-    const model = getGenAI().getGenerativeModel({ model: "gemini-2.0-flash" });
     
-    const systemPrompt = `Generate a PROFESSIONAL presentation with GUARANTEED IMAGES AND CHARTS for every slide.
+    const systemPrompt = `You are an expert presentation designer. Generate a PROFESSIONAL presentation with GUARANTEED IMAGES AND CHARTS for every slide.
 
-    Original prompt: "${prompt}"
     Template: ${template}
-    Outlines: ${JSON.stringify(outlines)}
 
     CRITICAL REQUIREMENTS - EVERY SLIDE MUST HAVE:
     1. A professional high-quality image from Pexels
@@ -339,10 +323,16 @@ export async function generatePresentation({
     TEMPLATE STYLING FOR ${template}:
     Apply professional design principles with consistent branding, proper typography, and visual hierarchy.`;
 
-    const result = await model.generateContent(systemPrompt);
-    const response = await result.response;
-    const jsonText = extractJsonFromMarkdown(response.text());
-    const slides = JSON.parse(jsonText);
+    const userPrompt = `Generate a professional presentation based on:
+Original prompt: "${prompt}"
+Outlines: ${JSON.stringify(outlines)}`;
+
+    const slides = await generateAIResponse({
+      systemPrompt,
+      userPrompt,
+      temperature: 0.7,
+      maxTokens: 8000,
+    });
 
     // GUARANTEE every slide has professional visuals
     const enhancedSlides = slides.map((slide: any, index: number) => {
@@ -595,31 +585,17 @@ export async function generateGuidedResume({
 }) {
   try {
     await validateApiConnection();
-    const model = getGenAI().getGenerativeModel({ model: "gemini-2.0-flash" });
     
-    const systemPrompt = `Create a 100% ATS-OPTIMIZED professional resume based on the provided information.
+    const systemPrompt = `You are an expert ATS-optimized resume creator. Create a 100% ATS-OPTIMIZED professional resume based on the provided information.
 
     CRITICAL ATS REQUIREMENTS:
-    1. Use EXACT keywords from the target role: "${targetRole}"
+    1. Use EXACT keywords from the target role
     2. Include quantifiable achievements with numbers and percentages
     3. Use standard section headers that ATS systems recognize
     4. Optimize for keyword density without keyword stuffing
     5. Use action verbs and industry-specific terminology
     6. Include relevant technical skills and certifications
     7. Format for maximum ATS compatibility
-
-    TARGET ROLE: ${targetRole}
-    ${jobDescription ? `JOB DESCRIPTION KEYWORDS: ${jobDescription}` : ''}
-
-    PROVIDED INFORMATION:
-    Personal Info: ${JSON.stringify(personalInfo)}
-    Professional Summary: ${professionalSummary}
-    Work Experience: ${JSON.stringify(workExperience)}
-    Education: ${JSON.stringify(education)}
-    Skills: ${JSON.stringify(skills)}
-    Projects: ${JSON.stringify(projects)}
-    Certifications: ${JSON.stringify(certifications)}
-    Professional Links: ${JSON.stringify(links)}
 
     Return as JSON with this EXACT ATS-optimized structure:
     {
@@ -705,10 +681,24 @@ export async function generateGuidedResume({
 
     MAKE THE RESUME 100% ATS-COMPATIBLE AND KEYWORD-OPTIMIZED FOR MAXIMUM SCORING.`;
 
-    const result = await model.generateContent(systemPrompt);
-    const response = await result.response;
-    const jsonText = extractJsonFromMarkdown(response.text());
-    return JSON.parse(jsonText);
+    const userPrompt = `Create an ATS-optimized resume with the following details:
+Personal Info: ${JSON.stringify(personalInfo)}
+Professional Summary: ${professionalSummary}
+Work Experience: ${JSON.stringify(workExperience)}
+Education: ${JSON.stringify(education)}
+Skills: ${JSON.stringify(skills)}
+Projects: ${JSON.stringify(projects)}
+Certifications: ${JSON.stringify(certifications)}
+Professional Links: ${JSON.stringify(links)}
+Target Role: ${targetRole}
+${jobDescription ? `Job Description: ${jobDescription}` : ''}`;
+
+    return await generateAIResponse({
+      systemPrompt,
+      userPrompt,
+      temperature: 0.7,
+      maxTokens: 6000,
+    });
   } catch (error) {
     console.error("Error generating guided resume:", error);
     throw new Error(`Failed to generate guided resume: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -719,9 +709,8 @@ export async function generateGuidedResume({
 export async function generateResumeStepGuidance(step: string, targetRole: string, existingData?: any) {
   try {
     await validateApiConnection();
-    const model = getGenAI().getGenerativeModel({ model: "gemini-2.0-flash" });
     
-    const systemPrompt = `Provide intelligent, personalized guidance for the "${step}" section of a resume targeting: "${targetRole}".
+    const systemPrompt = `You are an expert resume guidance counselor. Provide intelligent, personalized guidance for resume sections.
 
     CURRENT STEP: ${step}
     TARGET ROLE: ${targetRole}
@@ -748,12 +737,19 @@ export async function generateResumeStepGuidance(step: string, targetRole: strin
       "nextStep": "What to focus on next"
     }
 
-    Make guidance specific to ${targetRole} and include ATS optimization tips.`;
+    Make guidance specific to the target role and include ATS optimization tips.`;
 
-    const result = await model.generateContent(systemPrompt);
-    const response = await result.response;
-    const jsonText = extractJsonFromMarkdown(response.text());
-    return JSON.parse(jsonText);
+    const userPrompt = `Provide guidance for the "${step}" section of a resume targeting: "${targetRole}".
+CURRENT STEP: ${step}
+TARGET ROLE: ${targetRole}
+EXISTING DATA: ${existingData ? JSON.stringify(existingData) : 'None'}`;
+
+    return await generateAIResponse({
+      systemPrompt,
+      userPrompt,
+      temperature: 0.7,
+      maxTokens: 3000,
+    });
   } catch (error) {
     console.error("Error generating step guidance:", error);
     throw new Error(`Failed to generate step guidance: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -778,13 +774,10 @@ export async function generateLetter({
 }) {
   try {
     await validateApiConnection();
-    const model = getGenAI().getGenerativeModel({ model: "gemini-2.0-flash" });
     
-    const systemPrompt = `Create a professional ${letterType} letter from ${fromName} to ${toName} about: ${prompt}.
+    const systemPrompt = `You are an expert professional letter writer. Create professional letters with proper formatting and tone.
     
     LETTER TYPE: ${letterType}
-    FROM: ${fromName}${fromAddress ? `, ${fromAddress}` : ''}
-    TO: ${toName}${toAddress ? `, ${toAddress}` : ''}
     
     Return as JSON with this EXACT structure:
     {
@@ -823,53 +816,35 @@ export async function generateLetter({
     - Appropriate for the specified letter type
     - Addresses the specific prompt details`;
 
-    const result = await model.generateContent(systemPrompt);
-    const response = await result.response;
-    const jsonText = extractJsonFromMarkdown(response.text());
+    const userPrompt = `Create a professional ${letterType} letter from ${fromName} to ${toName} about: ${prompt}.
+FROM: ${fromName}${fromAddress ? `, ${fromAddress}` : ''}
+TO: ${toName}${toAddress ? `, ${toAddress}` : ''}`;
+
+    const letterData = await generateAIResponse({
+      systemPrompt,
+      userPrompt,
+      temperature: 0.7,
+      maxTokens: 4000,
+    });
     
-    try {
-      const letterData = JSON.parse(jsonText);
-      
-      // Ensure the letter has the expected structure
-      return {
-        from: {
-          name: letterData.from?.name || fromName,
-          address: letterData.from?.address || fromAddress || ""
-        },
-        to: {
-          name: letterData.to?.name || toName,
-          address: letterData.to?.address || toAddress || ""
-        },
-        date: letterData.date || new Date().toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        }),
-        subject: letterData.subject || "Re: " + prompt.substring(0, 30) + "...",
-        content: letterData.content || "Letter content not available."
-      };
-    } catch (parseError) {
-      console.error("Error parsing letter JSON:", parseError);
-      
-      // Fallback structure if JSON parsing fails
-      return {
-        from: {
-          name: fromName,
-          address: fromAddress || ""
-        },
-        to: {
-          name: toName,
-          address: toAddress || ""
-        },
-        date: new Date().toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        }),
-        subject: "Re: " + prompt.substring(0, 30) + "...",
-        content: jsonText // Use the raw text as content
-      };
-    }
+    // Ensure the letter has the expected structure
+    return {
+      from: {
+        name: letterData.from?.name || fromName,
+        address: letterData.from?.address || fromAddress || ""
+      },
+      to: {
+        name: letterData.to?.name || toName,
+        address: letterData.to?.address || toAddress || ""
+      },
+      date: letterData.date || new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }),
+      subject: letterData.subject || "Re: " + prompt.substring(0, 30) + "...",
+      content: letterData.content || "Letter content not available."
+    };
   } catch (error) {
     console.error("Error generating letter:", error);
     throw new Error(`Failed to generate letter: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -886,12 +861,8 @@ export async function generateATSScore({
 }) {
   try {
     await validateApiConnection();
-    const model = getGenAI().getGenerativeModel({ model: "gemini-2.0-flash" });
     
-    const systemPrompt = `Perform a comprehensive ATS analysis of the resume against the job description.
-
-    RESUME CONTENT: ${resumeContent}
-    JOB DESCRIPTION: ${jobDescription}
+    const systemPrompt = `You are an expert ATS (Applicant Tracking System) analyzer. Perform comprehensive ATS analysis of resumes.
 
     Provide detailed ATS scoring and analysis as JSON:
     {
@@ -948,10 +919,16 @@ export async function generateATSScore({
 
     Provide actionable, specific recommendations for ATS optimization.`;
 
-    const result = await model.generateContent(systemPrompt);
-    const response = await result.response;
-    const jsonText = extractJsonFromMarkdown(response.text());
-    return JSON.parse(jsonText);
+    const userPrompt = `Analyze this resume against the job description:
+RESUME CONTENT: ${resumeContent}
+JOB DESCRIPTION: ${jobDescription}`;
+
+    return await generateAIResponse({
+      systemPrompt,
+      userPrompt,
+      temperature: 0.7,
+      maxTokens: 5000,
+    });
   } catch (error) {
     console.error("Error analyzing resume:", error);
     throw new Error(`Failed to analyze resume: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -968,12 +945,8 @@ export async function generateDiagram({
 }) {
   try {
     await validateApiConnection();
-    const model = getGenAI().getGenerativeModel({ model: "gemini-2.0-flash" });
     
-    const systemPrompt = `Generate a professional ${diagramType} diagram using Mermaid syntax based on: "${prompt}".
-
-    DIAGRAM TYPE: ${diagramType}
-    USER REQUEST: ${prompt}
+    const systemPrompt = `You are an expert diagram creator. Generate professional diagrams using Mermaid syntax.
 
     Return as JSON with this structure:
     {
@@ -1031,10 +1004,14 @@ export async function generateDiagram({
     
     Create a diagram that clearly communicates the concept described in the prompt.`;
 
-    const result = await model.generateContent(systemPrompt);
-    const response = await result.response;
-    const jsonText = extractJsonFromMarkdown(response.text());
-    return JSON.parse(jsonText);
+    const userPrompt = `Generate a professional ${diagramType} diagram using Mermaid syntax based on: "${prompt}"`;
+
+    return await generateAIResponse({
+      systemPrompt,
+      userPrompt,
+      temperature: 0.7,
+      maxTokens: 3000,
+    });
   } catch (error) {
     console.error("Error generating diagram:", error);
     throw new Error(`Failed to generate diagram: ${error instanceof Error ? error.message : 'Unknown error'}`);
