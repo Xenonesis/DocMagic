@@ -1,84 +1,31 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get('code');
   const error = requestUrl.searchParams.get('error');
   const errorDescription = requestUrl.searchParams.get('error_description');
   
-  // Handle OAuth errors
+  // Handle OAuth errors from provider
   if (error) {
-    console.error('OAuth error:', error, errorDescription);
+    console.error('❌ OAuth provider error:', error, errorDescription);
     return NextResponse.redirect(
       `${requestUrl.origin}/auth/signin?error=${error}&message=${encodeURIComponent(errorDescription || error)}`
     );
   }
 
-  // Handle PKCE flow (code parameter)
-  if (code) {
-    const cookieStore = await cookies();
-    
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: CookieOptions) {
-            try {
-              cookieStore.set({ name, value, ...options });
-            } catch (error) {
-              console.error('Error setting cookie:', error);
-            }
-          },
-          remove(name: string, options: CookieOptions) {
-            try {
-              cookieStore.set({ name, value: '', ...options });
-            } catch (error) {
-              console.error('Error removing cookie:', error);
-            }
-          },
-        },
-      }
-    );
-    
-    try {
-      const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-      
-      if (exchangeError) {
-        console.error('Error exchanging code:', exchangeError);
-        return NextResponse.redirect(
-          `${requestUrl.origin}/auth/signin?error=exchange_failed&message=${encodeURIComponent(exchangeError.message)}`
-        );
-      }
-
-      if (data.session) {
-        console.log('✅ PKCE OAuth successful:', data.user?.email);
-        
-        // Get redirectTo parameter from URL
-        const redirectTo = requestUrl.searchParams.get('redirectTo') || '/';
-        const redirectUrl = `${requestUrl.origin}${redirectTo}`;
-        
-        console.log('Redirecting to:', redirectUrl);
-        return NextResponse.redirect(redirectUrl);
-      }
-    } catch (error: any) {
-      console.error('Unexpected error in code exchange:', error);
-      return NextResponse.redirect(
-        `${requestUrl.origin}/auth/signin?error=unexpected&message=${encodeURIComponent(error.message)}`
-      );
-    }
-  }
-
-  // No code and no error - likely implicit flow, redirect to intended page
-  // The client-side will handle the hash fragment
-  const redirectTo = requestUrl.searchParams.get('redirectTo') || '/';
-  const redirectUrl = `${requestUrl.origin}${redirectTo}`;
+  // For PKCE flow, the code verifier is stored in localStorage by the browser client
+  // We need to redirect to a client-side page that can access localStorage
+  // and let the Supabase client handle the code exchange automatically
+  console.log('🔄 OAuth callback received, redirecting to home for client-side processing');
   
-  console.log('No code parameter, redirecting (implicit flow) to:', redirectUrl);
-  return NextResponse.redirect(redirectUrl);
+  // Redirect to home page with the full query string
+  // The client-side Supabase will automatically detect and exchange the code
+  const redirectUrl = new URL('/', requestUrl.origin);
+  
+  // Preserve all query parameters for client-side processing
+  requestUrl.searchParams.forEach((value, key) => {
+    redirectUrl.searchParams.set(key, value);
+  });
+  
+  return NextResponse.redirect(redirectUrl.toString());
 }

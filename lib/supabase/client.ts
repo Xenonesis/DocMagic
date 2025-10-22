@@ -26,9 +26,9 @@ export const createClient = () => {
       autoRefreshToken: true,
       persistSession: true,
       detectSessionInUrl: true,
-      flowType: 'pkce', // Use PKCE flow for better security
+      flowType: 'implicit', // Use implicit flow - simpler and works better with client-side
       storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-      storageKey: 'docverse-auth',
+      storageKey: 'sb-dheiucdatrgrkozkssrp-auth-token',
     }
   });
 
