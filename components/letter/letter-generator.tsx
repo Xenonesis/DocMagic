@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/select";
 import { LetterPreview } from "@/components/letter/letter-preview";
 import { useToast } from "@/hooks/use-toast";
+import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
+import { ExportAuthDialog } from "@/components/ui/export-auth-dialog";
 import { Loader2, Sparkles, Mail as MailIcon, Download, User, MapPin, FileText, Wand2, Copy, Check, Send } from "lucide-react";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -37,7 +39,9 @@ export function LetterGenerator() {
   const [emailSubject, setEmailSubject] = useState("");
   const [emailContent, setEmailContent] = useState("");
   const [fromEmail, setFromEmail] = useState("");
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const { toast } = useToast();
+  const { isAuthenticated, requireAuth } = useAuthGuard();
   
   const generateLetter = async () => {
     if (!prompt.trim()) {
@@ -159,6 +163,12 @@ ${letterData.content || ''}
   const exportToPDF = async () => {
     if (!letterData) return;
     
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      setShowAuthDialog(true);
+      return;
+    }
+    
     setIsExporting(true);
     
     try {
@@ -204,6 +214,11 @@ ${letterData.content || ''}
     } finally {
       setIsExporting(false);
     }
+  };
+
+  const handleAuthDialogSignIn = () => {
+    setShowAuthDialog(false);
+    requireAuth(PROTECTED_ACTIVITIES.EXPORT_LETTER);
   };
 
   const openSendEmailDialog = () => {
@@ -271,6 +286,14 @@ ${letterData.content || ''}
 
   return (
     <div className="space-y-6">
+      {/* Authentication Dialog */}
+      <ExportAuthDialog
+        open={showAuthDialog}
+        onOpenChange={setShowAuthDialog}
+        onSignIn={handleAuthDialogSignIn}
+        exportType="letter"
+      />
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         {/* Left Side - Form */}
         <div className="space-y-6">

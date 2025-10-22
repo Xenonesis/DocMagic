@@ -11,6 +11,8 @@ import { PresentationPreview } from "@/components/presentation/presentation-prev
 import { PresentationTemplates } from "@/components/presentation/presentation-templates";
 import { SlideOutlinePreview } from "@/components/presentation/slide-outline-preview";
 import { useToast } from "@/hooks/use-toast";
+import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
+import { ExportAuthDialog } from "@/components/ui/export-auth-dialog";
 import { Loader2, Sparkles, Presentation as LayoutPresentation, Lock, Download, Wand2, Sliders as Slides, Palette, Eye, ArrowRight, CheckCircle, Play, Brain, Zap, Star, Share2, Copy, Globe, ExternalLink } from "lucide-react";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -29,7 +31,9 @@ export function PresentationGenerator() {
   const [isSaving, setIsSaving] = useState(false);
   const [shareUrl, setShareUrl] = useState<string>('');
   const [presentationId, setPresentationId] = useState<string>('');
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
   const { toast } = useToast();
+  const { isAuthenticated, requireAuth } = useAuthGuard();
 
   const MAX_FREE_PAGES = 8;
   const MAX_PRO_PAGES = 100;
@@ -131,6 +135,13 @@ export function PresentationGenerator() {
 
   const exportToPDF = async () => {
     if (!slides.length) return;
+    
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      setShowAuthDialog(true);
+      return;
+    }
+    
     setIsExporting(true);
 
     try {
@@ -176,6 +187,13 @@ export function PresentationGenerator() {
 
   const exportToPPTX = async () => {
     if (!slides.length) return;
+    
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      setShowAuthDialog(true);
+      return;
+    }
+    
     setIsExporting(true);
 
     try {
@@ -221,6 +239,11 @@ export function PresentationGenerator() {
     } finally {
       setIsExporting(false);
     }
+  };
+
+  const handleAuthDialogSignIn = () => {
+    setShowAuthDialog(false);
+    requireAuth(PROTECTED_ACTIVITIES.EXPORT_PRESENTATION);
   };
 
   const resetToInput = () => {
@@ -363,6 +386,14 @@ export function PresentationGenerator() {
 
   return (
     <div className="space-y-6">
+      {/* Authentication Dialog */}
+      <ExportAuthDialog
+        open={showAuthDialog}
+        onOpenChange={setShowAuthDialog}
+        onSignIn={handleAuthDialogSignIn}
+        exportType="presentation"
+      />
+
       {renderStepIndicator()}
 
       {/* Step 1: Input */}

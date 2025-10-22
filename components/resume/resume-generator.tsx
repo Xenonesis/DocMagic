@@ -11,6 +11,8 @@ import { ResumePreview } from "@/components/resume/resume-preview";
 import { ResumeTemplates } from "@/components/resume/resume-templates";
 import { GuidedResumeGenerator } from "@/components/resume/guided-resume-generator";
 import { useToast } from "@/hooks/use-toast";
+import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
+import { ExportAuthDialog } from "@/components/ui/export-auth-dialog";
 import {
   File as FileIcon,
   Loader2,
@@ -25,6 +27,7 @@ import {
   Brain,
   Target,
   Zap,
+  Lock,
 } from "lucide-react";
 import { useSubscription } from "@/hooks/use-subscription";
 import { TooltipWithShortcut } from "../ui/tooltip";
@@ -37,8 +40,11 @@ export function ResumeGenerator() {
   const [resumeData, setResumeData] = useState<any>(null);
   const [selectedTemplate, setSelectedTemplate] = useState("professional");
   const [isFullView, setIsFullView] = useState(false);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const [pendingDownloadFormat, setPendingDownloadFormat] = useState<'pdf' | 'docx' | null>(null);
   const { toast } = useToast();
   const { isPro } = useSubscription();
+  const { isAuthenticated, requireAuth } = useAuthGuard();
 
   const generateResume = async () => {
     if (!prompt.trim()) {
@@ -100,12 +106,40 @@ export function ResumeGenerator() {
     setResumeData(resume);
   };
 
+  const handleDownload = (format: 'pdf' | 'docx') => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      setPendingDownloadFormat(format);
+      setShowAuthDialog(true);
+      return;
+    }
+
+    // TODO: Implement actual download logic
+    toast({
+      title: `Downloading ${format.toUpperCase()}`,
+      description: `Your resume is being downloaded as ${format.toUpperCase()}`,
+    });
+  };
+
+  const handleAuthDialogSignIn = () => {
+    setShowAuthDialog(false);
+    requireAuth(PROTECTED_ACTIVITIES.EXPORT_RESUME);
+  };
+
   return (
     <div
       className={`space-y-6 transition-all duration-300 ${
         isFullView ? "p-0" : "px-2 sm:px-0"
       }`}
     >
+      {/* Authentication Dialog */}
+      <ExportAuthDialog
+        open={showAuthDialog}
+        onOpenChange={setShowAuthDialog}
+        onSignIn={handleAuthDialogSignIn}
+        exportType="resume"
+      />
+
       <Tabs defaultValue="guided" className="w-full">
         <div
           className={`flex justify-center mb-6 ${isFullView ? "hidden" : ""}`}
@@ -228,6 +262,7 @@ export function ResumeGenerator() {
                   <Button
                     variant="outline"
                     className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
+                    onClick={() => handleDownload('pdf')}
                   >
                     <Download className="mr-2 h-4 w-4" />
                     Download PDF
@@ -235,6 +270,7 @@ export function ResumeGenerator() {
                   <Button
                     variant="outline"
                     className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
+                    onClick={() => handleDownload('docx')}
                   >
                     <Download className="mr-2 h-4 w-4" />
                     Download DOCX
@@ -380,6 +416,7 @@ export function ResumeGenerator() {
                       <Button
                         variant="outline"
                         className="glass-effect border-yellow-400/30 hover:border-yellow-400/60 w-full sm:w-auto"
+                        onClick={() => handleDownload('pdf')}
                       >
                         <Download className="mr-2 h-4 w-4" />
                         Download PDF
@@ -389,6 +426,7 @@ export function ResumeGenerator() {
                       <Button
                         variant="outline"
                         className="glass-effect border-yellow-400/30 hover:border-yellow-400/60 w-full sm:w-auto"
+                        onClick={() => handleDownload('docx')}
                       >
                         <Download className="mr-2 h-4 w-4" />
                         Download DOCX

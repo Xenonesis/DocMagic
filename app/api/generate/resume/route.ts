@@ -8,17 +8,6 @@ import { createRoute } from '@/lib/supabase/server';
 
 export async function POST(request: Request) {
   try {
-    // Check authentication
-    const supabase = createRoute();
-    const { data: { session }, error: authError } = await supabase.auth.getSession();
-    
-    if (authError || !session) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
     const rawBody = await request.json();
 
     // Validate and sanitize input

@@ -75,6 +75,7 @@ const DIAGRAM_EXAMPLES = {
   
   gitGraph: `gitGraph
     commit
+    commit
     branch develop
     checkout develop
     commit
