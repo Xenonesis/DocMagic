@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.0.0] - 2025-10-22
+### Changed
+- Updated version to 3.0.0 in package.json
+
 ## [2.0.0] - 2025-07-28
 ### Changed
 - Updated version to 2.0.0 in package.json
