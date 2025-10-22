@@ -20,24 +20,18 @@ export async function POST(request: Request) {
       jobDescription
     } = body;
 
-    if (!personalInfo || !targetRole) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
-
+    // All fields are now optional - generate resume with whatever data is provided
     const resume = await generateGuidedResume({
-      personalInfo,
-      professionalSummary,
-      workExperience,
-      education,
-      skills,
-      projects,
-      certifications,
-      links,
-      targetRole,
-      jobDescription
+      personalInfo: personalInfo || {},
+      professionalSummary: professionalSummary || '',
+      workExperience: workExperience || [],
+      education: education || [],
+      skills: skills || { technical: [], programming: [], tools: [], soft: [] },
+      projects: projects || [],
+      certifications: certifications || [],
+      links: links || {},
+      targetRole: targetRole || 'General Position',
+      jobDescription: jobDescription || ''
     });
     
     return NextResponse.json(resume);

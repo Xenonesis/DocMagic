@@ -47,24 +47,6 @@ export function ResumeGenerator() {
   const { isAuthenticated, requireAuth } = useAuthGuard();
 
   const generateResume = async () => {
-    if (!prompt.trim()) {
-      toast({
-        title: "Please enter a prompt",
-        description: "Describe the resume you want to generate",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!name.trim() || !email.trim()) {
-      toast({
-        title: "Missing information",
-        description: "Please enter your name and email",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsGenerating(true);
 
     try {
@@ -374,12 +356,7 @@ export function ResumeGenerator() {
                 <TooltipWithShortcut content="Generate a professional resume using AI based on your description">
                   <Button
                     onClick={generateResume}
-                    disabled={
-                      isGenerating ||
-                      !prompt.trim() ||
-                      !name.trim() ||
-                      !email.trim()
-                    }
+                    disabled={isGenerating}
                     className="w-full h-12 bolt-gradient text-white font-semibold text-base hover:scale-105 transition-all duration-300 relative overflow-hidden"
                   >
                     <div className="flex items-center justify-center gap-2 relative z-10">

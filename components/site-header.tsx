@@ -118,28 +118,31 @@ export function SiteHeader() {
                         href={item.href}
                         onClick={handleNavClick}
                         className={cn(
-                          "flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-accent/50 hover:text-accent-foreground group w-full",
+                          "flex flex-col gap-1 px-3 py-3 rounded-lg text-sm transition-all duration-200 hover:bg-accent/50 hover:text-accent-foreground group w-full",
                           pathname === item.href
                             ? "bg-accent text-accent-foreground shadow-sm"
                             : "text-muted-foreground hover:text-foreground"
                         )}
                       >
-                        <span
-                          className={cn(
-                            "transition-colors duration-200",
-                            pathname === item.href
-                              ? "text-yellow-600"
-                              : "group-hover:text-yellow-500"
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={cn(
+                              "transition-colors duration-200",
+                              pathname === item.href
+                                ? "text-yellow-600"
+                                : "group-hover:text-yellow-500"
+                            )}
+                          >
+                            {item.icon}
+                          </span>
+                          <span className="font-semibold">{item.label}</span>
+                          {pathname === item.href && (
+                            <div className="ml-auto">
+                              <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                            </div>
                           )}
-                        >
-                          {item.icon}
-                        </span>
-                        <span className="font-medium">{item.label}</span>
-                        {pathname === item.href && (
-                          <div className="ml-auto">
-                            <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                          </div>
-                        )}
+                        </div>
+                        <span className="text-xs opacity-75 ml-7">{item.tooltip}</span>
                       </Link>
                     </SheetClose>
                   ))}

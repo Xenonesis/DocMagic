@@ -26,9 +26,9 @@ export const registrationSchema = z.object({
 
 // Resume generation schema
 export const resumeGenerationSchema = z.object({
-  prompt: z.string().min(10, 'Prompt must be at least 10 characters').max(5000, 'Prompt too long'),
-  name: nameSchema,
-  email: emailSchema,
+  prompt: z.string().min(1, 'Prompt must be at least 1 character').max(5000, 'Prompt too long').optional().or(z.literal('')),
+  name: z.string().max(100, 'Name must be less than 100 characters').optional().or(z.literal('')),
+  email: z.string().max(254, 'Email must be less than 254 characters').optional().or(z.literal('')),
 });
 
 // Presentation generation schema

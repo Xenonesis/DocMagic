@@ -31,6 +31,7 @@ import {
   Trophy,
 } from "lucide-react";
 import ScrollToTop from "@/components/scroll-to-top";
+import { QuickStartGuide } from "@/components/quick-start-guide";
 
 export default function Home() {
   return (
@@ -39,6 +40,9 @@ export default function Home() {
       <SiteHeader />
       <main className="flex-1">
         <HeroSection />
+        
+        {/* Quick Start Guide - Imported below Quick Navigation */}
+        
         {/* Quick Navigation Section */}
         <section className="py-12 sm:py-16 bg-gradient-to-r from-blue-50/30 via-background to-purple-50/30 border-y border-border/20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -120,6 +124,14 @@ export default function Home() {
             </div>
           </div>
         </section>
+        
+        {/* Quick Start Guide Section */}
+        <section className="py-8 sm:py-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <QuickStartGuide />
+          </div>
+        </section>
+        
         <FeaturesSection />
         <TestimonialsSection />
         <ScrollToTop />

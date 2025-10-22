@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sparkles, FileText, Zap, Star, Wand2, Target } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ResumeGeneratorSkeleton } from "@/components/ui/skeleton";
+import { FloatingHelpButton } from "@/components/floating-help-button";
 
 export default function ResumePage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -173,6 +174,9 @@ export default function ResumePage() {
           </div>
         </div>
       </main>
+      
+      {/* Floating Help Button */}
+      <FloatingHelpButton />
     </div>
   );
 }
