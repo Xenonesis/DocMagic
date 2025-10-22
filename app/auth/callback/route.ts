@@ -5,13 +5,21 @@ import { cookies } from 'next/headers';
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
-  const redirectTo = requestUrl.searchParams.get('redirectTo') || '/';
-  const activity = requestUrl.searchParams.get('activity');
+  const error = requestUrl.searchParams.get('error');
+  const errorDescription = requestUrl.searchParams.get('error_description');
+  
+  // Handle OAuth errors
+  if (error) {
+    console.error('OAuth error:', error, errorDescription);
+    return NextResponse.redirect(
+      `${requestUrl.origin}/auth/signin?error=${error}&message=${encodeURIComponent(errorDescription || error)}`
+    );
+  }
 
+  // Handle PKCE flow (code parameter)
   if (code) {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     
-    // Create a server-side Supabase client with proper cookie handling
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -24,14 +32,14 @@ export async function GET(request: Request) {
             try {
               cookieStore.set({ name, value, ...options });
             } catch (error) {
-              // Handle cookie setting errors (e.g., in middleware)
+              console.error('Error setting cookie:', error);
             }
           },
           remove(name: string, options: CookieOptions) {
             try {
               cookieStore.set({ name, value: '', ...options });
             } catch (error) {
-              // Handle cookie removal errors
+              console.error('Error removing cookie:', error);
             }
           },
         },
@@ -39,32 +47,38 @@ export async function GET(request: Request) {
     );
     
     try {
-      // Exchange the code for a session
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
       
-      if (error) {
-        console.error('Error exchanging code for session:', error);
+      if (exchangeError) {
+        console.error('Error exchanging code:', exchangeError);
         return NextResponse.redirect(
-          `${requestUrl.origin}/auth/signin?error=auth_failed`
+          `${requestUrl.origin}/auth/signin?error=exchange_failed&message=${encodeURIComponent(exchangeError.message)}`
         );
       }
 
-      // Build the redirect URL with parameters
-      let finalRedirect = redirectTo;
-      if (activity) {
-        finalRedirect += `${redirectTo.includes('?') ? '&' : '?'}activity=${activity}`;
+      if (data.session) {
+        console.log('✅ PKCE OAuth successful:', data.user?.email);
+        
+        // Get redirectTo parameter from URL
+        const redirectTo = requestUrl.searchParams.get('redirectTo') || '/';
+        const redirectUrl = `${requestUrl.origin}${redirectTo}`;
+        
+        console.log('Redirecting to:', redirectUrl);
+        return NextResponse.redirect(redirectUrl);
       }
-
-      // Successful authentication - redirect to the intended page
-      return NextResponse.redirect(`${requestUrl.origin}${finalRedirect}`);
-    } catch (error) {
-      console.error('Unexpected error in auth callback:', error);
+    } catch (error: any) {
+      console.error('Unexpected error in code exchange:', error);
       return NextResponse.redirect(
-        `${requestUrl.origin}/auth/signin?error=unexpected_error`
+        `${requestUrl.origin}/auth/signin?error=unexpected&message=${encodeURIComponent(error.message)}`
       );
     }
   }
 
-  // No code provided - redirect to sign in
-  return NextResponse.redirect(`${requestUrl.origin}/auth/signin`);
+  // No code and no error - likely implicit flow, redirect to intended page
+  // The client-side will handle the hash fragment
+  const redirectTo = requestUrl.searchParams.get('redirectTo') || '/';
+  const redirectUrl = `${requestUrl.origin}${redirectTo}`;
+  
+  console.log('No code parameter, redirecting (implicit flow) to:', redirectUrl);
+  return NextResponse.redirect(redirectUrl);
 }

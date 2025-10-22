@@ -37,13 +37,22 @@ export default function Register() {
   const [mounted, setMounted] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [redirectTo, setRedirectTo] = useState<string>("/");
   const router = useRouter();
   const { toast } = useToast();
   const supabase = createClient();
 
-  // Animation mount effect
+  // Animation mount effect and get redirect parameters
   useEffect(() => {
     setMounted(true);
+    
+    // Get redirect parameters from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectParam = urlParams.get('redirectTo');
+    
+    if (redirectParam) {
+      setRedirectTo(decodeURIComponent(redirectParam));
+    }
   }, []);
 
   // Password strength calculator
@@ -257,13 +266,30 @@ export default function Register() {
                 onClick={async () => {
                   setIsLoading(true);
                   try {
-                    const { error } = await supabase.auth.signInWithOAuth({
+                    console.log('🚀 Starting Google OAuth registration...');
+                    // Build callback URL with redirectTo parameter
+                    const callbackUrl = new URL('/auth/callback', window.location.origin);
+                    if (redirectTo && redirectTo !== '/') {
+                      callbackUrl.searchParams.set('redirectTo', redirectTo);
+                    }
+                    
+                    const { data, error } = await supabase.auth.signInWithOAuth({
                       provider: 'google',
                       options: {
-                        redirectTo: `${window.location.origin}/auth/callback`,
+                        redirectTo: callbackUrl.toString(),
+                        queryParams: {
+                          access_type: 'offline',
+                          prompt: 'consent',
+                        },
                       },
                     });
-                    if (error) throw error;
+                    
+                    if (error) {
+                      console.error('❌ OAuth initiation error:', error);
+                      throw error;
+                    }
+                    
+                    console.log('✅ OAuth initiated, redirecting to Google...');
                   } catch (error: any) {
                     console.error("Google sign up error:", error);
                     toast({

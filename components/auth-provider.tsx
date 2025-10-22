@@ -49,10 +49,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Handle different auth events
-        if (event === 'SIGNED_IN') {
-          router.refresh();
-        } else if (event === 'SIGNED_OUT') {
+        // Handle sign out event
+        if (event === 'SIGNED_OUT') {
           router.push('/');
           router.refresh();
         }

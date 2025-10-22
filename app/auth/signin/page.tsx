@@ -39,7 +39,7 @@ export default function SignIn() {
   const { toast } = useToast();
   const supabase = createClient();
 
-  // Animation mount effect and URL parameter handling
+  // Handle mount and URL parameters
   useEffect(() => {
     setMounted(true);
 
@@ -77,9 +77,8 @@ export default function SignIn() {
           description: `You've successfully signed in to docverse.${activityDescription}`,
         });
 
-        // Redirect to the intended page or home
+        // Redirect to the intended page (auth-provider handles refresh)
         router.push(redirectTo);
-        router.refresh();
       }
     } catch (error: any) {
       console.error("Sign in error:", error);
@@ -184,13 +183,30 @@ export default function SignIn() {
                 onClick={async () => {
                   setIsLoading(true);
                   try {
-                    const { error } = await supabase.auth.signInWithOAuth({
+                    console.log('🚀 Starting Google OAuth...');
+                    // Build callback URL with redirectTo parameter
+                    const callbackUrl = new URL('/auth/callback', window.location.origin);
+                    if (redirectTo && redirectTo !== '/') {
+                      callbackUrl.searchParams.set('redirectTo', redirectTo);
+                    }
+                    
+                    const { data, error } = await supabase.auth.signInWithOAuth({
                       provider: 'google',
                       options: {
-                        redirectTo: `${window.location.origin}/auth/callback?redirectTo=${encodeURIComponent(redirectTo)}${activity ? `&activity=${encodeURIComponent(activity)}` : ''}`,
+                        redirectTo: callbackUrl.toString(),
+                        queryParams: {
+                          access_type: 'offline',
+                          prompt: 'consent',
+                        },
                       },
                     });
-                    if (error) throw error;
+                    
+                    if (error) {
+                      console.error('❌ OAuth initiation error:', error);
+                      throw error;
+                    }
+                    
+                    console.log('✅ OAuth initiated, redirecting to Google...');
                   } catch (error: any) {
                     console.error("Google sign in error:", error);
                     toast({
