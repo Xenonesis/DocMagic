@@ -145,12 +145,12 @@ export function ResumeGenerator() {
           className={`flex justify-center mb-6 ${isFullView ? "hidden" : ""}`}
         >
           <TabsList
-            className="glass-effect border border-yellow-400/20 p-1 h-auto flex overflow-x-auto scrollbar-hide gap-1 sm:gap-2 md:gap-4 w-full max-w-full"
+            className="glass-effect border border-yellow-400/30 p-1.5 h-auto flex overflow-x-auto scrollbar-hide gap-1 sm:gap-2 md:gap-4 w-full max-w-full bg-white/80 dark:bg-gray-900/80 shadow-lg"
             style={{ WebkitOverflowScrolling: "touch" }}
           >
             <TabsTrigger
               value="guided"
-              className="data-[state=active]:bolt-gradient data-[state=active]:text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-1 sm:gap-2 text-sm sm:text-base min-w-[140px] justify-center"
+              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-1 sm:gap-2 text-sm sm:text-base min-w-[140px] justify-center hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
             >
               <Brain className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Smart Builder</span>
@@ -158,7 +158,7 @@ export function ResumeGenerator() {
             </TabsTrigger>
             <TabsTrigger
               value="quick"
-              className="data-[state=active]:bolt-gradient data-[state=active]:text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-1 sm:gap-2 text-sm sm:text-base min-w-[140px] justify-center"
+              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-1 sm:gap-2 text-sm sm:text-base min-w-[140px] justify-center hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
             >
               <Wand2 className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Quick Generate</span>
@@ -166,7 +166,7 @@ export function ResumeGenerator() {
             </TabsTrigger>
             <TabsTrigger
               value="templates"
-              className="data-[state=active]:bolt-gradient data-[state=active]:text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-1 sm:gap-2 text-sm sm:text-base min-w-[140px] justify-center"
+              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-1 sm:gap-2 text-sm sm:text-base min-w-[140px] justify-center hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
             >
               <Palette className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Templates</span>
