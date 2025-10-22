@@ -25,6 +25,7 @@ import {
   MousePointer2,
   Fingerprint,
 } from "lucide-react";
+import { Web3AuthButton } from "@/components/auth/Web3AuthButton";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -340,6 +341,26 @@ export default function Register() {
                 {/* Border glow effect */}
                 <div className="absolute inset-0 rounded-xl border border-yellow-400/20 group-hover:border-yellow-400/40 transition-all duration-300"></div>
               </Button>
+            </div>
+
+            {/* Web3 Wallet Authentication */}
+            <div
+              className={`space-y-3 transition-all duration-500 delay-350 ${
+                mounted
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4"
+              }`}
+            >
+              <Web3AuthButton
+                provider="ethereum"
+                redirectTo={redirectTo}
+                disabled={isLoading}
+              />
+              <Web3AuthButton
+                provider="solana"
+                redirectTo={redirectTo}
+                disabled={isLoading}
+              />
             </div>
 
             {/* Divider */}

@@ -132,6 +132,7 @@
 ### 🔐 **Authentication & Security**
 
 - **🛡️ Supabase Auth**: Secure user authentication with JWT tokens
+- **🔗 Web3 Wallet Auth**: Sign in with Ethereum (MetaMask) or Solana (Phantom) wallets
 - **👤 User Management**: Registration, login, password reset, and profile management
 - **🔒 Protected Routes**: Client-side route protection and redirects
 - **📊 Session Management**: Persistent sessions with automatic token refresh
@@ -1228,13 +1229,27 @@ The main subscription flow is handled by the `SubscriptionButton` component:
 
 ## 🔒 Authentication
 
-Authentication is handled by Supabase Auth. The system includes:
+Authentication is handled by Supabase Auth with multiple sign-in options:
 
+### Traditional Authentication
 - User registration with email/password
-- Secure login
+- Secure login with JWT tokens
+- Google OAuth integration
+- Password reset functionality
+
+### Web3 Wallet Authentication 🆕
+- **Ethereum**: Sign in with MetaMask and EIP-4361 compatible wallets
+- **Solana**: Sign in with Phantom and SIWS compatible wallets
+- Cryptographic signature verification
+- No password required - wallet ownership proves identity
+
+### Security Features
 - Protected routes with middleware
 - User profile management
-- Session persistence
+- Session persistence with automatic refresh
+- Rate limiting on authentication endpoints
+
+**Setup Guide**: See [WEB3_AUTH_SETUP.md](./docs/WEB3_AUTH_SETUP.md) for detailed Web3 configuration instructions.
 
 ## 💾 Database Schema
 
