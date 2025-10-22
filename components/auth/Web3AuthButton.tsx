@@ -178,7 +178,7 @@ Issued At: ${issuedAt}`;
       type="button"
       onClick={handleAuth}
       disabled={isLoading || disabled}
-      className="w-full glass-effect border-yellow-400/30 hover:border-yellow-400/60 font-semibold py-4 sm:py-5 rounded-xl relative text-base sm:text-lg shadow-lg hover:scale-105 transition-all duration-300 focus:ring-4 focus:ring-yellow-400/20 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed group"
+      className="w-full bg-[#2D2D2D] hover:bg-[#3D3D3D] text-white font-semibold py-4 sm:py-5 rounded-xl relative text-base sm:text-lg shadow-lg hover:scale-[1.02] transition-all duration-300 focus:ring-4 focus:ring-primary/20 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed group border border-border"
     >
       <div className="flex items-center justify-center gap-3 relative z-20">
         {isLoading ? (
@@ -193,30 +193,30 @@ Issued At: ${issuedAt}`;
                 <svg className="h-5 w-5" viewBox="0 0 256 417" fill="none">
                   <path
                     d="M127.961 0L125.635 7.89L125.635 285.168L127.961 287.492L255.922 212.32L127.961 0Z"
-                    fill="#343434"
+                    fill="#8C8C8C"
                   />
                   <path
                     d="M127.962 0L0 212.32L127.962 287.492V153.455V0Z"
-                    fill="#8C8C8C"
+                    fill="#C0C0C0"
                   />
                   <path
                     d="M127.961 312.187L126.635 313.854V406.006L127.961 410.616L256 237.023L127.961 312.187Z"
-                    fill="#3C3C3B"
-                  />
-                  <path
-                    d="M127.962 410.616V312.187L0 237.023L127.962 410.616Z"
                     fill="#8C8C8C"
                   />
                   <path
+                    d="M127.962 410.616V312.187L0 237.023L127.962 410.616Z"
+                    fill="#C0C0C0"
+                  />
+                  <path
                     d="M127.961 287.492L255.922 212.32L127.961 153.455V287.492Z"
-                    fill="#141414"
+                    fill="#6C6C6C"
                   />
                   <path
                     d="M0 212.32L127.962 287.492V153.455L0 212.32Z"
-                    fill="#393939"
+                    fill="#8C8C8C"
                   />
                 </svg>
-                <span className="font-semibold professional-text">
+                <span className="font-semibold">
                   Sign in with Ethereum
                 </span>
               </>
@@ -247,7 +247,7 @@ Issued At: ${issuedAt}`;
                     fill="url(#solana-gradient)"
                   />
                 </svg>
-                <span className="font-semibold professional-text">
+                <span className="font-semibold">
                   Sign in with Solana
                 </span>
               </>
@@ -257,8 +257,7 @@ Issued At: ${issuedAt}`;
       </div>
 
       {/* Enhanced effects */}
-      <div className="absolute inset-0 shimmer opacity-20 group-hover:opacity-40 transition-opacity duration-500 rounded-xl"></div>
-      <div className="absolute inset-0 rounded-xl border border-yellow-400/20 group-hover:border-yellow-400/40 transition-all duration-300"></div>
+      <div className="absolute inset-0 shimmer opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-xl"></div>
     </Button>
   );
 }

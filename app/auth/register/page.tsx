@@ -234,23 +234,22 @@ export default function Register() {
             >
               {/* Professional badge with hover effects */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-effect mb-4 badge-bg group hover:scale-105 transition-all duration-300 cursor-pointer">
-                <Wand2 className="h-4 w-4 text-yellow-500 group-hover:animate-spin transition-transform duration-300" />
-                <span className="text-sm font-medium bolt-gradient-text">
-                  Join the Magic
+                <Sparkles className="h-4 w-4 text-yellow-500 group-hover:animate-pulse transition-transform duration-300" />
+                <span className="text-sm font-medium">
+                  Welcome Back
                 </span>
-                <Shield className="h-4 w-4 text-green-500 group-hover:animate-pulse" />
+                <Wand2 className="h-4 w-4 text-blue-500 group-hover:animate-spin transition-transform duration-300" />
               </div>
 
               {/* Modern heading with typewriter effect simulation */}
               <h1 className="modern-display text-2xl sm:text-3xl font-bold mb-2 text-shadow-professional animate-fade-in-up">
-                Create Your{" "}
+                Sign In to{" "}
                 <span className="bolt-gradient-text animate-text-glow">
                   docverse
-                </span>{" "}
-                Account
+                </span>
               </h1>
               <p className="modern-body text-muted-foreground text-sm sm:text-base animate-fade-in-up delay-100">
-                Start creating professional documents with AI
+                Continue creating magical documents with AI
               </p>
             </div>
 
@@ -302,7 +301,7 @@ export default function Register() {
                   }
                 }}
                 disabled={isLoading}
-                className="w-full glass-effect border-yellow-400/30 hover:border-yellow-400/60 font-semibold py-4 sm:py-5 rounded-xl relative text-base sm:text-lg shadow-lg hover:scale-105 transition-all duration-300 focus:ring-4 focus:ring-yellow-400/20 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed group"
+                className="w-full bg-[#2D2D2D] hover:bg-[#3D3D3D] text-white font-semibold py-4 sm:py-5 rounded-xl relative text-base sm:text-lg shadow-lg hover:scale-[1.02] transition-all duration-300 focus:ring-4 focus:ring-primary/20 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed group border border-border"
                 aria-label="Sign up with Google"
               >
                 <div className="flex items-center justify-center gap-3 relative z-20">
@@ -324,22 +323,11 @@ export default function Register() {
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                     />
                   </svg>
-                  <span className="font-semibold professional-text">Continue with Google</span>
+                  <span className="font-semibold">Continue with Google</span>
                 </div>
                 
                 {/* Enhanced effects matching the site style */}
-                <div className="absolute inset-0 shimmer opacity-20 group-hover:opacity-40 transition-opacity duration-500 rounded-xl"></div>
-                
-                {/* Particle effects on hover */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="absolute top-2 left-8 w-1 h-1 bg-blue-400 rounded-full animate-ping"></div>
-                  <div className="absolute top-3 right-8 w-1 h-1 bg-green-400 rounded-full animate-ping delay-100"></div>
-                  <div className="absolute bottom-2 left-12 w-1 h-1 bg-yellow-400 rounded-full animate-ping delay-200"></div>
-                  <div className="absolute bottom-3 right-12 w-1 h-1 bg-red-400 rounded-full animate-ping delay-300"></div>
-                </div>
-                
-                {/* Border glow effect */}
-                <div className="absolute inset-0 rounded-xl border border-yellow-400/20 group-hover:border-yellow-400/40 transition-all duration-300"></div>
+                <div className="absolute inset-0 shimmer opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-xl"></div>
               </Button>
             </div>
 
@@ -365,17 +353,17 @@ export default function Register() {
 
             {/* Divider */}
             <div
-              className={`relative transition-all duration-500 delay-400 ${
+              className={`relative my-6 transition-all duration-500 delay-400 ${
                 mounted
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-4"
               }`}
             >
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-yellow-400/20"></div>
+                <div className="w-full border-t border-muted-foreground/20"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-background text-muted-foreground glass-effect rounded-full">
+                <span className="px-4 bg-background text-muted-foreground">
                   Or continue with email
                 </span>
               </div>
