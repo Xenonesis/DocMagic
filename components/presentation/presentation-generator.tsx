@@ -32,6 +32,8 @@ export function PresentationGenerator() {
   const [shareUrl, setShareUrl] = useState<string>('');
   const [presentationId, setPresentationId] = useState<string>('');
   const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [previewSlides, setPreviewSlides] = useState<any[]>([]);
   const { toast } = useToast();
   const { user, isAuthenticated, requireAuth } = useAuthGuard();
 
@@ -111,9 +113,11 @@ export function PresentationGenerator() {
     }
   };
 
-  const generateFullPresentation = async () => {
+  const generateFullPresentation = async (isPreview: boolean = false) => {
     setIsGenerating(true);
-    setCurrentStep('generated');
+    if (!isPreview) {
+      setCurrentStep('generated');
+    }
 
     try {
       const response = await fetch('/api/generate/presentation-full', {
@@ -133,12 +137,23 @@ export function PresentationGenerator() {
       }
 
       const data = await response.json();
-      setSlides(data.slides);
-
-      toast({
-        title: "🎉 Professional Presentation Ready!",
-        description: `${data.slides.length} slides created with Canva-style design, professional images, and interactive charts!`,
-      });
+      
+      if (isPreview) {
+        setPreviewSlides(data.slides);
+        setIsPreviewMode(true);
+        setCurrentStep('generated');
+        toast({
+          title: "👀 Preview Ready!",
+          description: `${data.slides.length} slides generated. Review and regenerate if needed, or keep this version.`,
+        });
+      } else {
+        setSlides(data.slides);
+        setIsPreviewMode(false);
+        toast({
+          title: "🎉 Professional Presentation Ready!",
+          description: `${data.slides.length} slides created with Canva-style design, professional images, and interactive charts!`,
+        });
+      }
     } catch (error) {
       toast({
         title: "Error",
@@ -148,6 +163,52 @@ export function PresentationGenerator() {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const regeneratePresentation = async () => {
+    setIsGenerating(true);
+    try {
+      const response = await fetch('/api/generate/presentation-full', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          outlines: slideOutlines, 
+          template: selectedTemplate,
+          prompt 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to regenerate presentation');
+      }
+
+      const data = await response.json();
+      setPreviewSlides(data.slides);
+      
+      toast({
+        title: "🔄 Presentation Regenerated!",
+        description: `New version created with ${data.slides.length} slides. Review or regenerate again.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to regenerate presentation. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const keepPresentation = () => {
+    setSlides(previewSlides);
+    setIsPreviewMode(false);
+    toast({
+      title: "✅ Presentation Saved!",
+      description: "You can now export or share your presentation.",
+    });
   };
 
   const exportToPDF = async () => {
@@ -267,6 +328,8 @@ export function PresentationGenerator() {
     setCurrentStep('input');
     setSlideOutlines([]);
     setSlides([]);
+    setPreviewSlides([]);
+    setIsPreviewMode(false);
     setPrompt("");
     setShareUrl('');
     setPresentationId('');
@@ -624,7 +687,25 @@ export function PresentationGenerator() {
               ← Back to Structure
             </Button>
             <Button
-              onClick={generateFullPresentation}
+              onClick={() => generateFullPresentation(true)}
+              disabled={isGenerating}
+              variant="outline"
+              className="glass-effect border-blue-400/30 hover:border-blue-400/60"
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Generating preview...
+                </>
+              ) : (
+                <>
+                  <Eye className="mr-2 h-5 w-5" />
+                  Preview First
+                </>
+              )}
+            </Button>
+            <Button
+              onClick={() => generateFullPresentation(false)}
               disabled={isGenerating}
               className="bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300 px-8 py-3"
             >
@@ -636,7 +717,7 @@ export function PresentationGenerator() {
               ) : (
                 <>
                   <Sparkles className="mr-2 h-5 w-5" />
-                  Generate Professional Presentation
+                  Generate & Finalize
                 </>
               )}
             </Button>
@@ -648,24 +729,45 @@ export function PresentationGenerator() {
       {currentStep === 'generated' && (
         <div className="space-y-6">
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-effect mb-4">
-              <CheckCircle className="h-4 w-4 text-green-500" />
-              <span className="text-sm font-medium">Professional Presentation Ready!</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-3 bolt-gradient-text">
-              🎉 Your Canva-Style Presentation is Ready!
-            </h2>
-            <p className="text-muted-foreground max-w-3xl mx-auto">
-              Complete with professional design, high-quality images, interactive charts, and compelling content. 
-              Present in full-screen mode or export to PowerPoint!
-            </p>
+            {isPreviewMode ? (
+              <>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-effect mb-4 border border-blue-400/30">
+                  <Eye className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm font-medium">Preview Mode - Not Saved Yet</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold mb-3 bolt-gradient-text">
+                  👀 Preview Your Presentation
+                </h2>
+                <p className="text-muted-foreground max-w-3xl mx-auto">
+                  Review the generated presentation. You can regenerate for a different version or keep this one.
+                  Your presentation won't be saved until you click "Keep This Version".
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-effect mb-4">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span className="text-sm font-medium">Professional Presentation Ready!</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold mb-3 bolt-gradient-text">
+                  🎉 Your Canva-Style Presentation is Ready!
+                </h2>
+                <p className="text-muted-foreground max-w-3xl mx-auto">
+                  Complete with professional design, high-quality images, interactive charts, and compelling content. 
+                  Present in full-screen mode or export to PowerPoint!
+                </p>
+              </>
+            )}
           </div>
 
-          {slides.length > 0 && (
+          {(isPreviewMode ? previewSlides : slides).length > 0 && (
             <div id="presentation-preview" className="glass-effect border border-yellow-400/20 rounded-xl overflow-hidden relative">
               <div className="absolute inset-0 shimmer opacity-10"></div>
               <div className="relative z-10">
-                <PresentationPreview slides={slides} template={selectedTemplate} />
+                <PresentationPreview 
+                  slides={isPreviewMode ? previewSlides : slides} 
+                  template={selectedTemplate} 
+                />
               </div>
             </div>
           )}
@@ -703,69 +805,118 @@ export function PresentationGenerator() {
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button
-              onClick={resetToInput}
-              variant="outline"
-              className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
-            >
-              <Brain className="mr-2 h-4 w-4" />
-              Create New Presentation
-            </Button>
-            <Button
-              onClick={() => setCurrentStep('theme')}
-              variant="outline"
-              className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
-            >
-              <Palette className="mr-2 h-4 w-4" />
-              Change Style
-            </Button>
-            
-            {/* Share button */}
-            {!shareUrl && (
-              <Button
-                onClick={() => saveAndSharePresentation(true)}
-                disabled={isSaving}
-                className="bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300"
-              >
-                {isSaving ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Share2 className="mr-2 h-4 w-4" />
-                )}
-                Share Presentation
-              </Button>
-            )}
-            
-            <div className="flex flex-col sm:flex-row gap-2">
-              <Button
-                onClick={exportToPDF}
-                disabled={isExporting}
-                variant="outline"
-                className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
-              >
-                {isExporting ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Download className="mr-2 h-4 w-4" />
-                )}
-                PDF
-              </Button>
-              <Button
-                onClick={exportToPPTX}
-                disabled={isExporting}
-                variant="outline"
-                className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
-              >
-                {isExporting ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Download className="mr-2 h-4 w-4" />
-                )}
-                PowerPoint
-              </Button>
+          {isPreviewMode ? (
+            // Preview Mode Actions
+            <div className="space-y-4">
+              <div className="glass-effect p-4 rounded-xl border border-blue-400/20 bg-blue-50/10">
+                <p className="text-center text-sm text-muted-foreground mb-4">
+                  💡 <strong>Preview Mode:</strong> This presentation is not saved yet. 
+                  Regenerate for a different version or keep this one to continue.
+                </p>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <Button
+                  onClick={() => setCurrentStep('theme')}
+                  variant="outline"
+                  className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
+                >
+                  <Palette className="mr-2 h-4 w-4" />
+                  Change Style
+                </Button>
+                <Button
+                  onClick={regeneratePresentation}
+                  disabled={isGenerating}
+                  variant="outline"
+                  className="glass-effect border-orange-400/30 hover:border-orange-400/60"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Regenerating...
+                    </>
+                  ) : (
+                    <>
+                      <Wand2 className="mr-2 h-4 w-4" />
+                      Regenerate Different Version
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={keepPresentation}
+                  className="bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300 px-8"
+                >
+                  <CheckCircle className="mr-2 h-5 w-5" />
+                  Keep This Version
+                </Button>
+              </div>
             </div>
-          </div>
+          ) : (
+            // Final Mode Actions
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Button
+                onClick={resetToInput}
+                variant="outline"
+                className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
+              >
+                <Brain className="mr-2 h-4 w-4" />
+                Create New Presentation
+              </Button>
+              <Button
+                onClick={() => setCurrentStep('theme')}
+                variant="outline"
+                className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
+              >
+                <Palette className="mr-2 h-4 w-4" />
+                Change Style
+              </Button>
+              
+              {/* Share button */}
+              {!shareUrl && (
+                <Button
+                  onClick={() => saveAndSharePresentation(true)}
+                  disabled={isSaving}
+                  className="bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300"
+                >
+                  {isSaving ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Share2 className="mr-2 h-4 w-4" />
+                  )}
+                  Share Presentation
+                </Button>
+              )}
+              
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Button
+                  onClick={exportToPDF}
+                  disabled={isExporting}
+                  variant="outline"
+                  className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
+                >
+                  {isExporting ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="mr-2 h-4 w-4" />
+                  )}
+                  PDF
+                </Button>
+                <Button
+                  onClick={exportToPPTX}
+                  disabled={isExporting}
+                  variant="outline"
+                  className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
+                >
+                  {isExporting ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="mr-2 h-4 w-4" />
+                  )}
+                  PowerPoint
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
