@@ -321,25 +321,25 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
     if (!stepGuidance || currentStep === 'review') return null;
 
     return (
-      <Card className="glass-effect border-blue-400/20 mb-6">
+      <Card className="glass-effect border-blue-400/20 mb-6 bg-blue-50/30 dark:bg-blue-950/20">
         <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
+          <CardTitle className="flex items-center gap-2 text-lg text-blue-900 dark:text-blue-200">
             <Brain className="h-5 w-5 text-blue-500" />
             AI Guidance for {stepGuidance.stepTitle}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground">{stepGuidance.description}</p>
+          <p className="text-sm text-blue-800 dark:text-blue-300">{stepGuidance.description}</p>
           
           {stepGuidance.tips && (
             <div>
-              <h4 className="font-medium text-sm mb-2 flex items-center gap-1">
+              <h4 className="font-medium text-sm mb-2 flex items-center gap-1 text-green-900 dark:text-green-200">
                 <Target className="h-4 w-4 text-green-500" />
                 ATS Optimization Tips
               </h4>
               <ul className="space-y-1">
                 {stepGuidance.tips.map((tip: string, index: number) => (
-                  <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
+                  <li key={index} className="text-sm text-green-800 dark:text-green-300 flex items-start gap-2">
                     <span className="text-green-500 mt-1">•</span>
                     {tip}
                   </li>
@@ -350,13 +350,13 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
 
           {stepGuidance.keywords && (
             <div>
-              <h4 className="font-medium text-sm mb-2 flex items-center gap-1">
+              <h4 className="font-medium text-sm mb-2 flex items-center gap-1 text-yellow-900 dark:text-yellow-200">
                 <Sparkles className="h-4 w-4 text-yellow-500" />
                 Recommended Keywords
               </h4>
               <div className="flex flex-wrap gap-1">
                 {stepGuidance.keywords.map((keyword: string, index: number) => (
-                  <Badge key={index} variant="outline" className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200">
+                  <Badge key={index} variant="outline" className="text-xs bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/50 dark:text-yellow-200 dark:border-yellow-700">
                     {keyword}
                   </Badge>
                 ))}
@@ -926,10 +926,10 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
         <div className="flex items-start gap-3">
           <Award className="h-5 w-5 text-orange-600 mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="font-semibold text-sm text-gray-900 dark:text-orange-100 mb-1">
+            <h3 className="font-semibold text-sm text-orange-900 dark:text-orange-100 mb-1">
               Certifications That Matter
             </h3>
-            <ul className="text-xs text-gray-700 dark:text-orange-300 space-y-1">
+            <ul className="text-xs text-orange-700 dark:text-orange-300 space-y-1">
               <li>• Include industry-recognized certifications relevant to your field</li>
               <li>• List most recent or most relevant certifications first</li>
               <li>• Add credential IDs when available for verification</li>
@@ -1105,22 +1105,22 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center gap-2 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-              <TrendingUp className="h-5 w-5 text-yellow-600" />
+            <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
+              <TrendingUp className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
               <div>
-                <p className="font-medium text-black dark:text-white">Target Role: {targetRole}</p>
-                <p className="text-sm text-black dark:text-white">
+                <p className="font-medium text-gray-900 dark:text-white">Target Role: {targetRole}</p>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
                   Your resume will be optimized for this specific role
                 </p>
               </div>
             </div>
             
             {jobDescription && (
-              <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <FileText className="h-5 w-5 text-blue-600" />
+              <div className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 <div>
-                  <p className="font-medium text-black dark:text-white">Job Description Provided</p>
-                  <p className="text-sm text-black dark:text-white">
+                  <p className="font-medium text-gray-900 dark:text-white">Job Description Provided</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
                     Keywords will be extracted for maximum ATS compatibility
                   </p>
                 </div>
