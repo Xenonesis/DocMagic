@@ -11,30 +11,30 @@
 
 
 :root {
-  --background: hsl(30 56% 91%);
-  --foreground: hsl(210 11% 15%);
-  --card: hsl(30 56% 96%);
-  --card-foreground: hsl(210 11% 15%);
-  --popover: hsl(30 56% 96%);
-  --popover-foreground: hsl(210 11% 15%);
-  --primary: hsl(210 11% 15%);
-  --primary-foreground: hsl(30 56% 91%);
-  --secondary: hsl(30 56% 85%);
-  --secondary-foreground: hsl(210 11% 15%);
-  --muted: hsl(30 56% 85%);
-  --muted-foreground: hsl(210 8% 45%);
-  --accent: hsl(30 56% 80%);
-  --accent-foreground: hsl(210 11% 15%);
-  --destructive: hsl(0 84% 60%);
-  --destructive-foreground: hsl(30 56% 91%);
-  --border: hsl(30 40% 80%);
-  --input: hsl(30 40% 80%);
-  --ring: hsl(210 11% 15%);
-  --chart-1: hsl(210 70% 50%);
-  --chart-2: hsl(195 60% 45%);
-  --chart-3: hsl(160 50% 40%);
-  --chart-4: hsl(45 70% 55%);
-  --chart-5: hsl(25 60% 50%);
+  --background: hsl(30 15% 95%);
+  --foreground: hsl(30 10% 20%);
+  --card: hsl(30 15% 98%);
+  --card-foreground: hsl(30 10% 20%);
+  --popover: hsl(30 15% 98%);
+  --popover-foreground: hsl(30 10% 20%);
+  --primary: hsl(30 10% 55%);
+  --primary-foreground: hsl(30 15% 98%);
+  --secondary: hsl(30 12% 85%);
+  --secondary-foreground: hsl(30 10% 25%);
+  --muted: hsl(30 12% 88%);
+  --muted-foreground: hsl(30 8% 45%);
+  --accent: hsl(30 15% 80%);
+  --accent-foreground: hsl(30 10% 20%);
+  --destructive: hsl(0 70% 55%);
+  --destructive-foreground: hsl(30 15% 98%);
+  --border: hsl(30 12% 82%);
+  --input: hsl(30 12% 82%);
+  --ring: hsl(30 10% 55%);
+  --chart-1: hsl(30 25% 60%);
+  --chart-2: hsl(35 30% 55%);
+  --chart-3: hsl(25 20% 50%);
+  --chart-4: hsl(40 35% 65%);
+  --chart-5: hsl(20 25% 55%);
   --radius: 0.5rem;
 }
 
@@ -651,10 +651,32 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 
+  /* Light mode navbar text - black color */
+  .nav-professional a,
+  .nav-professional button,
+  .nav-professional span {
+    color: #000000 !important;
+  }
+
+  .nav-professional .text-muted-foreground {
+    color: #000000 !important;
+  }
+
   .dark .nav-professional {
     background: hsl(var(--background) / 0.95);
     border-bottom: 1px solid hsl(var(--border));
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Reset text colors for dark mode */
+  .dark .nav-professional a,
+  .dark .nav-professional button,
+  .dark .nav-professional span {
+    color: inherit !important;
+  }
+
+  .dark .nav-professional .text-muted-foreground {
+    color: hsl(var(--muted-foreground)) !important;
   }
 
   /* Professional Footer */
