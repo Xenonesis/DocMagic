@@ -133,7 +133,7 @@ export default function ContactForm() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 relative z-10 py-16 sm:py-24 lg:py-32">
+      <div className="flex-1 relative z-10 py-16 sm:py-24 lg:py-32 pt-24">
         <div className="container px-4 sm:px-6 lg:px-8 mx-auto">
           {/* Section transition indicator */}
           <div className="flex justify-center mb-8 sm:mb-12">

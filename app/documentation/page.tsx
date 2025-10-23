@@ -1,6 +1,6 @@
 export default function DocumentationPage() {
   return (
-    <div className="container py-12">
+    <div className="container py-12 pt-24">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-8">Documentation</h1>
         

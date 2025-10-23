@@ -326,7 +326,7 @@ export default function ProfilePage() {
     return (
       <div>
         <SiteHeader />
-        <div className="container mx-auto py-8">
+        <div className="container mx-auto py-8 pt-24">
           <div className="max-w-4xl mx-auto space-y-6">
             <div className="animate-pulse">
               <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
@@ -347,7 +347,7 @@ export default function ProfilePage() {
     return (
       <div>
         <SiteHeader />
-        <div className="container mx-auto py-8">
+        <div className="container mx-auto py-8 pt-24">
           <div className="text-center">
             <p>Please sign in to view your profile.</p>
           </div>
@@ -359,7 +359,7 @@ export default function ProfilePage() {
   return (
     <div>
       <SiteHeader />
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto py-8 pt-24">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Header */}
           <div className="flex items-center justify-between">

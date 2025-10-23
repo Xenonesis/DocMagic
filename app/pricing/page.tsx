@@ -115,7 +115,7 @@ export default function PricingPage() {
             }}
           />
       <SiteHeader />
-      <main className="flex-1 relative z-10 flex items-center justify-center">
+      <main className="flex-1 relative z-10 flex items-center justify-center pt-20">
         {/* Pricing Section with matching background elements */}
         <section className="py-16 sm:py-24 lg:py-32 relative overflow-hidden">
             
