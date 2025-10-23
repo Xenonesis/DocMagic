@@ -105,44 +105,44 @@ export function DocumentTypesSection() {
           {documentTypes.map((doc, index) => (
             <Card 
               key={doc.title}
-              className={`group relative professional-card glass-effect hover:scale-105 transition-all duration-300 border ${doc.borderColor} overflow-hidden animate-fade-in-up`}
+              className="group relative !bg-white dark:!bg-gray-900 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 !border !border-gray-200 dark:!border-gray-700 overflow-hidden animate-fade-in-up rounded-xl"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Badge */}
               {doc.badge && (
                 <div className="absolute top-4 right-4 z-10">
-                  <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold shadow-lg">
+                  <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold shadow-lg">
                     <Star className="h-3 w-3" />
                     {doc.badge}
                   </div>
                 </div>
               )}
 
-              {/* Gradient overlay on hover */}
-              <div className={`absolute inset-0 ${doc.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
+              {/* Gradient background overlay */}
+              <div className={`absolute inset-0 ${doc.gradient} opacity-0 group-hover:opacity-10 dark:group-hover:opacity-20 transition-opacity duration-300`}></div>
 
-              <CardHeader className="pb-4">
-                <div className={`w-14 h-14 ${doc.gradient} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <doc.icon className="h-7 w-7 text-white" />
+              <CardHeader className="pb-4 relative z-10">
+                <div className={`w-16 h-16 ${doc.gradient} rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
+                  <doc.icon className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-xl font-bold group-hover:bolt-gradient-text transition-colors">
+                <CardTitle className="text-xl font-bold text-gray-900 dark:text-white group-hover:bolt-gradient-text transition-colors">
                   {doc.title}
                 </CardTitle>
-                <CardDescription className="text-sm leading-relaxed mt-2">
+                <CardDescription className="text-sm leading-relaxed mt-2 text-gray-600 dark:text-gray-400">
                   {doc.description}
                 </CardDescription>
               </CardHeader>
 
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 relative z-10">
                 {/* Features */}
                 <div className="flex flex-wrap gap-2">
                   {doc.features.map((feature) => (
                     <div 
                       key={feature}
-                      className="flex items-center gap-1 px-3 py-1 rounded-full glass-effect border border-current/20 text-xs font-medium"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                     >
-                      <Zap className="h-3 w-3 text-blue-500" />
-                      {feature}
+                      <Zap className="h-3 w-3 text-blue-500 dark:text-blue-400" />
+                      <span>{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -150,11 +150,11 @@ export function DocumentTypesSection() {
                 {/* CTA Button */}
                 <Button 
                   asChild
-                  className="w-full group/btn"
+                  className="w-full group/btn !bg-white dark:!bg-gray-800 hover:!bg-gray-50 dark:hover:!bg-gray-700 !text-gray-900 dark:!text-white hover:!text-gray-900 dark:hover:!text-white !border-2 !border-gray-300 dark:!border-gray-600 hover:!border-blue-500 dark:hover:!border-blue-400 transition-all"
                   variant="outline"
                 >
-                  <Link href={doc.href} className="flex items-center justify-center gap-2">
-                    <span>Create {doc.title}</span>
+                  <Link href={doc.href} className="flex items-center justify-center gap-2 !text-gray-900 dark:!text-white hover:!text-gray-900 dark:hover:!text-white">
+                    <span className="font-semibold">Create {doc.title}</span>
                     <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
