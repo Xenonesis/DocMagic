@@ -7,7 +7,7 @@ const testimonials = [
   {
     text: "This ERP revolutionized our operations, streamlining finance and inventory. The cloud-based platform keeps us productive, even remotely.",
     image: "https://randomuser.me/api/portraits/women/1.jpg",
-    name: "Briana Patton",
+    name: "Priya Sharma",
     role: "Operations Manager",
   },
   {
@@ -19,13 +19,13 @@ const testimonials = [
   {
     text: "The support team is exceptional, guiding us through setup and providing ongoing assistance, ensuring our satisfaction.",
     image: "https://randomuser.me/api/portraits/women/3.jpg",
-    name: "Saman Malik",
+    name: "Ananya Patel",
     role: "Customer Support Lead",
   },
   {
     text: "This ERP's seamless integration enhanced our business operations and efficiency. Highly recommend for its intuitive interface.",
     image: "https://randomuser.me/api/portraits/men/4.jpg",
-    name: "Omar Raza",
+    name: "Rajesh Kumar",
     role: "CEO",
   },
   {
@@ -37,13 +37,13 @@ const testimonials = [
   {
     text: "The smooth implementation exceeded expectations. It streamlined processes, improving overall business performance.",
     image: "https://randomuser.me/api/portraits/women/6.jpg",
-    name: "Aliza Khan",
+    name: "Kavya Reddy",
     role: "Business Analyst",
   },
   {
     text: "Our business functions improved with a user-friendly design and positive customer feedback.",
     image: "https://randomuser.me/api/portraits/men/7.jpg",
-    name: "Farhan Siddiqui",
+    name: "Arjun Singh",
     role: "Marketing Director",
   },
   {
@@ -55,7 +55,7 @@ const testimonials = [
   {
     text: "Using this ERP, our online presence and conversions significantly improved, boosting business performance.",
     image: "https://randomuser.me/api/portraits/men/9.jpg",
-    name: "Hassan Ali",
+    name: "Vikram Mehta",
     role: "E-commerce Manager",
   },
 ];
