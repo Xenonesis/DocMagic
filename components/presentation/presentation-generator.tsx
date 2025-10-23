@@ -13,7 +13,8 @@ import { SlideOutlinePreview } from "@/components/presentation/slide-outline-pre
 import { useToast } from "@/hooks/use-toast";
 import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
 import { ExportAuthDialog } from "@/components/ui/export-auth-dialog";
-import { Loader2, Sparkles, Presentation as LayoutPresentation, Lock, Download, Wand2, Sliders as Slides, Palette, Eye, ArrowRight, CheckCircle, Play, Brain, Zap, Star, Share2, Copy, Globe, ExternalLink } from "lucide-react";
+import { Loader2, Sparkles, Presentation as LayoutPresentation, Lock, Download, Wand2, Sliders as Slides, Palette, Eye, ArrowRight, CheckCircle, Play, Brain, Zap, Star, Share2, Copy, Globe, ExternalLink, Maximize2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -36,6 +37,7 @@ export function PresentationGenerator() {
   const [previewSlides, setPreviewSlides] = useState<any[]>([]);
   const { toast } = useToast();
   const { user, isAuthenticated, requireAuth } = useAuthGuard();
+  const router = useRouter();
 
   // Subscription limits - currently showing free tier limits for all users
   const MAX_FREE_PAGES = 5;
@@ -401,6 +403,51 @@ export function PresentationGenerator() {
         description: "Please copy the URL manually",
         variant: "destructive",
       });
+    }
+  };
+
+  const openFullView = async () => {
+    if (!slides.length) return;
+    
+    // Save presentation first if not already saved
+    if (!presentationId) {
+      setIsSaving(true);
+      try {
+        const response = await fetch('/api/presentations', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: prompt.slice(0, 100) || 'Untitled Presentation',
+            slides,
+            template: selectedTemplate,
+            prompt,
+            isPublic: false
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save presentation');
+        }
+
+        const data = await response.json();
+        setPresentationId(data.id);
+        
+        // Open full view in new tab
+        window.open(`/presentation/fullview/${data.id}`, '_blank');
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to open full view. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsSaving(false);
+      }
+    } else {
+      // Already saved, just open in new tab
+      window.open(`/presentation/fullview/${presentationId}`, '_blank');
     }
   };
 
@@ -871,19 +918,34 @@ export function PresentationGenerator() {
                 Change Style
               </Button>
               
+              {/* Full View button */}
+              <Button
+                onClick={openFullView}
+                disabled={isSaving}
+                className="bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300"
+              >
+                {isSaving ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Maximize2 className="mr-2 h-4 w-4" />
+                )}
+                Full View
+              </Button>
+              
               {/* Share button */}
               {!shareUrl && (
                 <Button
                   onClick={() => saveAndSharePresentation(true)}
                   disabled={isSaving}
-                  className="bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300"
+                  variant="outline"
+                  className="glass-effect border-green-400/30 hover:border-green-400/60"
                 >
                   {isSaving ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
                     <Share2 className="mr-2 h-4 w-4" />
                   )}
-                  Share Presentation
+                  Share
                 </Button>
               )}
               
