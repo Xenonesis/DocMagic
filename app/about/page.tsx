@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { 
-  Sparkles, 
-  Zap, 
-  Star, 
-  Users, 
-  Globe, 
-  Code, 
-  Palette, 
+import {
+  Sparkles,
+  Zap,
+  Star,
+  Users,
+  Globe,
+  Code,
+  Palette,
   Shield,
   Heart,
   Github,
@@ -37,19 +37,19 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
-      
+
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative overflow-hidden section-header py-16 sm:py-24 lg:py-32">
           {/* Animated background elements */}
           <div className="absolute inset-0 mesh-gradient opacity-30"></div>
           <div className="absolute inset-0 mesh-gradient-alt opacity-15"></div>
-          
+
           {/* Animated colorful floating orbs */}
           <div className="floating-orb w-48 h-48 sm:w-72 sm:h-72 sunset-gradient opacity-20 top-10 -left-24 sm:-left-36 animate-float-gentle will-change-transform"></div>
           <div className="floating-orb w-64 h-64 sm:w-96 sm:h-96 ocean-gradient opacity-15 -top-20 -right-32 sm:-right-48 animate-glow-pulse will-change-transform"></div>
-          <div className="floating-orb w-40 h-40 sm:w-64 sm:h-64 forest-gradient opacity-25 bottom-10 left-1/4 sm:left-1/3 animate-float-gentle will-change-transform" style={{animationDelay: '2s'}}></div>
-          
+          <div className="floating-orb w-40 h-40 sm:w-64 sm:h-64 forest-gradient opacity-25 bottom-10 left-1/4 sm:left-1/3 animate-float-gentle will-change-transform" style={{ animationDelay: '2s' }}></div>
+
           <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto">
             <div className="max-w-4xl mx-auto text-center">
               {/* Badge */}
@@ -57,10 +57,10 @@ export default function AboutPage() {
                 <div className="relative z-10 flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-yellow-500 animate-text-glow" />
                   <span className="text-sm font-medium bolt-gradient-text">About docverse</span>
-                  <Heart className="h-4 w-4 text-red-500" style={{animation: 'sparkle 2s ease-in-out infinite'}} />
+                  <Heart className="h-4 w-4 text-red-500" style={{ animation: 'sparkle 2s ease-in-out infinite' }} />
                 </div>
               </div>
-              
+
               {/* Main heading */}
               <h1 className="modern-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6 sm:mb-8 animate-slide-in-left will-change-transform">
                 Transforming Ideas into{" "}
@@ -71,14 +71,14 @@ export default function AboutPage() {
                   </div>
                 </span>
               </h1>
-              
+
               {/* Subtitle */}
               <p className="modern-body text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8 animate-slide-in-right delay-200 will-change-opacity">
-                docverse is a <span className="font-semibold bolt-gradient-text">100% open source</span>, 
-                AI-powered document creation platform that revolutionizes how professionals create 
+                docverse is a <span className="font-semibold bolt-gradient-text">100% open source</span>,
+                AI-powered document creation platform that revolutionizes how professionals create
                 stunning documents. Built by the community, for the community.
               </p>
-              
+
               {/* Stats */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 mt-12 animate-scale-in delay-400 will-change-transform">
                 <div className="professional-card p-4 rounded-xl text-center">
@@ -111,11 +111,11 @@ export default function AboutPage() {
                   Our <span className="bolt-gradient-text">Mission</span>
                 </h2>
                 <p className="modern-body text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-                  Democratize professional document creation through AI magic, making high-quality 
+                  Democratize professional document creation through AI magic, making high-quality
                   documents accessible to everyone, everywhere.
                 </p>
               </div>
-              
+
               <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
                 <Card className="card-coral hover-coral professional-card animate-slide-in-left delay-100 will-change-transform">
                   <CardHeader>
@@ -128,12 +128,12 @@ export default function AboutPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="professional-text text-base sm:text-lg leading-relaxed">
-                      To become the world's leading community-driven AI-powered document creation platform, 
+                      To become the world's leading community-driven AI-powered document creation platform,
                       transforming how professionals, students, and businesses create stunning documents in seconds.
                     </p>
                   </CardContent>
                 </Card>
-                
+
                 <Card className="card-sky hover-sky professional-card animate-slide-in-right delay-200 will-change-transform">
                   <CardHeader>
                     <div className="flex items-center gap-3 mb-4">
@@ -181,10 +181,10 @@ export default function AboutPage() {
                   Powerful AI-driven tools designed to create professional documents with magical precision.
                 </p>
               </div>
-              
+
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
                 {features.map((feature, index) => (
-                  <Card key={feature.title} className={`${feature.cardClass} professional-card animate-bounce-in will-change-transform`} style={{animationDelay: `${(index + 1) * 100}ms`}}>
+                  <Card key={feature.title} className={`${feature.cardClass} professional-card animate-bounce-in will-change-transform`} style={{ animationDelay: `${(index + 1) * 100}ms` }}>
                     <CardHeader className="text-center">
                       <div className={`w-16 h-16 mx-auto rounded-xl ${feature.gradientClass} flex items-center justify-center mb-4`}>
                         {feature.icon}
@@ -213,7 +213,7 @@ export default function AboutPage() {
                   Built with cutting-edge technologies for optimal performance and developer experience.
                 </p>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-8">
                 <Card className="card-mint hover-mint professional-card">
                   <CardHeader>
@@ -235,7 +235,7 @@ export default function AboutPage() {
                     </div>
                   </CardContent>
                 </Card>
-                
+
                 <Card className="card-lavender hover-lavender professional-card">
                   <CardHeader>
                     <div className="flex items-center gap-3 mb-4">
@@ -256,7 +256,7 @@ export default function AboutPage() {
                     </div>
                   </CardContent>
                 </Card>
-                
+
                 <Card className="card-coral hover-coral professional-card">
                   <CardHeader>
                     <div className="flex items-center gap-3 mb-4">
@@ -294,7 +294,7 @@ export default function AboutPage() {
                   "Magical Professionalism" - combining cutting-edge visual effects with professional usability.
                 </p>
               </div>
-              
+
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {designPrinciples.map((principle, index) => (
                   <Card key={principle.title} className={`${principle.cardClass} professional-card`}>
@@ -328,7 +328,7 @@ export default function AboutPage() {
                   Enterprise-grade security and quality assurance built into every aspect of docverse.
                 </p>
               </div>
-              
+
               <div className="grid md:grid-cols-2 gap-8">
                 <Card className="card-coral hover-coral professional-card">
                   <CardHeader>
@@ -364,7 +364,7 @@ export default function AboutPage() {
                     </ul>
                   </CardContent>
                 </Card>
-                
+
                 <Card className="card-sky hover-sky professional-card">
                   <CardHeader>
                     <div className="flex items-center gap-3 mb-4">
@@ -415,17 +415,17 @@ export default function AboutPage() {
                   <Heart className="h-4 w-4 text-red-500" />
                 </div>
               </div>
-              
+
               <h2 className="modern-title text-3xl sm:text-4xl lg:text-5xl mb-6">
                 Built by the <span className="bolt-gradient-text">Community</span>
               </h2>
-              
+
               <p className="modern-body text-lg sm:text-xl text-muted-foreground mb-8">
-                docverse is proudly open source under the MIT License. We believe in the power of 
-                community-driven development and welcome contributions from developers, designers, 
+                docverse is proudly open source under the MIT License. We believe in the power of
+                community-driven development and welcome contributions from developers, designers,
                 and users worldwide.
               </p>
-              
+
               <div className="grid sm:grid-cols-3 gap-6 mb-12">
                 <div className="professional-card p-6 text-center">
                   <Users className="h-8 w-8 mx-auto mb-3 text-blue-500" />
@@ -443,7 +443,7 @@ export default function AboutPage() {
                   <p className="professional-text text-sm">Used in 50+ countries worldwide</p>
                 </div>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button asChild className="bolt-gradient text-white font-semibold px-6 py-3 rounded-full hover:scale-105 transition-all duration-300">
                   <Link href="https://github.com/Xenonesis/Docverse" className="flex items-center gap-2">
@@ -476,7 +476,7 @@ export default function AboutPage() {
                   Exciting features and improvements coming to docverse in 2025.
                 </p>
               </div>
-              
+
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 {roadmapItems.map((item, index) => (
                   <Card key={item.title} className={`${item.cardClass} professional-card`}>
@@ -508,12 +508,12 @@ export default function AboutPage() {
               <h2 className="modern-title text-3xl sm:text-4xl lg:text-5xl mb-6">
                 Join Our <span className="bolt-gradient-text">Community</span>
               </h2>
-              
+
               <p className="modern-body text-lg sm:text-xl text-muted-foreground mb-12">
-                Connect with fellow developers, designers, and users. Get help, share ideas, 
+                Connect with fellow developers, designers, and users. Get help, share ideas,
                 and contribute to the future of docverse.
               </p>
-              
+
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {communityLinks.map((link, index) => (
                   <Button
@@ -579,7 +579,7 @@ const frontendTechnologies = [
   { name: "Tailwind CSS", version: "3.4.17" },
   { name: "Radix UI", version: "Latest" },
   { name: "Framer Motion", version: "12.23.6" },
-  { name: "docverse", version: "0.7.0" }
+  { name: "docverse", version: "4.0.0" }
 ];
 
 // Backend technologies defined below

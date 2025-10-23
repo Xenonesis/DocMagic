@@ -483,10 +483,10 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
         <div className="flex items-start gap-3">
           <Sparkles className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="font-semibold text-sm text-black dark:text-black mb-1">
+            <h3 className="font-semibold text-sm text-black dark:text-white mb-1">
               Pro Tips for a Great Professional Summary
             </h3>
-            <ul className="text-xs text-black dark:text-black space-y-1">
+            <ul className="text-xs text-black dark:text-white space-y-1">
               <li>• Keep it brief: 3-4 sentences maximum</li>
               <li>• Mention your years of experience and key expertise</li>
               <li>• Include 2-3 most relevant skills or achievements</li>
@@ -525,10 +525,10 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
         <div className="flex items-start gap-3">
           <TrendingUp className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="font-semibold text-sm text-yellow-900 dark:text-yellow-100 mb-1">
+            <h3 className="font-semibold text-sm text-black dark:text-white mb-1">
               Make Your Experience Stand Out
             </h3>
-            <ul className="text-xs text-yellow-700 dark:text-yellow-300 space-y-1">
+            <ul className="text-xs text-black dark:text-white space-y-1">
               <li>• Start each bullet point with a strong action verb (Led, Developed, Increased, etc.)</li>
               <li>• Include quantifiable results and metrics whenever possible</li>
               <li>• Focus on achievements, not just responsibilities</li>
@@ -649,10 +649,10 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
         <div className="flex items-start gap-3">
           <GraduationCap className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="font-semibold text-sm text-purple-900 dark:text-purple-100 mb-1">
+            <h3 className="font-semibold text-sm text-black dark:text-white mb-1">
               Education Guidelines
             </h3>
-            <ul className="text-xs text-purple-700 dark:text-purple-300 space-y-1">
+            <ul className="text-xs text-black dark:text-white space-y-1">
               <li>• List your highest or most relevant degree first</li>
               <li>• Include GPA if it's 3.5 or higher</li>
               <li>• Mention honors, awards, or relevant coursework</li>
@@ -760,13 +760,13 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           <div className="flex items-start gap-3">
             <Code className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
             <div>
-              <h3 className="font-semibold text-sm text-green-900 dark:text-green-100 mb-1">
+              <h3 className="font-semibold text-sm text-black dark:text-white mb-1">
                 Skills That Get You Noticed
               </h3>
-              <p className="text-xs text-green-700 dark:text-green-300 mb-2">
+              <p className="text-xs text-black dark:text-white mb-2">
                 Add skills in each category. Press Enter or click + to add. Click on a skill to remove it.
               </p>
-              <ul className="text-xs text-green-700 dark:text-green-300 space-y-1">
+              <ul className="text-xs text-black dark:text-white space-y-1">
                 <li>• <strong>Technical:</strong> Domain-specific skills (e.g., Machine Learning, Cloud Architecture)</li>
                 <li>• <strong>Programming:</strong> Languages and frameworks (e.g., Python, React, Node.js)</li>
                 <li>• <strong>Tools:</strong> Software and platforms (e.g., Docker, AWS, Git)</li>
@@ -926,10 +926,10 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
         <div className="flex items-start gap-3">
           <Award className="h-5 w-5 text-orange-600 mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="font-semibold text-sm text-orange-900 dark:text-orange-100 mb-1">
+            <h3 className="font-semibold text-sm text-gray-900 dark:text-orange-100 mb-1">
               Certifications That Matter
             </h3>
-            <ul className="text-xs text-orange-700 dark:text-orange-300 space-y-1">
+            <ul className="text-xs text-gray-700 dark:text-orange-300 space-y-1">
               <li>• Include industry-recognized certifications relevant to your field</li>
               <li>• List most recent or most relevant certifications first</li>
               <li>• Add credential IDs when available for verification</li>
@@ -1108,8 +1108,8 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
             <div className="flex items-center gap-2 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
               <TrendingUp className="h-5 w-5 text-yellow-600" />
               <div>
-                <p className="font-medium text-yellow-800">Target Role: {targetRole}</p>
-                <p className="text-sm text-yellow-700">
+                <p className="font-medium text-black dark:text-white">Target Role: {targetRole}</p>
+                <p className="text-sm text-black dark:text-white">
                   Your resume will be optimized for this specific role
                 </p>
               </div>
@@ -1119,8 +1119,8 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
               <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
                 <FileText className="h-5 w-5 text-blue-600" />
                 <div>
-                  <p className="font-medium text-blue-800">Job Description Provided</p>
-                  <p className="text-sm text-blue-700">
+                  <p className="font-medium text-black dark:text-white">Job Description Provided</p>
+                  <p className="text-sm text-black dark:text-white">
                     Keywords will be extracted for maximum ATS compatibility
                   </p>
                 </div>
@@ -1214,7 +1214,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
 
       <Card className="glass-effect border-green-400/20 bg-green-50/10">
         <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-green-700">
+          <CardTitle className="flex items-center gap-2 text-black dark:text-white">
             <Shield className="h-5 w-5 text-green-600" />
             ATS Optimization Benefits
           </CardTitle>
@@ -1223,25 +1223,25 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           <div className="space-y-3">
             <div className="flex items-start gap-2">
               <Star className="h-4 w-4 text-yellow-500 mt-1" />
-              <p className="text-sm text-green-700">
+              <p className="text-sm text-black dark:text-white">
                 <span className="font-medium">Keyword Optimization:</span> Your resume will be optimized with exact keywords from your target role
               </p>
             </div>
             <div className="flex items-start gap-2">
               <Star className="h-4 w-4 text-yellow-500 mt-1" />
-              <p className="text-sm text-green-700">
+              <p className="text-sm text-black dark:text-white">
                 <span className="font-medium">ATS-Friendly Format:</span> Structured for maximum compatibility with Applicant Tracking Systems
               </p>
             </div>
             <div className="flex items-start gap-2">
               <Star className="h-4 w-4 text-yellow-500 mt-1" />
-              <p className="text-sm text-green-700">
+              <p className="text-sm text-black dark:text-white">
                 <span className="font-medium">Quantified Achievements:</span> Your experience will be enhanced with metrics and results
               </p>
             </div>
             <div className="flex items-start gap-2">
               <Star className="h-4 w-4 text-yellow-500 mt-1" />
-              <p className="text-sm text-green-700">
+              <p className="text-sm text-black dark:text-white">
                 <span className="font-medium">Professional Links:</span> Your online presence will be properly formatted and integrated
               </p>
             </div>

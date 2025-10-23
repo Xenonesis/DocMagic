@@ -394,7 +394,7 @@ export function ResumeTemplates({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-8">
             <div>
-              <h2 className="text-xl font-bold mb-4 flex items-center text-blue-800">
+              <h2 className="text-xl font-bold mb-4 flex items-center text-black dark:text-blue-800">
                 <span className="w-8 h-1 mr-3 inline-block bg-gradient-to-r from-blue-500 to-blue-700"></span>
                 About Me
               </h2>
@@ -402,7 +402,7 @@ export function ResumeTemplates({
             </div>
 
             <div>
-              <h2 className="text-xl font-bold mb-4 flex items-center text-blue-800">
+              <h2 className="text-xl font-bold mb-4 flex items-center text-black dark:text-blue-800">
                 <span className="w-8 h-1 mr-3 inline-block bg-gradient-to-r from-blue-500 to-blue-700"></span>
                 Experience
               </h2>
@@ -427,7 +427,7 @@ export function ResumeTemplates({
 
           <div className="space-y-8">
             <div>
-              <h2 className="text-xl font-bold mb-4 flex items-center text-blue-800">
+              <h2 className="text-xl font-bold mb-4 flex items-center text-black dark:text-blue-800">
                 <span className="w-8 h-1 mr-3 inline-block bg-gradient-to-r from-blue-500 to-blue-700"></span>
                 Skills
               </h2>
@@ -442,7 +442,7 @@ export function ResumeTemplates({
             </div>
 
             <div>
-              <h2 className="text-xl font-bold mb-4 flex items-center text-blue-800">
+              <h2 className="text-xl font-bold mb-4 flex items-center text-black dark:text-blue-800">
                 <span className="w-8 h-1 mr-3 inline-block bg-gradient-to-r from-blue-500 to-blue-700"></span>
                 Education
               </h2>
@@ -458,7 +458,7 @@ export function ResumeTemplates({
             </div>
 
             <div>
-              <h2 className="text-xl font-bold mb-4 flex items-center text-blue-800">
+              <h2 className="text-xl font-bold mb-4 flex items-center text-black dark:text-blue-800">
                 <span className="w-8 h-1 mr-3 inline-block bg-gradient-to-r from-blue-500 to-blue-700"></span>
                 Projects
               </h2>
@@ -473,7 +473,7 @@ export function ResumeTemplates({
             </div>
             
             <div>
-              <h2 className="text-xl font-bold mb-4 flex items-center text-blue-800">
+              <h2 className="text-xl font-bold mb-4 flex items-center text-black dark:text-blue-800">
                 <span className="w-8 h-1 mr-3 inline-block bg-gradient-to-r from-blue-500 to-blue-700"></span>
                 Connect
               </h2>
@@ -500,10 +500,10 @@ export function ResumeTemplates({
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col md:flex-row gap-8 mb-10">
           <div className="flex-1">
-            <h1 className="text-4xl font-bold tracking-tight mb-2 text-purple-800">
+            <h1 className="text-4xl font-bold tracking-tight mb-2 text-black dark:text-purple-800">
               {sampleResumeData.name}
             </h1>
-            <div className="text-2xl font-medium mb-4 text-purple-800">
+            <div className="text-2xl font-medium mb-4 text-black dark:text-purple-800">
               {sampleResumeData.title}
             </div>
             <p className="text-gray-700">{sampleResumeData.summary}</p>
@@ -533,7 +533,7 @@ export function ResumeTemplates({
             <div className="w-full border-t-2 border-dashed border-purple-100"></div>
           </div>
           <div className="relative flex justify-center">
-            <span className="px-4 bg-white text-lg font-medium text-purple-800">
+            <span className="px-4 bg-white text-lg font-medium text-black dark:text-purple-800">
               Professional Journey
             </span>
           </div>
@@ -542,7 +542,7 @@ export function ResumeTemplates({
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="md:col-span-2 space-y-8">
             <div>
-              <h2 className="text-2xl font-bold mb-4 text-purple-800">
+              <h2 className="text-2xl font-bold mb-4 text-black dark:text-purple-800">
                 Expertise
               </h2>
               <div className="space-y-3">
@@ -564,7 +564,7 @@ export function ResumeTemplates({
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold mb-4 text-purple-800">
+              <h2 className="text-2xl font-bold mb-4 text-black dark:text-purple-800">
                 Education
               </h2>
               <div className="space-y-4">
@@ -579,7 +579,7 @@ export function ResumeTemplates({
             </div>
             
             <div>
-              <h2 className="text-2xl font-bold mb-4 text-purple-800">
+              <h2 className="text-2xl font-bold mb-4 text-black dark:text-purple-800">
                 Connect
               </h2>
               <div className="space-y-2">
@@ -598,7 +598,7 @@ export function ResumeTemplates({
 
           <div className="md:col-span-3 space-y-8">
             <div>
-              <h2 className="text-2xl font-bold mb-6 text-purple-800">
+              <h2 className="text-2xl font-bold mb-6 text-black dark:text-purple-800">
                 Work Experience
               </h2>
               <div className="space-y-8">
@@ -611,7 +611,7 @@ export function ResumeTemplates({
                         <h3 className="text-xl font-semibold text-gray-900">{exp.role}</h3>
                         <p className="text-sm text-gray-500">{exp.period}</p>
                       </div>
-                      <p className="text-lg font-medium mb-3 text-purple-800">
+                      <p className="text-lg font-medium mb-3 text-black dark:text-purple-800">
                         {exp.company}
                       </p>
                       <ul className="list-disc pl-5 space-y-2 text-gray-700">
@@ -626,7 +626,7 @@ export function ResumeTemplates({
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold mb-6 text-purple-800">
+              <h2 className="text-2xl font-bold mb-6 text-black dark:text-purple-800">
                 Notable Projects
               </h2>
               <div className="grid grid-cols-1 gap-4">
