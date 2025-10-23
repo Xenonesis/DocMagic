@@ -367,19 +367,22 @@ export function ShaderHero() {
         }
         .animate-fade-in-up {
           animation: fade-in-up 0.8s ease-out forwards;
-          opacity: 0;
         }
         .animation-delay-200 {
           animation-delay: 0.2s;
+          opacity: 0;
         }
         .animation-delay-400 {
           animation-delay: 0.4s;
+          opacity: 0;
         }
         .animation-delay-600 {
           animation-delay: 0.6s;
+          opacity: 0;
         }
         .animation-delay-800 {
           animation-delay: 0.8s;
+          opacity: 0;
         }
         @keyframes gradient-shift {
           0% {
@@ -405,7 +408,7 @@ export function ShaderHero() {
       />
 
       {/* Hero Content Overlay */}
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-white px-4">
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-white px-4 pt-24">
         {/* Trust Badge */}
         <div className="mb-8 animate-fade-in-down">
           <div className="flex items-center gap-2 px-6 py-3 bg-amber-500/10 backdrop-blur-md border border-amber-300/30 rounded-full text-sm">
@@ -418,14 +421,10 @@ export function ShaderHero() {
 
         <div className="text-center space-y-6 max-w-5xl mx-auto">
           {/* Main Heading with Animation */}
-          <div className="space-y-2">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold bg-gradient-to-r from-amber-300 via-yellow-400 to-orange-300 bg-clip-text text-transparent animate-fade-in-up animation-delay-200">
-              Create Stunning Documents
-            </h1>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold bg-gradient-to-r from-yellow-300 via-amber-400 to-red-400 bg-clip-text text-transparent animate-fade-in-up animation-delay-400">
-              in Seconds with AI
-            </h1>
-          </div>
+          <h1 className="modern-display text-5xl md:text-7xl lg:text-8xl font-bold leading-tight animate-fade-in-up animation-delay-200">
+            <span className="block">Create Stunning <span className="bolt-gradient-text">Documents</span></span>
+            <span className="block mt-2">in Seconds with <span className="bolt-gradient-text">AI</span></span>
+          </h1>
 
           {/* Subtitle with Animation */}
           <div className="max-w-3xl mx-auto animate-fade-in-up animation-delay-600">
@@ -452,10 +451,10 @@ export function ShaderHero() {
           </div>
 
           {/* CTA Buttons with Animation */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10 animate-fade-in-up animation-delay-800">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10 animate-fade-in-up animation-delay-800 relative z-20">
             <Link
               href="#document-types"
-              className="px-8 py-4 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-amber-500/25 flex items-center justify-center gap-2"
+              className="px-8 py-4 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-amber-500/25 flex items-center justify-center gap-2 shadow-lg"
             >
               <Sparkles className="h-5 w-5" />
               Start Creating Now
@@ -463,7 +462,7 @@ export function ShaderHero() {
             </Link>
             <Link
               href="#how-it-works"
-              className="px-8 py-4 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-300/30 hover:border-amber-300/50 text-amber-100 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 backdrop-blur-sm flex items-center justify-center gap-2"
+              className="px-8 py-4 bg-amber-500/20 hover:bg-amber-500/30 border-2 border-amber-300/50 hover:border-amber-300/70 text-amber-100 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 backdrop-blur-md flex items-center justify-center gap-2 shadow-lg"
             >
               <Star className="h-5 w-5" />
               Watch Demo
