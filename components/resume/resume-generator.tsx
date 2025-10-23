@@ -246,7 +246,11 @@ export function ResumeGenerator() {
                     className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
                     onClick={() => handleDownload('pdf')}
                   >
-                    <Download className="mr-2 h-4 w-4" />
+                    {isAuthenticated ? (
+                      <Download className="mr-2 h-4 w-4" />
+                    ) : (
+                      <Lock className="mr-2 h-4 w-4" />
+                    )}
                     Download PDF
                   </Button>
                   <Button
@@ -254,7 +258,11 @@ export function ResumeGenerator() {
                     className="glass-effect border-yellow-400/30 hover:border-yellow-400/60"
                     onClick={() => handleDownload('docx')}
                   >
-                    <Download className="mr-2 h-4 w-4" />
+                    {isAuthenticated ? (
+                      <Download className="mr-2 h-4 w-4" />
+                    ) : (
+                      <Lock className="mr-2 h-4 w-4" />
+                    )}
                     Download DOCX
                   </Button>
                   {isPro && (
@@ -389,23 +397,31 @@ export function ResumeGenerator() {
                     Download Options
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    <TooltipWithShortcut content="Download resume as PDF file for sharing">
+                    <TooltipWithShortcut content={isAuthenticated ? "Download resume as PDF file for sharing" : "Sign in to download your resume"}>
                       <Button
                         variant="outline"
                         className="glass-effect border-yellow-400/30 hover:border-yellow-400/60 w-full sm:w-auto"
                         onClick={() => handleDownload('pdf')}
                       >
-                        <Download className="mr-2 h-4 w-4" />
+                        {isAuthenticated ? (
+                          <Download className="mr-2 h-4 w-4" />
+                        ) : (
+                          <Lock className="mr-2 h-4 w-4" />
+                        )}
                         Download PDF
                       </Button>
                     </TooltipWithShortcut>
-                    <TooltipWithShortcut content="Download as Word document for editing">
+                    <TooltipWithShortcut content={isAuthenticated ? "Download as Word document for editing" : "Sign in to download your resume"}>
                       <Button
                         variant="outline"
                         className="glass-effect border-yellow-400/30 hover:border-yellow-400/60 w-full sm:w-auto"
                         onClick={() => handleDownload('docx')}
                       >
-                        <Download className="mr-2 h-4 w-4" />
+                        {isAuthenticated ? (
+                          <Download className="mr-2 h-4 w-4" />
+                        ) : (
+                          <Lock className="mr-2 h-4 w-4" />
+                        )}
                         Download DOCX
                       </Button>
                     </TooltipWithShortcut>

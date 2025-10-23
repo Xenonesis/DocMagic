@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { Linkedin, Github, Globe, Mail, Phone, MapPin, Download, Edit, Check, X, Sparkles, FileText } from "lucide-react";
+import { Linkedin, Github, Globe, Mail, Phone, MapPin, Download, Edit, Check, X, Sparkles, FileText, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useAuthGuard } from "@/lib/auth-utils";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -68,6 +69,7 @@ export function ResumePreview({ resume, template, onChange }: ResumePreviewProps
   const [isEditing, setIsEditing] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const { toast } = useToast();
+  const { isAuthenticated } = useAuthGuard();
   const [editableResume, setEditableResume] = useState<ResumeData>({
     ...resume,
     phone: resume.phone?.toString() || "",
@@ -200,6 +202,16 @@ export function ResumePreview({ resume, template, onChange }: ResumePreviewProps
   };
 
   const exportToPDF = async () => {
+    // Check authentication before downloading
+    if (!isAuthenticated) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to download your resume.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsExporting(true);
     
     try {
@@ -248,6 +260,16 @@ export function ResumePreview({ resume, template, onChange }: ResumePreviewProps
   };
 
   const exportToWord = () => {
+    // Check authentication before downloading
+    if (!isAuthenticated) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to download your resume.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     toast({
       title: "Coming Soon",
       description: "Word export will be available in the next update.",
@@ -796,8 +818,10 @@ export function ResumePreview({ resume, template, onChange }: ResumePreviewProps
             >
               {isExporting ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent" />
-              ) : (
+              ) : isAuthenticated ? (
                 <Download className="h-4 w-4" />
+              ) : (
+                <Lock className="h-4 w-4" />
               )}
               PDF
             </Button>
@@ -807,7 +831,11 @@ export function ResumePreview({ resume, template, onChange }: ResumePreviewProps
               onClick={exportToWord}
               className="flex items-center gap-1"
             >
-              <FileText className="h-4 w-4" />
+              {isAuthenticated ? (
+                <FileText className="h-4 w-4" />
+              ) : (
+                <Lock className="h-4 w-4" />
+              )}
               Word
             </Button>
           </div>

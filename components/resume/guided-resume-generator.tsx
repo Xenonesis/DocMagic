@@ -115,6 +115,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
     portfolio: ""
   });
 
+  // State for skills input
+  const [newSkill, setNewSkill] = useState({ technical: "", programming: "", tools: "", soft: "" });
+
   const steps: { id: ResumeStep; title: string; icon: any; description: string }[] = [
     { id: 'personal', title: 'Personal Info', icon: User, description: 'Basic contact information' },
     { id: 'summary', title: 'Professional Summary', icon: FileText, description: 'Your professional overview' },
@@ -191,12 +194,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
   };
 
   const generateResume = async () => {
-    // Check authentication before generating
-    if (!isAuthenticated) {
-      setShowAuthDialog(true);
-      return;
-    }
-
+    // Allow generation without authentication
     setIsGenerating(true);
 
     try {
@@ -229,7 +227,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
 
       toast({
         title: "🎯 ATS-Optimized Resume Generated!",
-        description: `Your resume is optimized for ${targetRole} with ${resume.atsScore}% ATS compatibility`,
+        description: `Your resume is optimized for ${targetRole} with ${resume.atsScore}% ATS compatibility. ${!isAuthenticated ? 'Sign in to download.' : ''}`,
       });
     } catch (error) {
       toast({
@@ -274,7 +272,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
 
   const renderStepIndicator = () => (
     <div className="mb-8">
-      <div className="flex items-center justify-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+      <div className="flex items-center justify-start gap-2 overflow-x-auto pb-2 px-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {steps.map((step, index) => (
           <div key={step.id} className="flex items-center flex-shrink-0">
             <button
@@ -756,8 +754,6 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
   );
 
   const renderSkillsStep = () => {
-    const [newSkill, setNewSkill] = useState({ technical: "", programming: "", tools: "", soft: "" });
-
     return (
       <div className="space-y-6">
         <div className="bg-green-50/50 dark:bg-green-950/20 p-4 rounded-lg border border-green-200/30">
