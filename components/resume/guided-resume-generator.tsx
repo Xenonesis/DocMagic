@@ -281,7 +281,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 currentStep === step.id
                   ? "bolt-gradient text-white shadow-lg scale-105"
                   : index < currentStepIndex
-                  ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800 hover:scale-105"
+                  ? "bg-black dark:bg-black text-white dark:text-white border border-black dark:border-black hover:scale-105"
                   : "glass-effect hover:scale-105 hover:border-primary/30"
               )}
               onClick={() => setCurrentStep(step.id)}
@@ -483,10 +483,10 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
         <div className="flex items-start gap-3">
           <Sparkles className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="font-semibold text-sm text-blue-900 dark:text-blue-100 mb-1">
+            <h3 className="font-semibold text-sm text-black dark:text-black mb-1">
               Pro Tips for a Great Professional Summary
             </h3>
-            <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
+            <ul className="text-xs text-black dark:text-black space-y-1">
               <li>• Keep it brief: 3-4 sentences maximum</li>
               <li>• Mention your years of experience and key expertise</li>
               <li>• Include 2-3 most relevant skills or achievements</li>
