@@ -462,9 +462,9 @@ export function ShaderHero() {
             </Link>
             <Link
               href="#how-it-works"
-              className="px-8 py-4 bg-amber-500/20 hover:bg-amber-500/30 border-2 border-amber-300/50 hover:border-amber-300/70 text-amber-100 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 backdrop-blur-md flex items-center justify-center gap-2 shadow-lg"
+              className="px-8 py-4 bg-white hover:bg-gray-50 border-2 border-gray-800 hover:border-black text-gray-900 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 shadow-2xl"
             >
-              <Star className="h-5 w-5" />
+              <Star className="h-5 w-5 text-gray-900" />
               Watch Demo
             </Link>
           </div>
