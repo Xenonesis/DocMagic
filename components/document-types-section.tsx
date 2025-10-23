@@ -91,8 +91,7 @@ export function DocumentTypesSection() {
             className="block group/heading cursor-pointer"
           >
             <h2 className="modern-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 leading-tight transition-transform duration-300 group-hover/heading:scale-105">
-              <span className="block mb-2">What would you like to</span>
-              <span className="bolt-gradient-text group-hover/heading:underline">create today?</span>
+              <span className="block">What would you like to <span className="bolt-gradient-text group-hover/heading:underline">create today?</span></span>
             </h2>
           </div>
           

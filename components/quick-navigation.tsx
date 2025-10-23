@@ -60,10 +60,10 @@ export function QuickNavigation() {
     <section className="py-12 sm:py-16 bg-gradient-to-r from-blue-50/30 via-background to-purple-50/30 border-y border-border/20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold bolt-gradient-text mb-3">
-            Explore docverse
+          <h2 className="modern-display text-2xl sm:text-3xl md:text-4xl font-bold mb-3">
+            <span className="bolt-gradient-text">Explore docverse</span>
           </h2>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+          <p className="modern-body text-sm sm:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Discover all the powerful features and tools available
           </p>
         </div>

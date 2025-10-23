@@ -21,9 +21,8 @@ export function TestimonialsSection() {
           <div className="flex justify-center">
             <div className="border py-1 px-4 rounded-lg">Testimonials</div>
           </div>
-          <h2 className="modern-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter mt-5 leading-tight">
-            <span className="block mb-2">What our</span>
-            <span className="bolt-gradient-text">users say</span>
+          <h2 className="modern-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter mt-5 leading-tight text-center">
+            What our <span className="bolt-gradient-text">users say</span>
           </h2>
           <p className="modern-body text-base sm:text-lg lg:text-xl text-muted-foreground text-center mt-5 leading-relaxed">
             See what our customers have to say about us.

@@ -65,8 +65,8 @@ export function QuickStartGuide() {
               <Sparkles className="h-4 w-4 text-yellow-500 animate-pulse" />
               <span className="text-sm font-semibold bolt-gradient-text">Get Started in 4 Easy Steps</span>
             </div>
-            <CardTitle className="text-2xl sm:text-3xl font-bold">
-              Quick Start Guide
+            <CardTitle className="modern-display text-2xl sm:text-3xl md:text-4xl font-bold">
+              <span className="bolt-gradient-text">Quick Start Guide</span>
             </CardTitle>
             <p className="text-sm text-muted-foreground mt-2">
               Create your first professional document in minutes

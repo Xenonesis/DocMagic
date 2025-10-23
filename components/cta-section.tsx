@@ -26,9 +26,8 @@ export function CTASection() {
           </div>
 
           {/* Heading */}
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            <span className="block mb-2">Transform Your Ideas</span>
-            <span className="block">Into Professional Documents</span>
+          <h2 className="modern-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+            <span className="block text-white">Transform Your Ideas Into <span className="bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-300 bg-clip-text text-transparent">Professional Documents</span></span>
           </h2>
 
           {/* Description */}

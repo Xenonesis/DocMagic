@@ -17,9 +17,8 @@ export function FeaturesSection() {
             <Sparkles className="h-5 w-5 text-yellow-500 animate-pulse" />
           </div>
 
-          <h2 className="modern-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-8 leading-tight">
-            <span className="block mb-2">How docverse</span>
-            <span className="bolt-gradient-text">Works Its Magic</span>
+          <h2 className="modern-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-8 leading-tight text-center">
+            How docverse <span className="bolt-gradient-text">Works Its Magic</span>
           </h2>
 
           <p className="modern-body text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
