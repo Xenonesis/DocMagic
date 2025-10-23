@@ -1,6 +1,8 @@
 'use client';
 
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FileText, Presentation, Mail, FileUser, Network, ArrowRight, Sparkles, Zap, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -59,6 +61,16 @@ const documentTypes = [
 ];
 
 export function DocumentTypesSection() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const router = useRouter();
+  
+  const handleHeadingClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const nextIndex = (currentIndex + 1) % documentTypes.length;
+    setCurrentIndex(nextIndex);
+    router.push(documentTypes[nextIndex].href);
+  };
+
   return (
     <section id="document-types" className="relative py-16 sm:py-20 lg:py-28 overflow-hidden">
       {/* Background elements */}
@@ -74,10 +86,15 @@ export function DocumentTypesSection() {
             <span className="text-sm font-semibold bolt-gradient-text">Choose Your Document Type</span>
           </div>
           
-          <h2 className="modern-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 leading-tight">
-            <span className="block mb-2">What would you like to</span>
-            <span className="bolt-gradient-text">create today?</span>
-          </h2>
+          <div 
+            onClick={handleHeadingClick}
+            className="block group/heading cursor-pointer"
+          >
+            <h2 className="modern-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 leading-tight transition-transform duration-300 group-hover/heading:scale-105">
+              <span className="block mb-2">What would you like to</span>
+              <span className="bolt-gradient-text group-hover/heading:underline">create today?</span>
+            </h2>
+          </div>
           
           <p className="modern-body text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Select a document type and let our AI help you create professional content in seconds

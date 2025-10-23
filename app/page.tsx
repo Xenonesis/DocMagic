@@ -1,6 +1,6 @@
 import { SiteHeader } from "@/components/site-header";
 import { SponsorBanner } from "@/components/sponsor-banner";
-import { HeroSection } from "@/components/hero-section";
+import { ShaderHero } from "@/components/shader-hero";
 import { FeaturesSection } from "@/components/features-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { QuickNavigation } from "@/components/quick-navigation";
@@ -15,7 +15,7 @@ export default function Home() {
       <SponsorBanner />
       <SiteHeader />
       <main className="flex-1">
-        <HeroSection />
+        <ShaderHero />
         <QuickStartGuide />
         <DocumentTypesSection />
         <QuickNavigation />
