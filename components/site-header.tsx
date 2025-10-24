@@ -15,6 +15,7 @@ import {
   DollarSign,
   Workflow,
   User,
+  Palette,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -388,6 +389,12 @@ const navItems = [
     label: "Diagram",
     icon: <Workflow className="h-4 w-4" />,
     tooltip: "Create flowcharts, architectures, and Mermaid diagrams",
+  },
+  {
+    href: "/icon",
+    label: "Icon",
+    icon: <Palette className="h-4 w-4" />,
+    tooltip: "Generate custom AI-powered icons and graphics",
   },
   {
     href: "/templates",

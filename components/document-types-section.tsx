@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FileText, Presentation, Mail, FileUser, Network, ArrowRight, Sparkles, Zap, Star } from "lucide-react";
+import { FileText, Presentation, Mail, FileUser, Network, Palette, ArrowRight, Sparkles, Zap, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -56,6 +56,16 @@ const documentTypes = [
     gradient: "ocean-gradient",
     borderColor: "border-cyan-200/30",
     features: ["Flowcharts", "Mind Maps", "Export SVG"],
+    badge: "New"
+  },
+  {
+    title: "Icon",
+    description: "AI-generated custom icons and graphics for your brand",
+    icon: Palette,
+    href: "/icon",
+    gradient: "sunset-gradient",
+    borderColor: "border-pink-200/30",
+    features: ["Multiple Styles", "High-Res", "Custom Colors"],
     badge: "New"
   }
 ];

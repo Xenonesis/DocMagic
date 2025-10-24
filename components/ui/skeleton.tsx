@@ -369,6 +369,36 @@ export function TemplateCardSkeleton() {
 
 export { Skeleton };
 
+// Icon Generator Skeleton
+export function IconGeneratorSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Input Section */}
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Skeleton className="h-5 w-32" />
+          <Skeleton className="h-24 w-full rounded-lg" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-10 w-full rounded-lg" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-10 w-full rounded-lg" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-24" />
+            <Skeleton className="h-10 w-full rounded-lg" />
+          </div>
+        </div>
+        <Skeleton className="h-12 w-full rounded-xl" />
+      </div>
+    </div>
+  );
+}
+
 // Diagram Generator Skeleton
 export function DiagramGeneratorSkeleton() {
   return (
