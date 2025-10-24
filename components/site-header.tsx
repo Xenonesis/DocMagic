@@ -9,10 +9,12 @@ export function SiteHeader() {
         <div className="flex h-14 sm:h-16 items-center justify-between">
           <div className="flex items-center gap-4 lg:gap-8">
             <NavLogo />
-            <MobileNav />
             <DesktopNav />
           </div>
-          <NavActions />
+          <div className="flex items-center gap-3">
+            <NavActions />
+            <MobileNav />
+          </div>
         </div>
       </div>
     </header>

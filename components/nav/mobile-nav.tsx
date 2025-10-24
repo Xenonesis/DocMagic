@@ -42,11 +42,11 @@ export function MobileNav() {
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden hover:bg-accent/50 h-9 w-9 transition-all duration-200 relative group"
+          className="md:hidden hover:bg-accent/50 h-10 w-10 transition-all duration-200 relative group"
           aria-label="Open navigation menu"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/0 to-orange-500/0 group-hover:from-yellow-500/10 group-hover:to-orange-500/10 rounded-md transition-all duration-300" />
-          <Menu className="h-5 w-5 relative z-10 group-hover:scale-110 transition-transform" />
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/0 to-orange-500/0 group-hover:from-yellow-500/10 group-hover:to-orange-500/10 rounded-lg transition-all duration-300" />
+          <Menu className="h-6 w-6 relative z-10 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
         </Button>
       </SheetTrigger>
       <SheetContent
