@@ -24,7 +24,9 @@ async function extractTextFromFile(file) {
     if (fileName.endsWith('.pdf')) {
       // Load pdf-parse dynamically in the API route context
       const pdfParse = require('pdf-parse');
-      const data = await pdfParse(buffer);
+      // pdf-parse exports a default function, access it properly
+      const parser = pdfParse.default || pdfParse;
+      const data = await parser(buffer);
       return data.text;
     }
     
