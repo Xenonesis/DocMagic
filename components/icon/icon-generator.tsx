@@ -64,9 +64,59 @@ export function IconGenerator() {
   const [generatedIcons, setGeneratedIcons] = useState<string[]>([]);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [showExportDialog, setShowExportDialog] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
   
   const { toast } = useToast();
   const { subscription, isLoading: subscriptionLoading } = useSubscription();
+
+  const handleEnhancePrompt = async () => {
+    if (!prompt.trim()) {
+      toast({
+        title: "No prompt to enhance",
+        description: "Please enter a basic description first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsEnhancing(true);
+
+    try {
+      const response = await fetch("/api/enhance-prompt", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt,
+          type: "icon",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to enhance prompt");
+      }
+
+      const data = await response.json();
+      
+      if (data.enhancedPrompt) {
+        setPrompt(data.enhancedPrompt);
+        toast({
+          title: "✨ Prompt Enhanced!",
+          description: "Your description has been improved with AI",
+        });
+      }
+    } catch (error) {
+      console.error("Error enhancing prompt:", error);
+      toast({
+        title: "Enhancement Failed",
+        description: "Failed to enhance prompt. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -229,14 +279,31 @@ export function IconGenerator() {
               </span>
             )}
           </div>
-          <Textarea
-            id="prompt"
-            placeholder="E.g., A modern rocket launching into space, minimalist design with blue and orange colors"
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            className="min-h-[100px] resize-none border-gray-300 focus:border-blue-500 dark:border-gray-600"
-            disabled={isGenerating}
-          />
+          <div className="relative">
+            <Textarea
+              id="prompt"
+              placeholder="E.g., A modern rocket launching into space, minimalist design with blue and orange colors"
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              className="min-h-[100px] resize-none border-gray-300 focus:border-blue-500 dark:border-gray-600 pr-12"
+              disabled={isGenerating}
+            />
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={handleEnhancePrompt}
+              disabled={isGenerating || isEnhancing || !prompt.trim()}
+              className="absolute bottom-2 right-2 h-8 px-3 hover:bg-yellow-500/10 hover:text-yellow-600 transition-colors"
+              title="Enhance prompt with AI"
+            >
+              {isEnhancing ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Sparkles className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
           <p className="text-xs text-muted-foreground">
             💡 Tip: Be specific about shapes, objects, colors, and mood for best results
           </p>
