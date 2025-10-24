@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Analyzer Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 10px;
+        }
+        button {
+            background: #0070f3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background: #ccc;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>ATS Analyzer Test</h1>
+    
+    <form id="atsForm">
+        <div class="form-group">
+            <label for="resumeFile">Upload Resume (PDF, DOC, DOCX, or TXT):</label>
+            <input type="file" id="resumeFile" accept=".pdf,.doc,.docx,.txt" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="jobDescription">Job Description:</label>
+            <textarea id="jobDescription" placeholder="Paste the job description here..." required></textarea>
+        </div>
+        
+        <button type="submit" id="submitBtn">Analyze Resume</button>
+    </form>
+    
+    <div id="result" style="display: none;"></div>
+    
+    <script>
+        document.getElementById('atsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            const fileInput = document.getElementById('resumeFile');
+            const jobDescription = document.getElementById('jobDescription').value;
+            
+            if (!fileInput.files[0]) {
+                alert('Please select a file');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Analyzing...';
+            resultDiv.style.display = 'none';
+            
+            try {
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                formData.append('jobDescription', jobDescription);
+                
+                const response = await fetch('/api/analyze/resume', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <h2 class="success">✅ Analysis Complete!</h2>
+                        <h3>Overall Score: ${data.score}%</h3>
+                        <h4>Section Scores:</h4>
+                        <ul>
+                            ${Object.entries(data.analysis.sectionScores).map(([section, score]) => 
+                                `<li>${section}: ${score}%</li>`
+                            ).join('')}
+                        </ul>
+                        <h4>Formatting Score: ${data.analysis.formattingScore}%</h4>
+                        <h4>Keywords Found: ${data.analysis.keywordMatch.found.length}</h4>
+                        <h4>Keywords Missing: ${data.analysis.keywordMatch.missing.length}</h4>
+                        ${data.improvements.critical.length > 0 ? `
+                            <h4>Critical Improvements:</h4>
+                            <ul>${data.improvements.critical.map(imp => `<li>${imp}</li>`).join('')}</ul>
+                        ` : ''}
+                        ${data.improvements.aiSuggestions.length > 0 ? `
+                            <h4>AI Suggestions:</h4>
+                            <ul>${data.improvements.aiSuggestions.map(sug => `<li>${sug}</li>`).join('')}</ul>
+                        ` : ''}
+                    `;
+                    resultDiv.classList.remove('error');
+                    resultDiv.classList.add('success');
+                } else {
+                    resultDiv.innerHTML = `
+                        <h2 class="error">❌ Error</h2>
+                        <p>${data.error}</p>
+                        ${data.details ? `<p>Details: ${data.details}</p>` : ''}
+                    `;
+                    resultDiv.classList.remove('success');
+                    resultDiv.classList.add('error');
+                }
+                
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h2 class="error">❌ Error</h2>
+                    <p>${error.message}</p>
+                `;
+                resultDiv.classList.remove('success');
+                resultDiv.classList.add('error');
+                resultDiv.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Analyze Resume';
+            }
+        });
+    </script>
+</body>
+</html>

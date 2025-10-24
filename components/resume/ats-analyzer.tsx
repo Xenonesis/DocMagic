@@ -85,22 +85,23 @@ export function ATSAnalyzer() {
         body: formData,
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        throw new Error(`Status: ${res.status}`);
+        throw new Error(data.error || `Status: ${res.status}`);
       }
 
-      const data = await res.json();
       setAnalysis(data);
 
       toast({
         title: "Analysis Complete",
         description: `Your resume scored ${data.score}% ATS compatibility`,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error analyzing resume:", err);
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: err.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
