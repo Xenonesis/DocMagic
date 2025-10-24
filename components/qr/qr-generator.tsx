@@ -151,30 +151,171 @@ export function QRGenerator() {
     }
   }, []);
 
+  // Auto-update QR code when styling changes (only if already generated)
+  useEffect(() => {
+    if (isGenerated && qrCode && qrRef.current) {
+      try {
+        const data = generateQRData();
+        if (data && data.trim() !== "") {
+          qrCode.update({
+            width: size,
+            height: size,
+            data: data,
+            margin: margin,
+            qrOptions: {
+              typeNumber: 0,
+              mode: "Byte",
+              errorCorrectionLevel: "Q"
+            },
+            imageOptions: {
+              hideBackgroundDots: true,
+              imageSize: 0.4,
+              margin: 0
+            },
+            dotsOptions: {
+              color: dotsColor,
+              type: dotStyle as any
+            },
+            backgroundOptions: {
+              color: backgroundColor,
+            },
+            cornersSquareOptions: {
+              color: cornerSquareColor,
+              type: cornerSquareStyle as any,
+            },
+            cornersDotOptions: {
+              color: cornerDotColor,
+              type: cornerDotStyle as any,
+            }
+          });
+          
+          qrRef.current.innerHTML = "";
+          qrCode.append(qrRef.current);
+        }
+      } catch (error) {
+        console.error("Error updating QR code style:", error);
+      }
+    }
+  }, [isGenerated, qrCode, size, margin, dotStyle, cornerSquareStyle, cornerDotStyle, dotsColor, backgroundColor, cornerSquareColor, cornerDotColor, qrType, qrData, emailAddress, emailSubject, emailBody, phoneNumber, smsNumber, smsMessage, wifiSSID, wifiPassword, wifiEncryption, vcardName, vcardPhone, vcardEmail, vcardOrg, vcardUrl, latitude, longitude]);
+
   const generateQRData = () => {
     switch (qrType) {
       case "url":
+        // Ensure URL has protocol
+        if (qrData && !qrData.match(/^[a-zA-Z]+:\/\//)) {
+          return `https://${qrData}`;
+        }
         return qrData;
+      
       case "text":
         return qrData;
+      
       case "email":
-        return `mailto:${emailAddress}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+        // Build mailto URL with optional subject and body
+        let emailUrl = `mailto:${emailAddress}`;
+        const params = [];
+        if (emailSubject) params.push(`subject=${encodeURIComponent(emailSubject)}`);
+        if (emailBody) params.push(`body=${encodeURIComponent(emailBody)}`);
+        if (params.length > 0) emailUrl += `?${params.join('&')}`;
+        return emailUrl;
+      
       case "phone":
+        // Remove any non-numeric characters except + for international format
         return `tel:${phoneNumber}`;
+      
       case "sms":
-        return `sms:${smsNumber}?body=${encodeURIComponent(smsMessage)}`;
+        // SMS format with optional message
+        if (smsMessage) {
+          return `sms:${smsNumber}?body=${encodeURIComponent(smsMessage)}`;
+        }
+        return `sms:${smsNumber}`;
+      
       case "wifi":
-        return `WIFI:T:${wifiEncryption};S:${wifiSSID};P:${wifiPassword};;`;
+        // WiFi format: WIFI:T:WPA;S:mynetwork;P:mypass;;
+        // Escape special characters in SSID and password
+        const escapedSSID = wifiSSID.replace(/([\\;,":])/g, '\\$1');
+        const escapedPassword = wifiPassword.replace(/([\\;,":])/g, '\\$1');
+        return `WIFI:T:${wifiEncryption};S:${escapedSSID};P:${escapedPassword};;`;
+      
       case "vcard":
-        return `BEGIN:VCARD\nVERSION:3.0\nFN:${vcardName}\nTEL:${vcardPhone}\nEMAIL:${vcardEmail}\nORG:${vcardOrg}\nURL:${vcardUrl}\nEND:VCARD`;
+        // vCard 3.0 format with proper line breaks
+        let vcard = "BEGIN:VCARD\nVERSION:3.0\n";
+        if (vcardName) vcard += `FN:${vcardName}\n`;
+        if (vcardPhone) vcard += `TEL:${vcardPhone}\n`;
+        if (vcardEmail) vcard += `EMAIL:${vcardEmail}\n`;
+        if (vcardOrg) vcard += `ORG:${vcardOrg}\n`;
+        if (vcardUrl) vcard += `URL:${vcardUrl}\n`;
+        vcard += "END:VCARD";
+        return vcard;
+      
       case "location":
-        return `geo:${latitude},${longitude}`;
+        // Geo URI format: geo:latitude,longitude
+        if (latitude && longitude) {
+          return `geo:${latitude},${longitude}`;
+        }
+        return "";
+      
       default:
         return qrData;
     }
   };
 
   const handleGenerate = () => {
+    // Validate required fields based on QR type
+    let validationError = "";
+    
+    switch (qrType) {
+      case "url":
+        if (!qrData || qrData.trim() === "") {
+          validationError = "Please enter a URL";
+        }
+        break;
+      case "text":
+        if (!qrData || qrData.trim() === "") {
+          validationError = "Please enter some text";
+        }
+        break;
+      case "email":
+        if (!emailAddress || emailAddress.trim() === "") {
+          validationError = "Please enter an email address";
+        }
+        break;
+      case "phone":
+        if (!phoneNumber || phoneNumber.trim() === "") {
+          validationError = "Please enter a phone number";
+        }
+        break;
+      case "sms":
+        if (!smsNumber || smsNumber.trim() === "") {
+          validationError = "Please enter a phone number";
+        }
+        break;
+      case "wifi":
+        if (!wifiSSID || wifiSSID.trim() === "") {
+          validationError = "Please enter WiFi network name (SSID)";
+        }
+        break;
+      case "vcard":
+        if (!vcardName || vcardName.trim() === "") {
+          validationError = "Please enter at least a name for the contact";
+        }
+        break;
+      case "location":
+        if (!latitude || !longitude) {
+          validationError = "Please enter both latitude and longitude";
+        }
+        break;
+    }
+    
+    if (validationError) {
+      toast({
+        title: "Data Required",
+        description: validationError,
+        variant: "destructive",
+      });
+      return;
+    }
+    
     const data = generateQRData();
     
     if (!data || data.trim() === "") {
@@ -210,6 +351,16 @@ export function QRGenerator() {
         height: size,
         data: data,
         margin: margin,
+        qrOptions: {
+          typeNumber: 0,
+          mode: "Byte",
+          errorCorrectionLevel: "Q"
+        },
+        imageOptions: {
+          hideBackgroundDots: true,
+          imageSize: 0.4,
+          margin: 0
+        },
         dotsOptions: {
           color: dotsColor,
           type: dotStyle as any
@@ -561,6 +712,14 @@ export function QRGenerator() {
         </TabsContent>
         
         <TabsContent value="style" className="space-y-6 mt-6">
+          {isGenerated && (
+            <div className="glass-effect p-4 rounded-lg border border-blue-500/20 mb-4">
+              <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
+                <Sparkles className="h-4 w-4 animate-pulse" />
+                <span className="font-medium">Live Preview Active - Changes apply automatically</span>
+              </div>
+            </div>
+          )}
           <div className="space-y-6">
             {/* Size and Margin */}
             <div className="grid grid-cols-2 gap-4">
