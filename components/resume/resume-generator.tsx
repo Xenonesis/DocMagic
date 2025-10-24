@@ -124,35 +124,35 @@ export function ResumeGenerator() {
 
       <Tabs defaultValue="guided" className="w-full">
         <div
-          className={`flex justify-center mb-6 ${isFullView ? "hidden" : ""}`}
+          className={`flex justify-center mb-4 sm:mb-6 overflow-x-auto scrollbar-hide ${isFullView ? "hidden" : ""}`}
         >
           <TabsList
-            className="glass-effect border border-yellow-400/30 p-1.5 h-auto flex overflow-x-auto scrollbar-hide gap-1 sm:gap-2 md:gap-4 w-full max-w-full bg-white/80 dark:bg-gray-900/80 shadow-lg"
+            className="glass-effect border border-yellow-400/30 p-1 sm:p-1.5 h-auto flex gap-1 sm:gap-2 min-w-max bg-white/80 dark:bg-gray-900/80 shadow-lg"
             style={{ WebkitOverflowScrolling: "touch" }}
           >
             <TabsTrigger
               value="guided"
-              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-1 sm:gap-2 text-sm sm:text-base min-w-[140px] justify-center hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all duration-300 flex items-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
             >
-              <Brain className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Smart Builder</span>
-              <span className="sm:hidden">Smart</span>
+              <Brain className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="hidden xs:inline">Smart Builder</span>
+              <span className="xs:hidden">Smart</span>
             </TabsTrigger>
             <TabsTrigger
               value="quick"
-              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-1 sm:gap-2 text-sm sm:text-base min-w-[140px] justify-center hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all duration-300 flex items-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
             >
-              <Wand2 className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Quick Generate</span>
-              <span className="sm:hidden">Quick</span>
+              <Wand2 className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="hidden xs:inline">Quick Generate</span>
+              <span className="xs:hidden">Quick</span>
             </TabsTrigger>
             <TabsTrigger
               value="templates"
-              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-1 sm:gap-2 text-sm sm:text-base min-w-[140px] justify-center hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all duration-300 flex items-center gap-1 sm:gap-2 text-xs sm:text-sm whitespace-nowrap hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
             >
-              <Palette className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Templates</span>
-              <span className="sm:hidden">Templates</span>
+              <Palette className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="hidden xs:inline">Templates</span>
+              <span className="xs:hidden">Templ</span>
             </TabsTrigger>
           </TabsList>
         </div>

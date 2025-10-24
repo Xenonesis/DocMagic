@@ -97,21 +97,23 @@ export default function ResumePage() {
 
           {/* Enhanced Tabs */}
           <Tabs defaultValue="generator" className="w-full">
-            <div className="flex justify-center mb-8">
-              <TabsList className="glass-effect border border-yellow-400/30 p-1.5 h-auto bg-white/80 dark:bg-gray-900/80 shadow-lg">
+            <div className="flex justify-center mb-6 sm:mb-8 overflow-x-auto scrollbar-hide">
+              <TabsList className="glass-effect border border-yellow-400/30 p-1 sm:p-1.5 h-auto bg-white/80 dark:bg-gray-900/80 shadow-lg min-w-max">
                 <TabsTrigger
                   value="generator"
-                  className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+                  className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-3 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-base hover:bg-gray-100/50 dark:hover:bg-gray-800/50 whitespace-nowrap"
                 >
-                  <Sparkles className="h-4 w-4" />
-                  Resume Generator
+                  <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+                  <span className="hidden xs:inline">Resume Generator</span>
+                  <span className="xs:hidden">Resume</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="analyzer"
-                  className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+                  className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-3 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-base hover:bg-gray-100/50 dark:hover:bg-gray-800/50 whitespace-nowrap"
                 >
-                  <Target className="h-4 w-4" />
-                  ATS Analyzer
+                  <Target className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+                  <span className="hidden xs:inline">ATS Analyzer</span>
+                  <span className="xs:hidden">ATS</span>
                 </TabsTrigger>
               </TabsList>
             </div>
