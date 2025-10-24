@@ -22,8 +22,8 @@ export function SimpleThemeToggle() {
 
   if (!mounted) {
     return (
-      <button className="w-10 h-10 rounded-lg border border-border bg-background/90 shadow-sm flex items-center justify-center">
-        <Sun className="h-6 w-6" strokeWidth={1.5} />
+      <button className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-border bg-background/90 shadow-sm flex items-center justify-center">
+        <Sun className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={1.5} />
       </button>
     );
   }
@@ -34,11 +34,11 @@ export function SimpleThemeToggle() {
   return (
     <button
       onClick={cycleTheme}
-      className="group relative w-10 h-10 rounded-lg border border-border/80 hover:border-border flex items-center justify-center bg-background/90 hover:bg-accent/50 shadow-sm transition-all duration-200 hover:shadow-lg overflow-hidden p-0"
+      className="group relative w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-border/80 hover:border-border flex items-center justify-center bg-background/90 hover:bg-accent/50 shadow-sm transition-all duration-200 hover:shadow-lg overflow-hidden p-0"
       aria-label={`Current theme: ${label}. Click to cycle themes`}
     >
       <div className={`transition-all duration-500 flex items-center justify-center ${isChanging ? "scale-0 rotate-180 opacity-0" : "scale-100 rotate-0 opacity-100"}`}>
-        <Icon className="h-6 w-6 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" strokeWidth={1.5} />
+        <Icon className="h-5 w-5 sm:h-6 sm:w-6 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" strokeWidth={1.5} />
       </div>
       {isChanging && (
         <div className="absolute inset-0 flex items-center justify-center">

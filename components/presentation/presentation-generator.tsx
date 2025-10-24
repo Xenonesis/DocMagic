@@ -480,33 +480,35 @@ export function PresentationGenerator() {
   };
 
   const renderStepIndicator = () => (
-    <div className="flex items-center justify-center gap-2 sm:gap-4 mb-6 sm:mb-8 overflow-x-auto pb-2">
-      <div className={`flex items-center gap-2 px-3 py-2 rounded-full transition-all whitespace-nowrap ${
-        currentStep === 'input' ? 'bolt-gradient text-white shadow-lg' : 'glass-effect hover:scale-105'
-      }`}>
-        <Brain className="h-4 w-4" />
-        <span className="text-sm font-medium">1. Describe</span>
-      </div>
-      <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-      <div className={`flex items-center gap-2 px-3 py-2 rounded-full transition-all whitespace-nowrap ${
-        currentStep === 'outline' ? 'bolt-gradient text-white shadow-lg' : 'glass-effect hover:scale-105'
-      }`}>
-        <Zap className="h-4 w-4" />
-        <span className="text-sm font-medium">2. AI Structure</span>
-      </div>
-      <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-      <div className={`flex items-center gap-2 px-3 py-2 rounded-full transition-all whitespace-nowrap ${
-        currentStep === 'theme' ? 'bolt-gradient text-white shadow-lg' : 'glass-effect hover:scale-105'
-      }`}>
-        <Palette className="h-4 w-4" />
-        <span className="text-sm font-medium">3. Style</span>
-      </div>
-      <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-      <div className={`flex items-center gap-2 px-3 py-2 rounded-full transition-all whitespace-nowrap ${
-        currentStep === 'generated' ? 'bolt-gradient text-white shadow-lg' : 'glass-effect hover:scale-105'
-      }`}>
-        <Play className="h-4 w-4" />
-        <span className="text-sm font-medium">4. Present</span>
+    <div className="w-full overflow-x-auto mb-6 sm:mb-8 pb-2 scrollbar-hide">
+      <div className="flex items-center justify-start sm:justify-center gap-2 sm:gap-4 min-w-max px-4 sm:px-0">
+        <div className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap ${
+          currentStep === 'input' ? 'bolt-gradient text-white shadow-lg' : 'glass-effect hover:scale-105'
+        }`}>
+          <Brain className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+          <span className="text-xs sm:text-sm font-medium">1. Describe</span>
+        </div>
+        <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
+        <div className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap ${
+          currentStep === 'outline' ? 'bolt-gradient text-white shadow-lg' : 'glass-effect hover:scale-105'
+        }`}>
+          <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+          <span className="text-xs sm:text-sm font-medium">2. AI Structure</span>
+        </div>
+        <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
+        <div className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap ${
+          currentStep === 'theme' ? 'bolt-gradient text-white shadow-lg' : 'glass-effect hover:scale-105'
+        }`}>
+          <Palette className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+          <span className="text-xs sm:text-sm font-medium">3. Style</span>
+        </div>
+        <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
+        <div className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap ${
+          currentStep === 'generated' ? 'bolt-gradient text-white shadow-lg' : 'glass-effect hover:scale-105'
+        }`}>
+          <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+          <span className="text-xs sm:text-sm font-medium">4. Present</span>
+        </div>
       </div>
     </div>
   );
