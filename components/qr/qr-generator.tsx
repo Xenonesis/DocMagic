@@ -107,12 +107,12 @@ export function QRGenerator() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Initialize QR Code
+    // Initialize QR Code only once
     const qr = new QRCodeStyling({
-      width: size,
-      height: size,
-      data: "",
-      margin: margin,
+      width: 300,
+      height: 300,
+      data: "https://example.com",
+      margin: 10,
       qrOptions: {
         typeNumber: 0,
         mode: "Byte",
@@ -124,19 +124,19 @@ export function QRGenerator() {
         margin: 0
       },
       dotsOptions: {
-        color: dotsColor,
-        type: dotStyle as any
+        color: "#000000",
+        type: "rounded"
       },
       backgroundOptions: {
-        color: backgroundColor,
+        color: "#ffffff",
       },
       cornersSquareOptions: {
-        color: cornerSquareColor,
-        type: cornerSquareStyle as any,
+        color: "#000000",
+        type: "extra-rounded",
       },
       cornersDotOptions: {
-        color: cornerDotColor,
-        type: cornerDotStyle as any,
+        color: "#000000",
+        type: "dot",
       }
     });
     
