@@ -34,7 +34,13 @@ import {
   RefreshCw
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import QRCodeStyling from "qr-code-styling";
+import dynamic from "next/dynamic";
+
+// Dynamically import QRCodeStyling to avoid SSR issues
+let QRCodeStyling: any = null;
+if (typeof window !== "undefined") {
+  QRCodeStyling = require("qr-code-styling");
+}
 
 const qrTypes = [
   { value: "url", label: "Website URL", icon: Link2, description: "Link to a website" },
@@ -70,7 +76,7 @@ const cornerDotStyles = [
 export function QRGenerator() {
   const [qrType, setQrType] = useState("url");
   const [qrData, setQrData] = useState("");
-  const [qrCode, setQrCode] = useState<QRCodeStyling | null>(null);
+  const [qrCode, setQrCode] = useState<any>(null);
   const [isGenerated, setIsGenerated] = useState(false);
   const [copied, setCopied] = useState(false);
   
@@ -107,40 +113,42 @@ export function QRGenerator() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Initialize QR Code only once
-    const qr = new QRCodeStyling({
-      width: 300,
-      height: 300,
-      data: "https://example.com",
-      margin: 10,
-      qrOptions: {
-        typeNumber: 0,
-        mode: "Byte",
-        errorCorrectionLevel: "Q"
-      },
-      imageOptions: {
-        hideBackgroundDots: true,
-        imageSize: 0.4,
-        margin: 0
-      },
-      dotsOptions: {
-        color: "#000000",
-        type: "rounded"
-      },
-      backgroundOptions: {
-        color: "#ffffff",
-      },
-      cornersSquareOptions: {
-        color: "#000000",
-        type: "extra-rounded",
-      },
-      cornersDotOptions: {
-        color: "#000000",
-        type: "dot",
-      }
-    });
-    
-    setQrCode(qr);
+    // Initialize QR Code only once on client side
+    if (typeof window !== "undefined" && QRCodeStyling) {
+      const qr = new QRCodeStyling({
+        width: 300,
+        height: 300,
+        data: "https://example.com",
+        margin: 10,
+        qrOptions: {
+          typeNumber: 0,
+          mode: "Byte",
+          errorCorrectionLevel: "Q"
+        },
+        imageOptions: {
+          hideBackgroundDots: true,
+          imageSize: 0.4,
+          margin: 0
+        },
+        dotsOptions: {
+          color: "#000000",
+          type: "rounded"
+        },
+        backgroundOptions: {
+          color: "#ffffff",
+        },
+        cornersSquareOptions: {
+          color: "#000000",
+          type: "extra-rounded",
+        },
+        cornersDotOptions: {
+          color: "#000000",
+          type: "dot",
+        }
+      });
+      
+      setQrCode(qr);
+    }
   }, []);
 
   const generateQRData = () => {
@@ -178,7 +186,25 @@ export function QRGenerator() {
       return;
     }
 
-    if (qrCode && qrRef.current) {
+    if (!qrCode) {
+      toast({
+        title: "Error",
+        description: "QR Code generator is not ready. Please refresh the page.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!qrRef.current) {
+      toast({
+        title: "Error",
+        description: "QR Code container is not ready.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
       qrCode.update({
         width: size,
         height: size,
@@ -209,6 +235,13 @@ export function QRGenerator() {
       toast({
         title: "✨ QR Code Generated!",
         description: "Your QR code is ready to download",
+      });
+    } catch (error) {
+      console.error("QR Code generation error:", error);
+      toast({
+        title: "Generation Failed",
+        description: "Failed to generate QR code. Please try again.",
+        variant: "destructive",
       });
     }
   };
@@ -691,64 +724,62 @@ export function QRGenerator() {
         </TabsContent>
       </Tabs>
 
-      {/* QR Code Preview */}
-      {isGenerated && (
-        <div className="space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
-            <QrCode className="h-5 w-5 text-yellow-500" />
-            Your QR Code
-          </h3>
+      {/* QR Code Preview - Always render the ref container */}
+      <div className={`space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700 ${!isGenerated ? 'hidden' : ''}`}>
+        <h3 className="text-lg font-semibold flex items-center gap-2">
+          <QrCode className="h-5 w-5 text-yellow-500" />
+          Your QR Code
+        </h3>
+        
+        <div className="flex flex-col items-center gap-4">
+          <Card className="p-6 bg-white dark:bg-gray-900">
+            <div ref={qrRef} className="flex items-center justify-center" />
+          </Card>
           
-          <div className="flex flex-col items-center gap-4">
-            <Card className="p-6 bg-white dark:bg-gray-900">
-              <div ref={qrRef} className="flex items-center justify-center" />
-            </Card>
-            
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Button
-                onClick={() => handleDownload("png")}
-                className="bolt-gradient text-white font-semibold px-6 hover:scale-105 transition-transform"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Download PNG
-              </Button>
-              <Button
-                onClick={() => handleDownload("svg")}
-                variant="outline"
-                className="border-gray-300 dark:border-gray-600 hover:scale-105 transition-transform"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Download SVG
-              </Button>
-              <Button
-                onClick={handleCopy}
-                variant="outline"
-                className="border-gray-300 dark:border-gray-600 hover:scale-105 transition-transform"
-              >
-                {copied ? (
-                  <>
-                    <Check className="h-4 w-4 mr-2" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-4 w-4 mr-2" />
-                    Copy Data
-                  </>
-                )}
-              </Button>
-              <Button
-                onClick={handleGenerate}
-                variant="outline"
-                className="border-gray-300 dark:border-gray-600 hover:scale-105 transition-transform"
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Regenerate
-              </Button>
-            </div>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <Button
+              onClick={() => handleDownload("png")}
+              className="bolt-gradient text-white font-semibold px-6 hover:scale-105 transition-transform"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Download PNG
+            </Button>
+            <Button
+              onClick={() => handleDownload("svg")}
+              variant="outline"
+              className="border-gray-300 dark:border-gray-600 hover:scale-105 transition-transform"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Download SVG
+            </Button>
+            <Button
+              onClick={handleCopy}
+              variant="outline"
+              className="border-gray-300 dark:border-gray-600 hover:scale-105 transition-transform"
+            >
+              {copied ? (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy Data
+                </>
+              )}
+            </Button>
+            <Button
+              onClick={handleGenerate}
+              variant="outline"
+              className="border-gray-300 dark:border-gray-600 hover:scale-105 transition-transform"
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Regenerate
+            </Button>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
