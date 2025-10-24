@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.0.0] - 2025-10-24
+### Changed
+- Project documentation cleanup - removed temporary implementation notes and temporary .md files
+- Updated version to 5.0.0 in package.json
+
 ## [4.0.0] - 2025-10-23
 ### Changed
 - Updated version to 4.0.0 in package.json

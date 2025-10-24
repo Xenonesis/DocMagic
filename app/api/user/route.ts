@@ -11,7 +11,16 @@ export async function GET() {
   const { data: { session } } = await supabase.auth.getSession();
   
   if (!session?.user?.email) {
-    return new NextResponse("Unauthorized", { status: 401 });
+    return NextResponse.json(
+      { error: "Unauthorized", user: null },
+      { 
+        status: 401,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, no-cache, must-revalidate',
+        }
+      }
+    );
   }
 
   const { data, error } = await supabase
@@ -21,10 +30,17 @@ export async function GET() {
     .single();
 
   if (error || !data) {
-    return new NextResponse("User not found", { status: 404 });
+    return NextResponse.json(
+      { error: "User not found", user: null },
+      { status: 404 }
+    );
   }
 
   return NextResponse.json({
+    user: {
+      email: session.user.email,
+      id: session.user.id,
+    },
     subscription: data.subscription || null,
   });
 }
