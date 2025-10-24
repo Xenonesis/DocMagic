@@ -6,9 +6,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ReactNode, useState } from 'react';
 import { TemplateProvider } from '@/providers/template-provider';
-import { Toaster } from '@/components/ui/toaster';
+import dynamic from 'next/dynamic';
 import { ToastProvider } from '@/components/ui/use-toast';
 import { AuthProvider } from '@/components/auth-provider';
+
+const Toaster = dynamic(() => import('@/components/ui/toaster').then((mod) => mod.Toaster), {
+  ssr: false,
+});
 
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(

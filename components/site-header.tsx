@@ -19,7 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { PWAInstallButton } from "@/components/pwa-install-button";
+import { PWAInstallButton } from "./pwa-install-button";
 import { SimpleThemeToggle } from "@/components/simple-theme-toggle";
 import { useAuth } from "@/components/auth-provider";
 import { TooltipWithShortcut } from "@/components/ui/tooltip";
@@ -262,7 +262,7 @@ export function SiteHeader() {
           <div className="flex items-center gap-3">
           {/* PWA Install Button */}
           <TooltipWithShortcut content="Install docverse as an app on your device">
-            <PWAInstallButton variant="ghost" size="sm" showText={false} />
+            <PWAInstallButton />
           </TooltipWithShortcut>
 
           {/* Theme Toggle - Simple version for testing */}
