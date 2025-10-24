@@ -517,3 +517,52 @@ export function DiagramGeneratorSkeleton() {
     </div>
   );
 }
+
+// Formatter Skeleton
+export function FormatterSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-5 w-5 rounded" />
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-6 w-32 rounded-full" />
+        </div>
+      </div>
+
+      {/* Input Section */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-5 w-32" />
+        </div>
+        <Skeleton className="h-[200px] w-full rounded-lg" />
+      </div>
+
+      {/* Operation Buttons */}
+      <div className="glass-effect p-6 rounded-xl space-y-4">
+        <Skeleton className="h-4 w-40" />
+        <div className="space-y-3">
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-9 w-28 rounded-lg" />
+            <Skeleton className="h-9 w-28 rounded-lg" />
+            <Skeleton className="h-9 w-32 rounded-lg" />
+            <Skeleton className="h-9 w-28 rounded-lg" />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-9 w-24 rounded-lg" />
+            <Skeleton className="h-9 w-28 rounded-lg" />
+            <Skeleton className="h-9 w-32 rounded-lg" />
+          </div>
+        </div>
+      </div>
+
+      {/* Output Section Placeholder */}
+      <div className="space-y-3">
+        <Skeleton className="h-5 w-32" />
+        <Skeleton className="h-[200px] w-full rounded-lg" />
+      </div>
+    </div>
+  );
+}

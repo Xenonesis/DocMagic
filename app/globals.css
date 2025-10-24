@@ -2471,3 +2471,25 @@ img {
   background: rgba(59, 130, 246, 0.3);
   color: inherit;
 }
+
+/* Page with fixed header and sponsor banner */
+.page-with-header {
+  padding-top: 100px;
+}
+
+@media (min-width: 640px) {
+  .page-with-header {
+    padding-top: 116px;
+  }
+}
+
+/* For pages without sponsor banner (just header) */
+.page-with-header-only {
+  padding-top: 56px;
+}
+
+@media (min-width: 640px) {
+  .page-with-header-only {
+    padding-top: 64px;
+  }
+}

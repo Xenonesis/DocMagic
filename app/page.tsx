@@ -13,7 +13,7 @@ export default function Home() {
     <div id="top" className="min-h-screen flex flex-col">
       <SponsorBanner />
       <SiteHeader />
-      <main className="flex-1">
+      <main className="flex-1 pt-[100px] sm:pt-[116px]">
         <ShaderHero />
         <QuickStartGuide />
         <DocumentTypesSection />

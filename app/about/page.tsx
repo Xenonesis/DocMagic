@@ -38,7 +38,7 @@ export default function AboutPage() {
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
 
-      <main className="flex-1 pt-20">
+      <main className="flex-1 page-with-header-only">
         {/* Hero Section */}
         <section className="relative overflow-hidden section-header py-16 sm:py-24 lg:py-32">
           {/* Animated background elements */}

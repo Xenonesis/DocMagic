@@ -7,6 +7,7 @@ import {
   Workflow,
   Palette,
   QrCode,
+  Code,
 } from "lucide-react";
 
 export const navItems = [
@@ -51,6 +52,12 @@ export const navItems = [
     label: "QR Code",
     icon: QrCode,
     tooltip: "Create custom QR codes with styling options",
+  },
+  {
+    href: "/formatter",
+    label: "Formatter",
+    icon: Code,
+    tooltip: "Format and validate text and JSON data",
   },
   {
     href: "/templates",
