@@ -59,6 +59,7 @@ export function IconGenerator() {
   const [size, setSize] = useState("512");
   const [colorScheme, setColorScheme] = useState("vibrant");
   const [customColor, setCustomColor] = useState("#3b82f6");
+  const [provider, setProvider] = useState<"pollinations" | "openrouter">("pollinations");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedIcons, setGeneratedIcons] = useState<string[]>([]);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
@@ -92,6 +93,7 @@ export function IconGenerator() {
           style,
           size: parseInt(size),
           colorScheme: colorScheme === "custom" ? customColor : colorScheme,
+          provider,
         }),
       });
 
@@ -135,13 +137,45 @@ export function IconGenerator() {
     }
 
     try {
-      // Create a temporary link to download the image
+      let downloadUrl: string;
+      let filename: string;
+
+      // For external URLs (Pollinations.ai), use proxy endpoint to avoid CORS
+      if (selectedIcon.startsWith('http://') || selectedIcon.startsWith('https://')) {
+        // Use proxy API to fetch the image server-side
+        const proxyResponse = await fetch('/api/download/icon', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ url: selectedIcon }),
+        });
+
+        if (!proxyResponse.ok) {
+          throw new Error('Failed to fetch icon through proxy');
+        }
+
+        const blob = await proxyResponse.blob();
+        downloadUrl = URL.createObjectURL(blob);
+        filename = `icon-${Date.now()}.png`;
+      } else {
+        // Direct download for data URLs (SVG from OpenRouter)
+        downloadUrl = selectedIcon;
+        filename = `icon-${Date.now()}.svg`;
+      }
+
+      // Create and trigger download
       const link = document.createElement("a");
-      link.href = selectedIcon;
-      link.download = `icon-${Date.now()}.png`;
+      link.href = downloadUrl;
+      link.download = filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
+      // Clean up blob URL if created
+      if (downloadUrl.startsWith('blob:')) {
+        setTimeout(() => URL.revokeObjectURL(downloadUrl), 100);
+      }
 
       toast({
         title: "✅ Download Started",
@@ -211,7 +245,33 @@ export function IconGenerator() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Provider Selection */}
+          <div className="space-y-2">
+            <Label htmlFor="provider" className="text-sm font-semibold">
+              ⚡ Generation Engine
+            </Label>
+            <Select value={provider} onValueChange={(value: "pollinations" | "openrouter") => setProvider(value)} disabled={isGenerating}>
+              <SelectTrigger id="provider" className="border-gray-300 dark:border-gray-600">
+                <SelectValue placeholder="Select provider" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pollinations">
+                  <div className="flex flex-col">
+                    <span className="font-medium">Pollinations.ai</span>
+                    <span className="text-xs text-muted-foreground">Image-based icons (Recommended)</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="openrouter">
+                  <div className="flex flex-col">
+                    <span className="font-medium">OpenRouter AI</span>
+                    <span className="text-xs text-muted-foreground">SVG-based icons</span>
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Style Selection */}
           <div className="space-y-2">
             <Label htmlFor="style" className="text-sm font-semibold">

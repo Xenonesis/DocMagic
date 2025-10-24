@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createRoute } from "@/lib/supabase/server";
 import { generateIconWithOpenRouter } from "@/lib/openrouter";
+import { generatePollinationsIconsAuto } from "@/lib/pollinations";
 
 export const runtime = "edge";
 export const maxDuration = 60;
@@ -10,6 +11,7 @@ interface IconRequest {
   style: string;
   size: number;
   colorScheme: string;
+  provider?: 'openrouter' | 'pollinations';
 }
 
 export async function POST(request: Request) {
@@ -21,7 +23,7 @@ export async function POST(request: Request) {
 
     // Get request body
     const body: IconRequest = await request.json();
-    const { prompt, style, size, colorScheme } = body;
+    const { prompt, style, size, colorScheme, provider = 'pollinations' } = body;
 
     // Validate input
     if (!prompt || prompt.trim().length === 0) {
@@ -59,13 +61,27 @@ export async function POST(request: Request) {
       }
     }
 
-    // Generate icons using OpenRouter
-    const icons = await generateIconWithOpenRouter({
-      prompt,
-      style,
-      size,
-      colorScheme,
-    });
+    // Generate icons using selected provider
+    let icons: string[];
+    
+    if (provider === 'pollinations') {
+      // Use Pollinations.ai for image-based icon generation
+      icons = await generatePollinationsIconsAuto({
+        prompt,
+        style,
+        size,
+        colorScheme,
+        count: 4, // Generate 4 variations
+      });
+    } else {
+      // Use OpenRouter for SVG-based icon generation
+      icons = await generateIconWithOpenRouter({
+        prompt,
+        style,
+        size,
+        colorScheme,
+      });
+    }
 
     // Update usage stats if user is authenticated
     if (user) {
