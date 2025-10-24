@@ -322,7 +322,7 @@ export function IconGenerator() {
               <SelectContent>
                 <SelectItem value="pollinations">
                   <div className="flex flex-col">
-                    <span className="font-medium">Pollinations.ai</span>
+                    <span className="font-medium">Docverse</span>
                     <span className="text-xs text-muted-foreground">Image-based icons (Recommended)</span>
                   </div>
                 </SelectItem>
