@@ -22,7 +22,10 @@ async function extractTextFromFile(file) {
   try {
     // Handle PDF files
     if (fileName.endsWith('.pdf')) {
-      const pdfParse = (await import('pdf-parse')).default;
+      // pdf-parse is a CommonJS module, use dynamic require
+      const { createRequire } = await import('module');
+      const require = createRequire(import.meta.url);
+      const pdfParse = require('pdf-parse');
       const data = await pdfParse(buffer);
       return data.text;
     }
