@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FileText, Presentation, Mail, FileUser, Network, Palette, ArrowRight, Sparkles, Zap, Star } from "lucide-react";
+import { FileText, Presentation, Mail, FileUser, Network, Palette, QrCode, ArrowRight, Sparkles, Zap, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -66,6 +66,16 @@ const documentTypes = [
     gradient: "sunset-gradient",
     borderColor: "border-pink-200/30",
     features: ["Multiple Styles", "High-Res", "Custom Colors"],
+    badge: "New"
+  },
+  {
+    title: "QR Code",
+    description: "Custom QR codes with styling options for any purpose",
+    icon: QrCode,
+    href: "/qr",
+    gradient: "cosmic-gradient",
+    borderColor: "border-indigo-200/30",
+    features: ["Multiple Types", "Custom Colors", "High Quality"],
     badge: "New"
   }
 ];

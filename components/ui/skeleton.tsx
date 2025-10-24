@@ -399,6 +399,39 @@ export function IconGeneratorSkeleton() {
   );
 }
 
+// QR Generator Skeleton
+export function QRGeneratorSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Tabs */}
+      <div className="flex gap-2">
+        <Skeleton className="h-10 w-32 rounded-lg" />
+        <Skeleton className="h-10 w-32 rounded-lg" />
+      </div>
+      
+      {/* Type Selection */}
+      <div className="space-y-3">
+        <Skeleton className="h-5 w-32" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {[...Array(8)].map((_, i) => (
+            <Skeleton key={i} className="h-24 w-full rounded-lg" />
+          ))}
+        </div>
+      </div>
+
+      {/* Input Fields */}
+      <div className="space-y-4">
+        <Skeleton className="h-5 w-40" />
+        <Skeleton className="h-10 w-full rounded-lg" />
+        <Skeleton className="h-10 w-full rounded-lg" />
+      </div>
+
+      {/* Generate Button */}
+      <Skeleton className="h-12 w-full rounded-xl" />
+    </div>
+  );
+}
+
 // Diagram Generator Skeleton
 export function DiagramGeneratorSkeleton() {
   return (

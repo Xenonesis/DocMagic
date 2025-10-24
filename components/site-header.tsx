@@ -16,6 +16,7 @@ import {
   Workflow,
   User,
   Palette,
+  QrCode,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -395,6 +396,12 @@ const navItems = [
     label: "Icon",
     icon: <Palette className="h-4 w-4" />,
     tooltip: "Generate custom AI-powered icons and graphics",
+  },
+  {
+    href: "/qr",
+    label: "QR Code",
+    icon: <QrCode className="h-4 w-4" />,
+    tooltip: "Create custom QR codes with styling options",
   },
   {
     href: "/templates",
