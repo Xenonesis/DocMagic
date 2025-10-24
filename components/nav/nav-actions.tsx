@@ -28,9 +28,9 @@ export function NavActions() {
       ) : (
         <TooltipWithShortcut content="Sign in to save and manage your documents">
           <Link href="/auth/signin" className="group">
-            <Button className="bolt-gradient text-white font-semibold transition-all duration-300 text-xs h-9 hidden md:flex items-center leading-none overflow-hidden px-2 group-hover:px-4">
-              <Zap className="h-5 w-5 flex-shrink-0" />
-              <span className="w-0 group-hover:w-auto group-hover:ml-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 leading-none overflow-hidden whitespace-nowrap">
+            <Button className="bolt-gradient text-white font-semibold transition-all duration-300 text-sm h-10 hidden md:flex items-center leading-none overflow-hidden px-2.5 group-hover:px-5 shadow-lg hover:shadow-xl">
+              <Zap className="h-6 w-6 flex-shrink-0 group-hover:rotate-12 transition-transform duration-300" strokeWidth={2} />
+              <span className="w-0 group-hover:w-auto group-hover:ml-2 opacity-0 group-hover:opacity-100 transition-all duration-300 leading-none overflow-hidden whitespace-nowrap">
                 Sign In
               </span>
             </Button>

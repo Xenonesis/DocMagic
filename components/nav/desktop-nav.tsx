@@ -10,7 +10,7 @@ export function DesktopNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="hidden md:flex items-center gap-3 lg:gap-4">
+    <nav className="hidden md:flex items-center gap-4 lg:gap-5">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = pathname === item.href;
@@ -19,23 +19,23 @@ export function DesktopNav() {
             <Link
               href={item.href}
               className={cn(
-                "text-xs font-medium transition-all duration-300 hover:bolt-gradient-text flex items-center relative group",
+                "text-sm font-medium transition-all duration-300 hover:bolt-gradient-text flex items-center relative group rounded-lg px-2 py-1.5 hover:bg-accent/50",
                 isActive
-                  ? "bolt-gradient-text"
+                  ? "bolt-gradient-text bg-accent/30"
                   : "text-muted-foreground"
               )}
             >
-              <Icon className="h-5 w-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
+              <Icon className="h-6 w-6 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 group-hover:rotate-3" strokeWidth={1.5} />
               <span className={cn(
-                "transition-all duration-300 leading-none overflow-hidden whitespace-nowrap",
+                "transition-all duration-300 leading-none overflow-hidden whitespace-nowrap font-semibold",
                 isActive 
-                  ? "w-auto ml-1.5 opacity-100" 
-                  : "w-0 group-hover:w-auto group-hover:ml-1.5 opacity-0 group-hover:opacity-100"
+                  ? "w-auto ml-2 opacity-100" 
+                  : "w-0 group-hover:w-auto group-hover:ml-2 opacity-0 group-hover:opacity-100"
               )}>
                 {item.label}
               </span>
               {isActive && (
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-0.5 rounded-full bg-yellow-500"></div>
+                <div className="absolute -bottom-1.5 left-3 w-1 h-1 rounded-full bg-yellow-500 shadow-lg shadow-yellow-500/50"></div>
               )}
             </Link>
           </TooltipWithShortcut>
