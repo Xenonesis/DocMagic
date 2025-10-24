@@ -21,7 +21,12 @@ import {
   RefreshCw,
   Heart,
   Share2,
-  Wand2
+  Wand2,
+  Edit3,
+  Copy,
+  Trash2,
+  DownloadCloud,
+  Layers
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSubscription } from "@/hooks/use-subscription";
@@ -65,6 +70,11 @@ export function IconGenerator() {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
+  const [batchCount, setBatchCount] = useState(4);
+  const [editPrompt, setEditPrompt] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedIcons, setSelectedIcons] = useState<Set<string>>(new Set());
+  const [isBatchMode, setIsBatchMode] = useState(false);
   
   const { toast } = useToast();
   const { subscription, isLoading: subscriptionLoading } = useSubscription();
@@ -144,6 +154,7 @@ export function IconGenerator() {
           size: parseInt(size),
           colorScheme: colorScheme === "custom" ? customColor : colorScheme,
           provider,
+          count: batchCount,
         }),
       });
 
@@ -258,6 +269,153 @@ export function IconGenerator() {
     } catch (error) {
       console.error("Share error:", error);
     }
+  };
+
+  const handleEditIcon = async () => {
+    if (!selectedIcon || !editPrompt.trim()) {
+      toast({
+        title: "Edit Instructions Required",
+        description: "Please describe how you want to modify the icon",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsEditing(true);
+
+    try {
+      const response = await fetch("/api/generate/icon", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: `${prompt}. Modification: ${editPrompt}`,
+          style,
+          size: parseInt(size),
+          colorScheme: colorScheme === "custom" ? customColor : colorScheme,
+          provider,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to edit icon");
+      }
+
+      const data = await response.json();
+      
+      if (data.icons && data.icons.length > 0) {
+        setGeneratedIcons([...generatedIcons, ...data.icons]);
+        setSelectedIcon(data.icons[0]);
+        setEditPrompt("");
+        toast({
+          title: "✨ Icon Edited!",
+          description: "Your modified icon has been generated",
+        });
+      }
+    } catch (error) {
+      console.error("Error editing icon:", error);
+      toast({
+        title: "Edit Failed",
+        description: "Failed to edit icon. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsEditing(false);
+    }
+  };
+
+  const handleBatchDownload = async () => {
+    if (selectedIcons.size === 0) {
+      toast({
+        title: "No Icons Selected",
+        description: "Please select icons to download",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "📦 Batch Download Started",
+      description: `Downloading ${selectedIcons.size} icon${selectedIcons.size > 1 ? 's' : ''}...`,
+    });
+
+    for (const icon of Array.from(selectedIcons)) {
+      try {
+        let downloadUrl: string;
+        let filename: string;
+
+        if (icon.startsWith('http://') || icon.startsWith('https://')) {
+          const proxyResponse = await fetch('/api/download/icon', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url: icon }),
+          });
+
+          if (!proxyResponse.ok) continue;
+
+          const blob = await proxyResponse.blob();
+          downloadUrl = URL.createObjectURL(blob);
+          filename = `icon-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.png`;
+        } else {
+          downloadUrl = icon;
+          filename = `icon-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.svg`;
+        }
+
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        if (downloadUrl.startsWith('blob:')) {
+          setTimeout(() => URL.revokeObjectURL(downloadUrl), 100);
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+      } catch (error) {
+        console.error("Error downloading icon:", error);
+      }
+    }
+
+    toast({
+      title: "✅ Batch Download Complete",
+      description: `Downloaded ${selectedIcons.size} icons`,
+    });
+  };
+
+  const toggleIconSelection = (icon: string) => {
+    const newSelection = new Set(selectedIcons);
+    if (newSelection.has(icon)) {
+      newSelection.delete(icon);
+    } else {
+      newSelection.add(icon);
+    }
+    setSelectedIcons(newSelection);
+  };
+
+  const selectAllIcons = () => {
+    if (selectedIcons.size === generatedIcons.length) {
+      setSelectedIcons(new Set());
+    } else {
+      setSelectedIcons(new Set(generatedIcons));
+    }
+  };
+
+  const deleteSelectedIcons = () => {
+    const remaining = generatedIcons.filter(icon => !selectedIcons.has(icon));
+    setGeneratedIcons(remaining);
+    setSelectedIcons(new Set());
+    if (selectedIcon && selectedIcons.has(selectedIcon)) {
+      setSelectedIcon(remaining[0] || null);
+    }
+    toast({
+      title: "🗑️ Icons Deleted",
+      description: `Removed ${selectedIcons.size} icon${selectedIcons.size > 1 ? 's' : ''}`,
+    });
   };
 
   return (
@@ -430,6 +588,32 @@ export function IconGenerator() {
           </div>
         )}
 
+        {/* Batch Generation Options */}
+        <div className="glass-effect p-4 rounded-xl border border-blue-400/20">
+          <div className="flex items-center justify-between mb-3">
+            <Label htmlFor="batchCount" className="text-sm font-semibold flex items-center gap-2">
+              <Layers className="h-4 w-4 text-blue-500" />
+              Batch Generation
+            </Label>
+            <span className="text-xs text-muted-foreground">Generate multiple variations</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Input
+              id="batchCount"
+              type="number"
+              min="1"
+              max="12"
+              value={batchCount}
+              onChange={(e) => setBatchCount(Math.min(12, Math.max(1, parseInt(e.target.value) || 4)))}
+              className="w-20"
+              disabled={isGenerating}
+            />
+            <span className="text-sm text-muted-foreground">
+              Generate {batchCount} icon{batchCount > 1 ? 's' : ''} at once
+            </span>
+          </div>
+        </div>
+
         {/* Generate Button */}
         <Button
           onClick={handleGenerate}
@@ -453,22 +637,68 @@ export function IconGenerator() {
       {/* Generated Icons Display */}
       {(generatedIcons.length > 0 || isGenerating) && (
         <div className="space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-3">
             <h3 className="text-lg font-semibold flex items-center gap-2">
               <Palette className="h-5 w-5 text-yellow-500" />
-              Generated Icons
+              Generated Icons ({generatedIcons.length})
             </h3>
             {generatedIcons.length > 0 && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleGenerate}
-                disabled={isGenerating}
-                className="flex items-center gap-2"
-              >
-                <RefreshCw className="h-4 w-4" />
-                Regenerate
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsBatchMode(!isBatchMode)}
+                  className="flex items-center gap-2"
+                >
+                  <Copy className="h-4 w-4" />
+                  {isBatchMode ? 'Cancel' : 'Select Multiple'}
+                </Button>
+                {isBatchMode && (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={selectAllIcons}
+                      className="flex items-center gap-2"
+                    >
+                      <Layers className="h-4 w-4" />
+                      {selectedIcons.size === generatedIcons.length ? 'Deselect All' : 'Select All'}
+                    </Button>
+                    {selectedIcons.size > 0 && (
+                      <>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleBatchDownload}
+                          className="flex items-center gap-2"
+                        >
+                          <DownloadCloud className="h-4 w-4" />
+                          Download ({selectedIcons.size})
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={deleteSelectedIcons}
+                          className="flex items-center gap-2 text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete ({selectedIcons.size})
+                        </Button>
+                      </>
+                    )}
+                  </>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleGenerate}
+                  disabled={isGenerating}
+                  className="flex items-center gap-2"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  Regenerate
+                </Button>
+              </div>
             )}
           </div>
 
@@ -486,13 +716,36 @@ export function IconGenerator() {
                 {generatedIcons.map((icon, index) => (
                   <Card
                     key={index}
-                    className={`cursor-pointer transition-all duration-300 hover:scale-105 ${
+                    className={`cursor-pointer transition-all duration-300 hover:scale-105 relative ${
                       selectedIcon === icon
                         ? "ring-2 ring-yellow-500 shadow-lg"
+                        : selectedIcons.has(icon)
+                        ? "ring-2 ring-blue-500 shadow-lg"
                         : "hover:shadow-md"
                     }`}
-                    onClick={() => setSelectedIcon(icon)}
+                    onClick={() => {
+                      if (isBatchMode) {
+                        toggleIconSelection(icon);
+                      } else {
+                        setSelectedIcon(icon);
+                      }
+                    }}
                   >
+                    {isBatchMode && (
+                      <div className="absolute top-2 right-2 z-10">
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                          selectedIcons.has(icon)
+                            ? 'bg-blue-500 border-blue-500'
+                            : 'bg-white border-gray-300'
+                        }`}>
+                          {selectedIcons.has(icon) && (
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+                    )}
                     <CardContent className="p-4">
                       <div className="aspect-square rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center overflow-hidden">
                         <img
@@ -507,38 +760,77 @@ export function IconGenerator() {
               </div>
 
               {/* Action Buttons */}
-              {selectedIcon && (
-                <div className="flex flex-wrap gap-3 justify-center pt-4">
-                  <Button
-                    onClick={handleDownload}
-                    className="bolt-gradient text-white font-semibold px-6 hover:scale-105 transition-transform"
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Download Icon
-                  </Button>
-                  <Button
-                    onClick={handleShare}
-                    variant="outline"
-                    className="border-gray-300 dark:border-gray-600 hover:scale-105 transition-transform"
-                  >
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="border-gray-300 dark:border-gray-600 hover:scale-105 transition-transform"
-                    onClick={() => {
-                      // Add to favorites functionality
-                      toast({
-                        title: "❤️ Added to Favorites",
-                        description: "Icon saved to your collection",
-                      });
-                    }}
-                  >
-                    <Heart className="h-4 w-4 mr-2" />
-                    Save
-                  </Button>
-                </div>
+              {selectedIcon && !isBatchMode && (
+                <>
+                  <div className="flex flex-wrap gap-3 justify-center pt-4">
+                    <Button
+                      onClick={handleDownload}
+                      className="bolt-gradient text-white font-semibold px-6 hover:scale-105 transition-transform"
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Download Icon
+                    </Button>
+                    <Button
+                      onClick={handleShare}
+                      variant="outline"
+                      className="border-gray-300 dark:border-gray-600 hover:scale-105 transition-transform"
+                    >
+                      <Share2 className="h-4 w-4 mr-2" />
+                      Share
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="border-gray-300 dark:border-gray-600 hover:scale-105 transition-transform"
+                      onClick={() => {
+                        // Add to favorites functionality
+                        toast({
+                          title: "❤️ Added to Favorites",
+                          description: "Icon saved to your collection",
+                        });
+                      }}
+                    >
+                      <Heart className="h-4 w-4 mr-2" />
+                      Save
+                    </Button>
+                  </div>
+
+                  {/* Icon Editor */}
+                  <div className="glass-effect p-4 rounded-xl border border-purple-400/20 mt-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Edit3 className="h-4 w-4 text-purple-500" />
+                      <Label className="text-sm font-semibold">Edit Selected Icon</Label>
+                    </div>
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="E.g., Make it more colorful, add a shadow, change to blue..."
+                        value={editPrompt}
+                        onChange={(e) => setEditPrompt(e.target.value)}
+                        disabled={isEditing}
+                        className="flex-1"
+                      />
+                      <Button
+                        onClick={handleEditIcon}
+                        disabled={isEditing || !editPrompt.trim()}
+                        className="bg-purple-600 hover:bg-purple-700 text-white"
+                      >
+                        {isEditing ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Editing...
+                          </>
+                        ) : (
+                          <>
+                            <Wand2 className="h-4 w-4 mr-2" />
+                            Apply Edit
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      💡 Describe modifications to create a new variation
+                    </p>
+                  </div>
+                </>
               )}
             </>
           )}

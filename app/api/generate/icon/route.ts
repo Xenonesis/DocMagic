@@ -12,6 +12,7 @@ interface IconRequest {
   size: number;
   colorScheme: string;
   provider?: 'openrouter' | 'pollinations';
+  count?: number;
 }
 
 export async function POST(request: Request) {
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
 
     // Get request body
     const body: IconRequest = await request.json();
-    const { prompt, style, size, colorScheme, provider = 'pollinations' } = body;
+    const { prompt, style, size, colorScheme, provider = 'pollinations', count = 4 } = body;
 
     // Validate input
     if (!prompt || prompt.trim().length === 0) {
@@ -71,7 +72,7 @@ export async function POST(request: Request) {
         style,
         size,
         colorScheme,
-        count: 4, // Generate 4 variations
+        count: Math.min(count, 12), // Generate up to 12 variations
       });
     } else {
       // Use OpenRouter for SVG-based icon generation
