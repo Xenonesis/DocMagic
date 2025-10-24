@@ -22,9 +22,7 @@ async function extractTextFromFile(file) {
   try {
     // Handle PDF files
     if (fileName.endsWith('.pdf')) {
-      // pdf-parse is a CommonJS module, use dynamic require
-      const { createRequire } = await import('module');
-      const require = createRequire(import.meta.url);
+      // Load pdf-parse dynamically in the API route context
       const pdfParse = require('pdf-parse');
       const data = await pdfParse(buffer);
       return data.text;
@@ -32,8 +30,9 @@ async function extractTextFromFile(file) {
     
     // Handle DOCX files
     if (fileName.endsWith('.docx')) {
-      const mammoth = await import('mammoth');
-      const result = await mammoth.extractRawText({ buffer: buffer });
+      // Load mammoth dynamically in the API route context
+      const mammoth = require('mammoth');
+      const result = await mammoth.extractRawText({ buffer });
       return result.value;
     }
     
