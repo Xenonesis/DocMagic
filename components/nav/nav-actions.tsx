@@ -27,10 +27,12 @@ export function NavActions() {
         <UserMenu />
       ) : (
         <TooltipWithShortcut content="Sign in to save and manage your documents">
-          <Link href="/auth/signin">
-            <Button className="bolt-gradient text-white font-semibold hover:scale-105 transition-all duration-300 text-sm px-4 h-9 hidden md:flex">
-              <Zap className="h-4 w-4" />
-              <span>Sign In</span>
+          <Link href="/auth/signin" className="group">
+            <Button className="bolt-gradient text-white font-semibold transition-all duration-300 text-xs h-9 hidden md:flex items-center leading-none overflow-hidden px-2 group-hover:px-4">
+              <Zap className="h-5 w-5 flex-shrink-0" />
+              <span className="w-0 group-hover:w-auto group-hover:ml-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 leading-none overflow-hidden whitespace-nowrap">
+                Sign In
+              </span>
             </Button>
           </Link>
         </TooltipWithShortcut>

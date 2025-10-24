@@ -1,5 +1,4 @@
 import { SiteHeader } from "@/components/site-header";
-import { SponsorBanner } from "@/components/sponsor-banner";
 import { ShaderHero } from "@/components/shader-hero";
 import { FeaturesSection } from "@/components/features-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
@@ -11,9 +10,8 @@ import ScrollToTop from "@/components/scroll-to-top";
 export default function Home() {
   return (
     <div id="top" className="min-h-screen flex flex-col">
-      <SponsorBanner />
       <SiteHeader />
-      <main className="flex-1 pt-[100px] sm:pt-[116px]">
+      <main className="flex-1 page-with-header">
         <ShaderHero />
         <QuickStartGuide />
         <DocumentTypesSection />

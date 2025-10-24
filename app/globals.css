@@ -2474,22 +2474,46 @@ img {
 
 /* Page with fixed header and sponsor banner */
 .page-with-header {
-  padding-top: 100px;
+  padding-top: 88px; /* Mobile: ~32px banner + 56px navbar */
+}
+
+@media (min-width: 475px) {
+  .page-with-header {
+    padding-top: 92px; /* xs: ~36px banner + 56px navbar */
+  }
 }
 
 @media (min-width: 640px) {
   .page-with-header {
-    padding-top: 116px;
+    padding-top: 104px; /* sm: ~40px banner + 64px navbar */
+  }
+}
+
+@media (min-width: 768px) {
+  .page-with-header {
+    padding-top: 112px; /* md: ~48px banner + 64px navbar */
   }
 }
 
 /* For pages without sponsor banner (just header) */
 .page-with-header-only {
-  padding-top: 56px;
+  padding-top: 88px; /* Mobile: ~32px banner + 56px navbar */
+}
+
+@media (min-width: 475px) {
+  .page-with-header-only {
+    padding-top: 92px; /* xs: ~36px banner + 56px navbar */
+  }
 }
 
 @media (min-width: 640px) {
   .page-with-header-only {
-    padding-top: 64px;
+    padding-top: 104px; /* sm: ~40px banner + 64px navbar */
+  }
+}
+
+@media (min-width: 768px) {
+  .page-with-header-only {
+    padding-top: 112px; /* md: ~48px banner + 64px navbar */
   }
 }

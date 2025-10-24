@@ -12,8 +12,8 @@ export function PWAInstallButton() {
   }
 
   return (
-    <Button onClick={installApp} variant="ghost" size="icon" aria-label="Install App">
-      <Download className="h-4 w-4" />
+    <Button onClick={installApp} variant="ghost" size="icon" aria-label="Install App" className="h-9 w-9">
+      <Download className="h-5 w-5" />
     </Button>
   );
 }
