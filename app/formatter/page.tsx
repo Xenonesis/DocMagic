@@ -120,7 +120,7 @@ export default function FormatterPage() {
             </div>
 
             <TabsContent value="text" className="pt-6">
-              <div className="glass-effect p-6 sm:p-8 rounded-2xl border border-yellow-400/20 relative overflow-hidden">
+              <div className="glass-effect p-6 sm:p-8 rounded-2xl border border-yellow-400/20 relative overflow-hidden max-w-5xl mx-auto">
                 <div className="absolute inset-0 shimmer opacity-20"></div>
                 <div className="relative z-10">
                   {isLoading ? (
@@ -133,7 +133,7 @@ export default function FormatterPage() {
             </TabsContent>
 
             <TabsContent value="json" className="pt-6">
-              <div className="glass-effect p-6 sm:p-8 rounded-2xl border border-yellow-400/20 relative overflow-hidden">
+              <div className="glass-effect p-6 sm:p-8 rounded-2xl border border-yellow-400/20 relative overflow-hidden max-w-5xl mx-auto">
                 <div className="absolute inset-0 shimmer opacity-20"></div>
                 <div className="relative z-10">
                   {isLoading ? (
