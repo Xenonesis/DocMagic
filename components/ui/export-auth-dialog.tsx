@@ -14,7 +14,7 @@ interface ExportAuthDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSignIn: () => void;
-  exportType: "resume" | "presentation" | "letter" | "diagram" | "ats-analysis" | "guided-resume" | "icon" | "certificate";
+  exportType: "resume" | "presentation" | "letter" | "diagram" | "ats-analysis" | "guided-resume" | "icon" | "certificate" | "invoice";
 }
 
 export function ExportAuthDialog({
@@ -101,6 +101,17 @@ export function ExportAuthDialog({
         "Download certificates in print-ready PDF and PNG",
         "Save your designs for future access",
         "Access premium certificate templates",
+        "Free to start - No credit card required",
+      ],
+    },
+
+    invoice: {
+      title: "Sign in to Export Invoices",
+      description: "Create invoices freely, but sign in to export them as PDF or PNG files.",
+      benefits: [
+        "Export invoices as PDF and PNG",
+        "Save your invoices for later",
+        "Access templates and themes",
         "Free to start - No credit card required",
       ],
     },

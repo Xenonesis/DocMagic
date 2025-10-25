@@ -9,6 +9,7 @@ import {
   QrCode,
   Code,
   Award,
+ Receipt,
 
 } from "lucide-react";
 
@@ -42,6 +43,12 @@ export const navItems = [
     label: "Certificate",
     icon: Award,
     tooltip: "Design awards and achievement certificates",
+  },
+  {
+    href: "/invoice",
+    label: "Invoice",
+    icon: Receipt,
+    tooltip: "Create invoices with tax, discounts, and export",
   },
   {
     href: "/diagram",
