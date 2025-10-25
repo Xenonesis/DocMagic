@@ -65,7 +65,7 @@ export function CertificateTemplates({
           >
             <div className="flex items-start gap-3">
               <div className={cn("relative w-24 h-16 rounded-md ring-4 ring-offset-0 overflow-hidden", t.previewClass)}>
-                <div className="absolute inset-1 rounded bg-white/95"></div>
+                <div className="absolute inset-1 rounded bg-white/95 dark:bg-neutral-900/95"></div>
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">

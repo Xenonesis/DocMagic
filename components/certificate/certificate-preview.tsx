@@ -36,48 +36,48 @@ const templateStyles: Record<string, {
 }> = {
   "classic-gold": {
     frame: "ring-4 ring-yellow-500/80 shadow-xl",
-    headline: "text-yellow-700",
-    subtext: "text-neutral-600",
-    accent: "from-yellow-50 to-amber-50",
-    bg: "bg-white",
+    headline: "text-yellow-700 dark:text-yellow-300",
+    subtext: "text-neutral-600 dark:text-neutral-300",
+    accent: "from-yellow-50 to-amber-50 dark:from-neutral-900 dark:to-neutral-800",
+    bg: "bg-white dark:bg-neutral-950",
     seal: "bg-gradient-to-br from-yellow-500 to-amber-600",
-    signature: "text-yellow-700",
+    signature: "text-yellow-700 dark:text-yellow-300",
   },
   "modern-blue": {
     frame: "ring-4 ring-blue-500/70 shadow-xl",
-    headline: "text-blue-700",
-    subtext: "text-neutral-600",
-    accent: "from-blue-50 to-cyan-50",
-    bg: "bg-white",
+    headline: "text-blue-700 dark:text-blue-300",
+    subtext: "text-neutral-600 dark:text-neutral-300",
+    accent: "from-blue-50 to-cyan-50 dark:from-neutral-900 dark:to-neutral-800",
+    bg: "bg-white dark:bg-neutral-950",
     seal: "bg-gradient-to-br from-blue-500 to-indigo-600",
-    signature: "text-blue-700",
+    signature: "text-blue-700 dark:text-blue-300",
   },
   "elegant-purple": {
     frame: "ring-4 ring-purple-500/70 shadow-xl",
-    headline: "text-purple-700",
-    subtext: "text-neutral-600",
-    accent: "from-purple-50 to-fuchsia-50",
-    bg: "bg-white",
+    headline: "text-purple-700 dark:text-purple-300",
+    subtext: "text-neutral-600 dark:text-neutral-300",
+    accent: "from-purple-50 to-fuchsia-50 dark:from-neutral-900 dark:to-neutral-800",
+    bg: "bg-white dark:bg-neutral-950",
     seal: "bg-gradient-to-br from-purple-500 to-fuchsia-600",
-    signature: "text-purple-700",
+    signature: "text-purple-700 dark:text-purple-300",
   },
   "minimal-slate": {
     frame: "ring-4 ring-neutral-400/60 shadow-xl",
-    headline: "text-neutral-800",
-    subtext: "text-neutral-600",
-    accent: "from-neutral-50 to-slate-100",
-    bg: "bg-white",
+    headline: "text-neutral-800 dark:text-neutral-200",
+    subtext: "text-neutral-600 dark:text-neutral-300",
+    accent: "from-neutral-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800",
+    bg: "bg-white dark:bg-neutral-950",
     seal: "bg-gradient-to-br from-neutral-500 to-slate-600",
-    signature: "text-neutral-800",
+    signature: "text-neutral-800 dark:text-neutral-200",
   },
   "regal-emerald": {
     frame: "ring-4 ring-emerald-500/70 shadow-xl",
-    headline: "text-emerald-700",
-    subtext: "text-neutral-600",
-    accent: "from-emerald-50 to-green-100",
-    bg: "bg-white",
+    headline: "text-emerald-700 dark:text-emerald-300",
+    subtext: "text-neutral-600 dark:text-neutral-300",
+    accent: "from-emerald-50 to-green-100 dark:from-neutral-900 dark:to-neutral-800",
+    bg: "bg-white dark:bg-neutral-950",
     seal: "bg-gradient-to-br from-emerald-500 to-green-600",
-    signature: "text-emerald-700",
+    signature: "text-emerald-700 dark:text-emerald-300",
   },
 };
 
@@ -98,20 +98,16 @@ export function CertificatePreview({ certificate, isPreview = false, className }
       <div
         id="certificate-preview"
         className={cn(
-          "relative mx-auto aspect-[1.414/1] w-full max-w-[1100px] select-none certificate-canvas",
+          "relative mx-auto aspect-[1.414/1] w-full max-w-[1100px] select-none certificate-canvas text-neutral-900 dark:text-neutral-100",
           styles.bg,
           "rounded-xl overflow-hidden"
         )}
-        style={{
-          // Ensure crisp export background
-          backgroundColor: "#ffffff",
-        }}
       >
         {/* Subtle gradient background per template */}
-        <div className={cn("absolute inset-0 bg-gradient-to-br", styles.accent)} />
+        <div className={cn("absolute inset-0 bg-gradient-to-br", styles.accent)} style={{ mixBlendMode: 'normal' }} />
 
         {/* Ornamental double border */}
-        <div className={cn("absolute inset-4 rounded-xl bg-white/95")}></div>
+        <div className={cn("absolute inset-4 rounded-xl bg-white dark:bg-neutral-900")}></div>
         <div className={cn("absolute inset-3 rounded-2xl bg-transparent", styles.frame, "ring-offset-0 rounded-xl")} />
 
         {/* Content */}
@@ -144,7 +140,7 @@ export function CertificatePreview({ certificate, isPreview = false, className }
           {/* Recipient */}
           <div>
             <p className={cn("text-xs md:text-sm tracking-widest uppercase", styles.subtext)}>Awarded to</p>
-            <h1 className="mt-2 text-3xl md:text-5xl font-serif font-bold text-neutral-900" style={{ fontSize: `calc(1.25rem + ${fontScale/100} * 1.75rem)`, fontFamily: fontFamily }}>
+            <h1 className="mt-2 text-3xl md:text-5xl font-serif font-bold text-neutral-900 dark:text-neutral-100" style={{ fontSize: `calc(1.25rem + ${fontScale/100} * 1.75rem)`, fontFamily: fontFamily }}>
               {certificate.recipientName || "Recipient Name"}
             </h1>
           </div>
@@ -165,8 +161,8 @@ export function CertificatePreview({ certificate, isPreview = false, className }
                       {certificate.awardedBy}
                     </div>
                   )}
-                  <div className="mt-1 h-px w-44 bg-neutral-300" />
-                  <p className="mt-1 text-xs md:text-sm text-neutral-600">Authorized Signatory</p>
+                  <div className="mt-1 h-px w-44 bg-neutral-300 dark:bg-neutral-700" />
+                  <p className="mt-1 text-xs md:text-sm text-neutral-600 dark:text-neutral-300">Authorized Signatory</p>
                 </div>
               ) : (
                 <div className="h-10" />
@@ -182,9 +178,9 @@ export function CertificatePreview({ certificate, isPreview = false, className }
 
             <div className="flex-1">
               <div className="text-right">
-                <p className="text-neutral-800 text-sm md:text-base">{displayDate}</p>
-                <div className="mt-1 h-px w-44 bg-neutral-300 ml-auto" />
-                <p className="mt-1 text-xs md:text-sm text-neutral-600">Date</p>
+                <p className="text-neutral-800 dark:text-neutral-200 text-sm md:text-base">{displayDate}</p>
+                <div className="mt-1 h-px w-44 bg-neutral-300 dark:bg-neutral-700 ml-auto" />
+                <p className="mt-1 text-xs md:text-sm text-neutral-600 dark:text-neutral-300">Date</p>
               </div>
             </div>
           </div>
