@@ -420,25 +420,25 @@ export function DiagramGenerator() {
       </Dialog>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex justify-center mb-6">
-          <TabsList className="glass-effect border border-yellow-400/30 p-1.5 h-auto bg-white/80 dark:bg-gray-900/80 shadow-lg">
+        <div className="flex justify-center mb-6 sm:mb-8 overflow-x-auto scrollbar-hide">
+          <TabsList className="glass-effect border border-yellow-400/30 p-1.5 h-auto bg-white/80 dark:bg-gray-900/80 shadow-lg min-w-max">
             <TabsTrigger
               value="editor"
-              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-3 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 whitespace-nowrap text-xs sm:text-base"
             >
               <Code className="h-4 w-4" />
               Code Editor
             </TabsTrigger>
             <TabsTrigger
               value="templates"
-              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-3 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 whitespace-nowrap text-xs sm:text-base"
             >
               <Workflow className="h-4 w-4" />
               Templates
             </TabsTrigger>
             <TabsTrigger
               value="preview"
-              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+              className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-300 font-semibold px-3 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 whitespace-nowrap text-xs sm:text-base"
             >
               <Eye className="h-4 w-4" />
               Preview
@@ -751,7 +751,7 @@ export function DiagramGenerator() {
                 <h2 className="text-xl sm:text-2xl font-bold bolt-gradient-text">Preview</h2>
               </div>
 
-              <div ref={diagramRef} className="glass-effect border border-yellow-400/20 rounded-xl overflow-hidden bg-white relative min-h-[400px]">
+              <div ref={diagramRef} className="glass-effect border border-yellow-400/20 rounded-xl bg-white relative min-h-[320px] sm:min-h-[380px] md:min-h-[420px] max-h-[75vh] overflow-auto">
                 <div className="absolute inset-0 shimmer opacity-10"></div>
                 <div className="relative z-10">
                   <DiagramPreview code={diagramCode} />
