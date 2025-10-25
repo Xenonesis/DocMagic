@@ -14,7 +14,7 @@ interface ExportAuthDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSignIn: () => void;
-  exportType: "resume" | "presentation" | "letter" | "diagram" | "ats-analysis" | "guided-resume" | "icon";
+  exportType: "resume" | "presentation" | "letter" | "diagram" | "ats-analysis" | "guided-resume" | "icon" | "certificate";
 }
 
 export function ExportAuthDialog({
@@ -94,7 +94,17 @@ export function ExportAuthDialog({
         "Free to start - No credit card required",
       ],
     },
-  };
+    certificate: {
+      title: "Sign in to Download Certificates",
+      description: "Design certificates freely, but sign in to download high-resolution PDFs and images.",
+      benefits: [
+        "Download certificates in print-ready PDF and PNG",
+        "Save your designs for future access",
+        "Access premium certificate templates",
+        "Free to start - No credit card required",
+      ],
+    },
+  } as const;
 
   const content = contentMap[exportType];
 
@@ -157,7 +167,7 @@ export function ExportAuthDialog({
           >
             <Sparkles className="mr-2 h-4 w-4" />
             Sign In to {
-              exportType === "resume" || exportType === "letter" || exportType === "icon"
+              exportType === "resume" || exportType === "letter" || exportType === "icon" || exportType === "certificate"
                 ? "Download" 
                 : exportType === "ats-analysis" 
                 ? "Analyze" 

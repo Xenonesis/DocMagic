@@ -8,6 +8,8 @@ import {
   Palette,
   QrCode,
   Code,
+  Award,
+
 } from "lucide-react";
 
 export const navItems = [
@@ -34,6 +36,12 @@ export const navItems = [
     label: "Letter",
     icon: MailIcon,
     tooltip: "Write professional letters and cover letters",
+  },
+  {
+    href: "/certificate",
+    label: "Certificate",
+    icon: Award,
+    tooltip: "Design awards and achievement certificates",
   },
   {
     href: "/diagram",
