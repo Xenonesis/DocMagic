@@ -7,7 +7,7 @@ import { generateGuidedResume } from '@/lib/gemini';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { 
+    const {
       personalInfo,
       professionalSummary,
       workExperience,
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       certifications,
       links,
       targetRole,
-      jobDescription
+      jobDescription,
     } = body;
 
     // All fields are now optional - generate resume with whatever data is provided
@@ -31,15 +31,12 @@ export async function POST(request: Request) {
       certifications: certifications || [],
       links: links || {},
       targetRole: targetRole || 'General Position',
-      jobDescription: jobDescription || ''
+      jobDescription: jobDescription || '',
     });
-    
+
     return NextResponse.json(resume);
   } catch (error) {
     console.error('Error generating guided resume:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate resume' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate resume' }, { status: 500 });
   }
 }

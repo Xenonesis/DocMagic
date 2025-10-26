@@ -1,6 +1,6 @@
-"use client"
+'use client';
 import React, { useState } from 'react';
-import { 
+import {
   Mail,
   Phone,
   User,
@@ -21,8 +21,8 @@ import {
   HelpCircle,
   Bug,
   Lightbulb,
-  Settings
-} from "lucide-react";
+  Settings,
+} from 'lucide-react';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -31,36 +31,34 @@ export default function ContactForm() {
     phone: '',
     userType: '',
     helpType: '',
-    message: ''
+    message: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     setIsSubmitting(false);
     setIsSubmitted(true);
   };
 
   const userTypes = [
     { value: 'student', label: 'Student', icon: <GraduationCap className="h-4 w-4" /> },
-    { value: 'professional', label: 'Professional', icon: <Briefcase className="h-4 w-4" /> }
+    { value: 'professional', label: 'Professional', icon: <Briefcase className="h-4 w-4" /> },
   ];
 
   const helpTypes = [
@@ -69,7 +67,7 @@ export default function ContactForm() {
     { value: 'bug', label: 'Report a Bug', icon: <Bug className="h-4 w-4" /> },
     { value: 'feedback', label: 'Feature Request', icon: <Lightbulb className="h-4 w-4" /> },
     { value: 'billing', label: 'Billing Question', icon: <FileText className="h-4 w-4" /> },
-    { value: 'partnership', label: 'Partnership', icon: <Users className="h-4 w-4" /> }
+    { value: 'partnership', label: 'Partnership', icon: <Users className="h-4 w-4" /> },
   ];
 
   if (isSubmitted) {
@@ -90,7 +88,7 @@ export default function ContactForm() {
                 <p className="text-muted-foreground mb-6">
                   Thank you for reaching out. We'll get back to you within 24 hours.
                 </p>
-                <button 
+                <button
                   onClick={() => {
                     setIsSubmitted(false);
                     setFormData({
@@ -99,7 +97,7 @@ export default function ContactForm() {
                       phone: '',
                       userType: '',
                       helpType: '',
-                      message: ''
+                      message: '',
                     });
                   }}
                   className="professional-button w-full"
@@ -122,9 +120,9 @@ export default function ContactForm() {
         <div className="floating-orb w-40 h-40 sm:w-64 sm:h-64 bolt-gradient opacity-15 top-20 -left-20 sm:-left-32"></div>
         <div className="floating-orb w-32 h-32 sm:w-48 sm:h-48 bolt-gradient opacity-20 -top-10 right-10 sm:right-20"></div>
         <div className="floating-orb w-48 h-48 sm:w-72 sm:h-72 bolt-gradient opacity-10 bottom-10 left-1/3"></div>
-        
+
         {/* Grid pattern overlay */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.02]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='none' fill-rule='evenodd'%3e%3cg fill='%23000000' fill-opacity='1'%3e%3ccircle cx='30' cy='30' r='1'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e")`,
@@ -150,25 +148,27 @@ export default function ContactForm() {
               <span className="text-sm sm:text-base font-medium">Get In Touch</span>
               <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-500 animate-pulse" />
             </div>
-            
+
             {/* Main Heading */}
             <h1 className="modern-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center mb-6 sm:mb-8">
-              How can we{" "}
+              How can we{' '}
               <span className="bolt-gradient-text relative inline-block">
                 help you?
                 <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
-                  <Star className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-yellow-500 animate-spin" style={{animationDuration: '3s'}} />
+                  <Star
+                    className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-yellow-500 animate-spin"
+                    style={{ animationDuration: '3s' }}
+                  />
                 </div>
               </span>
             </h1>
-            
+
             {/* Subtitle */}
             <p className="modern-body text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-0">
-              Have a question about our{" "}
-              <span className="font-semibold text-blue-600">AI-powered platform</span>?{" "}
-              Need help creating{" "}
-              <span className="font-semibold text-yellow-600">professional documents</span>?{" "}
-              We're here to help with{" "}
+              Have a question about our{' '}
+              <span className="font-semibold text-blue-600">AI-powered platform</span>? Need help
+              creating <span className="font-semibold text-yellow-600">professional documents</span>
+              ? We're here to help with{' '}
               <span className="font-semibold bolt-gradient-text">magical support</span>
             </p>
 
@@ -197,12 +197,15 @@ export default function ContactForm() {
             <div className="professional-card p-6 sm:p-8 lg:p-10 rounded-2xl relative overflow-hidden">
               {/* Background shimmer effect */}
               <div className="absolute inset-0 shimmer opacity-20"></div>
-              
+
               <div className="relative z-10">
                 <div className="space-y-6 sm:space-y-8">
                   {/* Name Field */}
                   <div className="space-y-2">
-                    <label htmlFor="name" className="flex items-center gap-2 text-sm sm:text-base font-medium text-foreground">
+                    <label
+                      htmlFor="name"
+                      className="flex items-center gap-2 text-sm sm:text-base font-medium text-foreground"
+                    >
                       <User className="h-4 w-4 text-blue-500" />
                       Your Name
                     </label>
@@ -220,7 +223,10 @@ export default function ContactForm() {
 
                   {/* Email Field */}
                   <div className="space-y-2">
-                    <label htmlFor="email" className="flex items-center gap-2 text-sm sm:text-base font-medium text-foreground">
+                    <label
+                      htmlFor="email"
+                      className="flex items-center gap-2 text-sm sm:text-base font-medium text-foreground"
+                    >
                       <Mail className="h-4 w-4 text-green-500" />
                       Email Address
                     </label>
@@ -238,7 +244,10 @@ export default function ContactForm() {
 
                   {/* Phone Field */}
                   <div className="space-y-2">
-                    <label htmlFor="phone" className="flex items-center gap-2 text-sm sm:text-base font-medium text-foreground">
+                    <label
+                      htmlFor="phone"
+                      className="flex items-center gap-2 text-sm sm:text-base font-medium text-foreground"
+                    >
                       <Phone className="h-4 w-4 text-purple-500" />
                       Phone Number (Optional)
                     </label>
@@ -256,8 +265,7 @@ export default function ContactForm() {
                   {/* User Type Selection */}
                   <div className="space-y-3">
                     <label className="flex items-center gap-2 text-sm sm:text-base font-medium text-foreground">
-                      <Users className="h-4 w-4 text-yellow-500" />
-                      I am a
+                      <Users className="h-4 w-4 text-yellow-500" />I am a
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {userTypes.map((type) => (
@@ -271,18 +279,26 @@ export default function ContactForm() {
                             required
                             className="sr-only"
                           />
-                          <div className={`p-4 rounded-xl border-2 transition-all duration-300 ${
-                            formData.userType === type.value
-                              ? 'border-blue-500/50 bg-blue-500/10 professional-card'
-                              : 'border-border/30 glass-effect hover:border-border/50'
-                          }`}>
+                          <div
+                            className={`p-4 rounded-xl border-2 transition-all duration-300 ${
+                              formData.userType === type.value
+                                ? 'border-blue-500/50 bg-blue-500/10 professional-card'
+                                : 'border-border/30 glass-effect hover:border-border/50'
+                            }`}
+                          >
                             <div className="flex items-center gap-3">
-                              <div className={`${formData.userType === type.value ? 'text-blue-500' : 'text-muted-foreground'}`}>
+                              <div
+                                className={`${formData.userType === type.value ? 'text-blue-500' : 'text-muted-foreground'}`}
+                              >
                                 {type.icon}
                               </div>
-                              <span className={`text-sm sm:text-base font-medium ${
-                                formData.userType === type.value ? 'bolt-gradient-text' : 'text-foreground'
-                              }`}>
+                              <span
+                                className={`text-sm sm:text-base font-medium ${
+                                  formData.userType === type.value
+                                    ? 'bolt-gradient-text'
+                                    : 'text-foreground'
+                                }`}
+                              >
                                 {type.label}
                               </span>
                             </div>
@@ -310,18 +326,26 @@ export default function ContactForm() {
                             required
                             className="sr-only"
                           />
-                          <div className={`p-3 sm:p-4 rounded-xl border-2 transition-all duration-300 ${
-                            formData.helpType === type.value
-                              ? 'border-orange-500/50 bg-orange-500/10 professional-card'
-                              : 'border-border/30 glass-effect hover:border-border/50'
-                          }`}>
+                          <div
+                            className={`p-3 sm:p-4 rounded-xl border-2 transition-all duration-300 ${
+                              formData.helpType === type.value
+                                ? 'border-orange-500/50 bg-orange-500/10 professional-card'
+                                : 'border-border/30 glass-effect hover:border-border/50'
+                            }`}
+                          >
                             <div className="flex items-center gap-2 sm:gap-3">
-                              <div className={`${formData.helpType === type.value ? 'text-orange-500' : 'text-muted-foreground'}`}>
+                              <div
+                                className={`${formData.helpType === type.value ? 'text-orange-500' : 'text-muted-foreground'}`}
+                              >
                                 {type.icon}
                               </div>
-                              <span className={`text-xs sm:text-sm font-medium ${
-                                formData.helpType === type.value ? 'bolt-gradient-text' : 'text-foreground'
-                              }`}>
+                              <span
+                                className={`text-xs sm:text-sm font-medium ${
+                                  formData.helpType === type.value
+                                    ? 'bolt-gradient-text'
+                                    : 'text-foreground'
+                                }`}
+                              >
                                 {type.label}
                               </span>
                             </div>
@@ -333,7 +357,10 @@ export default function ContactForm() {
 
                   {/* Message Field */}
                   <div className="space-y-2">
-                    <label htmlFor="message" className="flex items-center gap-2 text-sm sm:text-base font-medium text-foreground">
+                    <label
+                      htmlFor="message"
+                      className="flex items-center gap-2 text-sm sm:text-base font-medium text-foreground"
+                    >
                       <MessageSquare className="h-4 w-4 text-pink-500" />
                       Your Message
                     </label>
@@ -403,38 +430,50 @@ export default function ContactForm() {
 
       <style jsx>{`
         .modern-display {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+          font-family:
+            'Inter',
+            -apple-system,
+            BlinkMacSystemFont,
+            'Segoe UI',
+            system-ui,
+            sans-serif;
           font-weight: 800;
           line-height: 1.1;
           letter-spacing: -0.02em;
         }
-        
+
         .modern-body {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+          font-family:
+            'Inter',
+            -apple-system,
+            BlinkMacSystemFont,
+            'Segoe UI',
+            system-ui,
+            sans-serif;
           font-weight: 400;
           line-height: 1.6;
         }
-        
+
         .bolt-gradient-text {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
         }
-        
+
         .glass-effect {
           background: rgba(255, 255, 255, 0.05);
           backdrop-filter: blur(10px);
           border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .professional-card {
           background: rgba(255, 255, 255, 0.03);
           backdrop-filter: blur(20px);
           border: 1px solid rgba(255, 255, 255, 0.08);
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
-        
+
         .professional-button {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
@@ -443,38 +482,48 @@ export default function ContactForm() {
           transition: all 0.3s ease;
           box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
         }
-        
+
         .professional-button:hover:not(:disabled) {
           transform: translateY(-2px);
           box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
         }
-        
+
         .mesh-gradient {
-          background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                      radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-                      radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.3) 0%, transparent 50%);
+          background:
+            radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.3) 0%, transparent 50%);
         }
-        
+
         .floating-orb {
           border-radius: 50%;
           filter: blur(40px);
           animation: float 6s ease-in-out infinite;
         }
-        
+
         .shimmer {
           background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
           background-size: 200% 100%;
           animation: shimmer 2s infinite;
         }
-        
+
         @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
+          0%,
+          100% {
+            transform: translateY(0px) rotate(0deg);
+          }
+          50% {
+            transform: translateY(-20px) rotate(180deg);
+          }
         }
-        
+
         @keyframes shimmer {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
+          0% {
+            background-position: -200% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
         }
       `}</style>
     </div>

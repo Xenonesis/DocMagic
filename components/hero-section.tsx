@@ -1,10 +1,10 @@
 'use client';
-import { Button } from "@/components/ui/button";
-import { StatCounter } from "./ui/stat-counter";
-import { TooltipWithShortcut } from "@/components/ui/tooltip";
-import Link from "next/link";
-import { Sparkles, ArrowRight, Zap, Star, Wand2, Clock, Users, Trophy, Rocket } from "lucide-react";
-import {TypedEffect} from '@/components/ui/typewriter';
+import { Button } from '@/components/ui/button';
+import { StatCounter } from './ui/stat-counter';
+import { TooltipWithShortcut } from '@/components/ui/tooltip';
+import Link from 'next/link';
+import { Sparkles, ArrowRight, Zap, Star, Wand2, Clock, Users, Trophy, Rocket } from 'lucide-react';
+import { TypedEffect } from '@/components/ui/typewriter';
 
 export function HeroSection() {
   return (
@@ -32,9 +32,7 @@ export function HeroSection() {
           <div className="mb-4 sm:mb-6 animate-fade-in-down will-change-transform">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-effect border border-amber-200/30 bg-gradient-to-r from-amber-50/50 to-yellow-50/50 backdrop-blur-sm">
               <Trophy className="h-4 w-4 text-amber-600" />
-              <span className="text-sm font-semibold text-amber-800">
-                #1 AI Document Creator
-              </span>
+              <span className="text-sm font-semibold text-amber-800">#1 AI Document Creator</span>
               <Star className="h-4 w-4 text-amber-500 fill-current" />
             </div>
           </div>
@@ -60,30 +58,26 @@ export function HeroSection() {
           </div>
           {/* Enhanced Main Headline */}
           <h1 className="modern-display text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-8xl mb-6 sm:mb-8 animate-fade-in-down delay-100 will-change-transform text-shadow-professional text-balance leading-tight">
-            <span className="block mb-2 sm:mb-4">
-              Create stunning
-            </span>
+            <span className="block mb-2 sm:mb-4">Create stunning</span>
             <span
               className="inline-flex items-center flex-wrap md:flex-nowrap leading-tight gap-x-3"
-              style={{ minHeight: "1.2em" }}
+              style={{ minHeight: '1.2em' }}
             >
               {/* Enhanced typed word container */}
               <span
                 className="typed-text bolt-gradient-text bg-clip-text text-transparent font-bold inline-block"
                 style={{
-                  display: "inline-block",
-                  minWidth: "5ch",
-                  maxWidth: "15ch",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
+                  display: 'inline-block',
+                  minWidth: '5ch',
+                  maxWidth: '15ch',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
                 }}
               >
                 <TypedEffect />
               </span>
-              <span className="text-inherit font-semibold whitespace-nowrap">
-                in
-              </span>
+              <span className="text-inherit font-semibold whitespace-nowrap">in</span>
               <span className="relative inline-flex items-center gap-2">
                 <span className="bolt-gradient-text font-bold">seconds</span>
                 <Rocket
@@ -96,18 +90,16 @@ export function HeroSection() {
 
           {/* Enhanced Value Proposition */}
           <p className="modern-body mt-6 sm:mt-8 text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-2xl sm:max-w-4xl mx-auto px-4 sm:px-0 animate-fade-in-up delay-200 will-change-opacity leading-relaxed">
-            Transform your ideas into{" "}
+            Transform your ideas into{' '}
             <span className="font-bold text-amber-600 hover:text-amber-700 transition-colors">
               professional documents
-            </span>{" "}
-            that impress. Our AI understands your needs and creates{" "}
+            </span>{' '}
+            that impress. Our AI understands your needs and creates{' '}
             <span className="font-bold text-blue-600 hover:text-blue-700 transition-colors">
               perfectly formatted
-            </span>{" "}
-            resumes, presentations, CVs, and letters{" "}
-            <span className="font-bold bolt-gradient-text">
-              instantly
-            </span>.
+            </span>{' '}
+            resumes, presentations, CVs, and letters{' '}
+            <span className="font-bold bolt-gradient-text">instantly</span>.
           </p>
 
           {/* Key Benefits Pills */}
@@ -132,7 +124,7 @@ export function HeroSection() {
               asChild
               size="lg"
               className="bolt-gradient text-white font-bold px-8 sm:px-10 py-4 sm:py-5 rounded-full hover:scale-105 focus:ring-4 focus:ring-blue-400 focus:outline-none transition-all duration-300 bolt-glow w-full sm:w-auto relative overflow-hidden shadow-2xl text-base sm:text-lg group"
-              style={{ animation: "gradient-shift 4s ease infinite" }}
+              style={{ animation: 'gradient-shift 4s ease infinite' }}
               aria-label="Start Creating Documents"
             >
               <Link
@@ -144,9 +136,7 @@ export function HeroSection() {
                   className="h-5 w-5 sm:h-6 sm:w-6 group-hover:animate-spin"
                   aria-hidden="true"
                 />
-                <span className="font-bold">
-                  Start Creating Now
-                </span>
+                <span className="font-bold">Start Creating Now</span>
                 <ArrowRight
                   className="h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-1 transition-transform"
                   aria-hidden="true"
@@ -154,35 +144,32 @@ export function HeroSection() {
               </Link>
             </Button>
             {/*Enhanced watch demo button*/}
-              <Button
-             asChild
-             variant="outline"
-             size="lg"
-            className="px-8 sm:px-10 py-4 sm:py-5 rounded-full w-full sm:w-auto relative z-10 focus:ring-4 focus:ring-red-400 focus:outline-none shadow-lg text-base sm:text-lg font-semibold transition-all duration-500 ease-in-out group
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="px-8 sm:px-10 py-4 sm:py-5 rounded-full w-full sm:w-auto relative z-10 focus:ring-4 focus:ring-red-400 focus:outline-none shadow-lg text-base sm:text-lg font-semibold transition-all duration-500 ease-in-out group
              bg-gradient-to-r from-red-600 to-black text-white
              hover:from-red-700 hover:to-neutral-900
              hover:scale-105 hover:shadow-[0_10px_25px_rgba(0,0,0,0.5)] hover:z-20"
-            aria-label="Watch Demo"
->
-            <Link
-            href="#how-it-works"
-            className="flex items-center justify-center gap-3"
-            tabIndex={0}
-          >
-    <Star
-  
-  className="text-yellow-500 h-5 w-5 sm:h-6 sm:w-6 transition-transform duration-700 ease-in-out hover:fill group-hover:rotate-[240deg]"
-  aria-hidden="true"
-/>
-      <span className="text-white">Watch Demo</span>
-       </Link>
-      </Button>
-       </div>
+              aria-label="Watch Demo"
+            >
+              <Link
+                href="#how-it-works"
+                className="flex items-center justify-center gap-3"
+                tabIndex={0}
+              >
+                <Star
+                  className="text-yellow-500 h-5 w-5 sm:h-6 sm:w-6 transition-transform duration-700 ease-in-out hover:fill group-hover:rotate-[240deg]"
+                  aria-hidden="true"
+                />
+                <span className="text-white">Watch Demo</span>
+              </Link>
+            </Button>
+          </div>
           {/* Social Proof Banner */}
           <div className="mt-8 sm:mt-10 animate-fade-in-up delay-350">
-            <p className="text-sm text-muted-foreground mb-4">
-              Trusted by professionals worldwide
-            </p>
+            <p className="text-sm text-muted-foreground mb-4">Trusted by professionals worldwide</p>
             <div className="flex items-center justify-center gap-6 opacity-60">
               <div className="text-xs font-medium">Fortune 500</div>
               <div className="w-1 h-1 bg-muted-foreground rounded-full"></div>
@@ -207,9 +194,7 @@ export function HeroSection() {
                     <div className="text-muted-foreground text-sm sm:text-base font-medium">
                       Documents Created
                     </div>
-                    <div className="text-xs text-muted-foreground/70 mt-1">
-                      And counting...
-                    </div>
+                    <div className="text-xs text-muted-foreground/70 mt-1">And counting...</div>
                   </div>
                 </div>
               </div>
@@ -226,9 +211,7 @@ export function HeroSection() {
                     <div className="text-muted-foreground text-sm sm:text-base font-medium">
                       Success Rate
                     </div>
-                    <div className="text-xs text-muted-foreground/70 mt-1">
-                      Proven results
-                    </div>
+                    <div className="text-xs text-muted-foreground/70 mt-1">Proven results</div>
                   </div>
                 </div>
               </div>
@@ -245,9 +228,7 @@ export function HeroSection() {
                     <div className="text-muted-foreground text-sm sm:text-base font-medium">
                       User Rating
                     </div>
-                    <div className="text-xs text-muted-foreground/70 mt-1">
-                      Loved by users
-                    </div>
+                    <div className="text-xs text-muted-foreground/70 mt-1">Loved by users</div>
                   </div>
                 </div>
               </div>

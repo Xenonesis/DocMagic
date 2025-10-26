@@ -23,14 +23,14 @@ const getTemplateColors = (template: string) => {
     'minimalist-pro': { background: 'F9FAFB', textColor: '374151', accentColor: '6B7280' },
     'tech-modern': { background: '0F172A', textColor: 'FFFFFF', accentColor: '06B6D4' },
     'elegant-dark': { background: '111827', textColor: 'FFFFFF', accentColor: 'FBBF24' },
-    'startup-pitch': { background: 'F0FDF4', textColor: '065F46', accentColor: '10B981' }
+    'startup-pitch': { background: 'F0FDF4', textColor: '065F46', accentColor: '10B981' },
   };
   return colors[template as keyof typeof colors] || colors['modern-business'];
 };
 
 export async function POST(request: NextRequest) {
   try {
-    const { slides, template, fileName } = await request.json() as RequestData;
+    const { slides, template, fileName } = (await request.json()) as RequestData;
 
     if (!slides || !slides.length) {
       return NextResponse.json({ error: 'No slides provided' }, { status: 400 });
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
         fontSize: 32,
         bold: true,
         color: templateStyles.textColor,
-        fontFace: 'Arial'
+        fontFace: 'Arial',
       });
 
       // Add content
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
           h: 2,
           fontSize: 18,
           color: templateStyles.textColor,
-          fontFace: 'Arial'
+          fontFace: 'Arial',
         });
       }
 
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
           fontSize: 16,
           bullet: true,
           color: templateStyles.textColor,
-          fontFace: 'Arial'
+          fontFace: 'Arial',
         });
       }
 
@@ -93,12 +93,12 @@ export async function POST(request: NextRequest) {
         h: 0.3,
         fontSize: 12,
         color: templateStyles.accentColor,
-        align: 'center'
+        align: 'center',
       });
     });
 
     // Generate PPTX file as base64
-    const pptxData = await pptx.write({ outputType: 'base64' }) as string;
+    const pptxData = (await pptx.write({ outputType: 'base64' })) as string;
     const buffer = Buffer.from(pptxData, 'base64');
 
     return new NextResponse(buffer, {
@@ -110,9 +110,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error generating PPTX:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate PowerPoint file' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate PowerPoint file' }, { status: 500 });
   }
 }

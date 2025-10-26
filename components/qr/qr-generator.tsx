@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { useState, useEffect, useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Sparkles, 
-  Download, 
+} from '@/components/ui/select';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Sparkles,
+  Download,
   QrCode,
   Link2,
   Mail,
@@ -31,122 +31,122 @@ import {
   Palette,
   Copy,
   Check,
-  RefreshCw
-} from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import dynamic from "next/dynamic";
+  RefreshCw,
+} from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import dynamic from 'next/dynamic';
 
 // Dynamically import QRCodeStyling to avoid SSR issues
 let QRCodeStyling: any = null;
-if (typeof window !== "undefined") {
-  QRCodeStyling = require("qr-code-styling");
+if (typeof window !== 'undefined') {
+  QRCodeStyling = require('qr-code-styling');
 }
 
 const qrTypes = [
-  { value: "url", label: "Website URL", icon: Link2, description: "Link to a website" },
-  { value: "text", label: "Plain Text", icon: FileText, description: "Any text content" },
-  { value: "email", label: "Email", icon: Mail, description: "Email address" },
-  { value: "phone", label: "Phone", icon: Phone, description: "Phone number" },
-  { value: "sms", label: "SMS", icon: MessageSquare, description: "Text message" },
-  { value: "wifi", label: "WiFi", icon: Wifi, description: "WiFi credentials" },
-  { value: "vcard", label: "Contact", icon: User, description: "Contact information" },
-  { value: "location", label: "Location", icon: MapPin, description: "GPS coordinates" },
+  { value: 'url', label: 'Website URL', icon: Link2, description: 'Link to a website' },
+  { value: 'text', label: 'Plain Text', icon: FileText, description: 'Any text content' },
+  { value: 'email', label: 'Email', icon: Mail, description: 'Email address' },
+  { value: 'phone', label: 'Phone', icon: Phone, description: 'Phone number' },
+  { value: 'sms', label: 'SMS', icon: MessageSquare, description: 'Text message' },
+  { value: 'wifi', label: 'WiFi', icon: Wifi, description: 'WiFi credentials' },
+  { value: 'vcard', label: 'Contact', icon: User, description: 'Contact information' },
+  { value: 'location', label: 'Location', icon: MapPin, description: 'GPS coordinates' },
 ];
 
 const dotStyles = [
-  { value: "rounded", label: "Rounded" },
-  { value: "dots", label: "Dots" },
-  { value: "classy", label: "Classy" },
-  { value: "classy-rounded", label: "Classy Rounded" },
-  { value: "square", label: "Square" },
-  { value: "extra-rounded", label: "Extra Rounded" },
+  { value: 'rounded', label: 'Rounded' },
+  { value: 'dots', label: 'Dots' },
+  { value: 'classy', label: 'Classy' },
+  { value: 'classy-rounded', label: 'Classy Rounded' },
+  { value: 'square', label: 'Square' },
+  { value: 'extra-rounded', label: 'Extra Rounded' },
 ];
 
 const cornerSquareStyles = [
-  { value: "dot", label: "Dot" },
-  { value: "square", label: "Square" },
-  { value: "extra-rounded", label: "Extra Rounded" },
+  { value: 'dot', label: 'Dot' },
+  { value: 'square', label: 'Square' },
+  { value: 'extra-rounded', label: 'Extra Rounded' },
 ];
 
 const cornerDotStyles = [
-  { value: "dot", label: "Dot" },
-  { value: "square", label: "Square" },
+  { value: 'dot', label: 'Dot' },
+  { value: 'square', label: 'Square' },
 ];
 
 export function QRGenerator() {
-  const [qrType, setQrType] = useState("url");
-  const [qrData, setQrData] = useState("");
+  const [qrType, setQrType] = useState('url');
+  const [qrData, setQrData] = useState('');
   const [qrCode, setQrCode] = useState<any>(null);
   const [isGenerated, setIsGenerated] = useState(false);
   const [copied, setCopied] = useState(false);
-  
+
   // Styling options
-  const [dotStyle, setDotStyle] = useState("rounded");
-  const [cornerSquareStyle, setCornerSquareStyle] = useState("extra-rounded");
-  const [cornerDotStyle, setCornerDotStyle] = useState("dot");
-  const [dotsColor, setDotsColor] = useState("#000000");
-  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
-  const [cornerSquareColor, setCornerSquareColor] = useState("#000000");
-  const [cornerDotColor, setCornerDotColor] = useState("#000000");
+  const [dotStyle, setDotStyle] = useState('rounded');
+  const [cornerSquareStyle, setCornerSquareStyle] = useState('extra-rounded');
+  const [cornerDotStyle, setCornerDotStyle] = useState('dot');
+  const [dotsColor, setDotsColor] = useState('#000000');
+  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
+  const [cornerSquareColor, setCornerSquareColor] = useState('#000000');
+  const [cornerDotColor, setCornerDotColor] = useState('#000000');
   const [size, setSize] = useState(300);
   const [margin, setMargin] = useState(10);
-  
+
   // Type-specific fields
-  const [emailAddress, setEmailAddress] = useState("");
-  const [emailSubject, setEmailSubject] = useState("");
-  const [emailBody, setEmailBody] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [smsNumber, setSmsNumber] = useState("");
-  const [smsMessage, setSmsMessage] = useState("");
-  const [wifiSSID, setWifiSSID] = useState("");
-  const [wifiPassword, setWifiPassword] = useState("");
-  const [wifiEncryption, setWifiEncryption] = useState("WPA");
-  const [vcardName, setVcardName] = useState("");
-  const [vcardPhone, setVcardPhone] = useState("");
-  const [vcardEmail, setVcardEmail] = useState("");
-  const [vcardOrg, setVcardOrg] = useState("");
-  const [vcardUrl, setVcardUrl] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  
+  const [emailAddress, setEmailAddress] = useState('');
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailBody, setEmailBody] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [smsNumber, setSmsNumber] = useState('');
+  const [smsMessage, setSmsMessage] = useState('');
+  const [wifiSSID, setWifiSSID] = useState('');
+  const [wifiPassword, setWifiPassword] = useState('');
+  const [wifiEncryption, setWifiEncryption] = useState('WPA');
+  const [vcardName, setVcardName] = useState('');
+  const [vcardPhone, setVcardPhone] = useState('');
+  const [vcardEmail, setVcardEmail] = useState('');
+  const [vcardOrg, setVcardOrg] = useState('');
+  const [vcardUrl, setVcardUrl] = useState('');
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
+
   const qrRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     // Initialize QR Code only once on client side
-    if (typeof window !== "undefined" && QRCodeStyling) {
+    if (typeof window !== 'undefined' && QRCodeStyling) {
       const qr = new QRCodeStyling({
         width: 300,
         height: 300,
-        data: "https://example.com",
+        data: 'https://example.com',
         margin: 10,
         qrOptions: {
           typeNumber: 0,
-          mode: "Byte",
-          errorCorrectionLevel: "Q"
+          mode: 'Byte',
+          errorCorrectionLevel: 'Q',
         },
         imageOptions: {
           hideBackgroundDots: true,
           imageSize: 0.4,
-          margin: 0
+          margin: 0,
         },
         dotsOptions: {
-          color: "#000000",
-          type: "rounded"
+          color: '#000000',
+          type: 'rounded',
         },
         backgroundOptions: {
-          color: "#ffffff",
+          color: '#ffffff',
         },
         cornersSquareOptions: {
-          color: "#000000",
-          type: "extra-rounded",
+          color: '#000000',
+          type: 'extra-rounded',
         },
         cornersDotOptions: {
-          color: "#000000",
-          type: "dot",
-        }
+          color: '#000000',
+          type: 'dot',
+        },
       });
-      
+
       setQrCode(qr);
     }
   }, []);
@@ -156,7 +156,7 @@ export function QRGenerator() {
     if (isGenerated && qrCode && qrRef.current) {
       try {
         const data = generateQRData();
-        if (data && data.trim() !== "") {
+        if (data && data.trim() !== '') {
           qrCode.update({
             width: size,
             height: size,
@@ -164,17 +164,17 @@ export function QRGenerator() {
             margin: margin,
             qrOptions: {
               typeNumber: 0,
-              mode: "Byte",
-              errorCorrectionLevel: "Q"
+              mode: 'Byte',
+              errorCorrectionLevel: 'Q',
             },
             imageOptions: {
               hideBackgroundDots: true,
               imageSize: 0.4,
-              margin: 0
+              margin: 0,
             },
             dotsOptions: {
               color: dotsColor,
-              type: dotStyle as any
+              type: dotStyle as any,
             },
             backgroundOptions: {
               color: backgroundColor,
@@ -186,31 +186,61 @@ export function QRGenerator() {
             cornersDotOptions: {
               color: cornerDotColor,
               type: cornerDotStyle as any,
-            }
+            },
           });
-          
-          qrRef.current.innerHTML = "";
+
+          qrRef.current.innerHTML = '';
           qrCode.append(qrRef.current);
         }
       } catch (error) {
-        console.error("Error updating QR code style:", error);
+        console.error('Error updating QR code style:', error);
       }
     }
-  }, [isGenerated, qrCode, size, margin, dotStyle, cornerSquareStyle, cornerDotStyle, dotsColor, backgroundColor, cornerSquareColor, cornerDotColor, qrType, qrData, emailAddress, emailSubject, emailBody, phoneNumber, smsNumber, smsMessage, wifiSSID, wifiPassword, wifiEncryption, vcardName, vcardPhone, vcardEmail, vcardOrg, vcardUrl, latitude, longitude]);
+  }, [
+    isGenerated,
+    qrCode,
+    size,
+    margin,
+    dotStyle,
+    cornerSquareStyle,
+    cornerDotStyle,
+    dotsColor,
+    backgroundColor,
+    cornerSquareColor,
+    cornerDotColor,
+    qrType,
+    qrData,
+    emailAddress,
+    emailSubject,
+    emailBody,
+    phoneNumber,
+    smsNumber,
+    smsMessage,
+    wifiSSID,
+    wifiPassword,
+    wifiEncryption,
+    vcardName,
+    vcardPhone,
+    vcardEmail,
+    vcardOrg,
+    vcardUrl,
+    latitude,
+    longitude,
+  ]);
 
   const generateQRData = () => {
     switch (qrType) {
-      case "url":
+      case 'url':
         // Ensure URL has protocol
         if (qrData && !qrData.match(/^[a-zA-Z]+:\/\//)) {
           return `https://${qrData}`;
         }
         return qrData;
-      
-      case "text":
+
+      case 'text':
         return qrData;
-      
-      case "email":
+
+      case 'email':
         // Build mailto URL with optional subject and body
         let emailUrl = `mailto:${emailAddress}`;
         const params = [];
@@ -218,43 +248,43 @@ export function QRGenerator() {
         if (emailBody) params.push(`body=${encodeURIComponent(emailBody)}`);
         if (params.length > 0) emailUrl += `?${params.join('&')}`;
         return emailUrl;
-      
-      case "phone":
+
+      case 'phone':
         // Remove any non-numeric characters except + for international format
         return `tel:${phoneNumber}`;
-      
-      case "sms":
+
+      case 'sms':
         // SMS format with optional message
         if (smsMessage) {
           return `sms:${smsNumber}?body=${encodeURIComponent(smsMessage)}`;
         }
         return `sms:${smsNumber}`;
-      
-      case "wifi":
+
+      case 'wifi':
         // WiFi format: WIFI:T:WPA;S:mynetwork;P:mypass;;
         // Escape special characters in SSID and password
         const escapedSSID = wifiSSID.replace(/([\\;,":])/g, '\\$1');
         const escapedPassword = wifiPassword.replace(/([\\;,":])/g, '\\$1');
         return `WIFI:T:${wifiEncryption};S:${escapedSSID};P:${escapedPassword};;`;
-      
-      case "vcard":
+
+      case 'vcard':
         // vCard 3.0 format with proper line breaks
-        let vcard = "BEGIN:VCARD\nVERSION:3.0\n";
+        let vcard = 'BEGIN:VCARD\nVERSION:3.0\n';
         if (vcardName) vcard += `FN:${vcardName}\n`;
         if (vcardPhone) vcard += `TEL:${vcardPhone}\n`;
         if (vcardEmail) vcard += `EMAIL:${vcardEmail}\n`;
         if (vcardOrg) vcard += `ORG:${vcardOrg}\n`;
         if (vcardUrl) vcard += `URL:${vcardUrl}\n`;
-        vcard += "END:VCARD";
+        vcard += 'END:VCARD';
         return vcard;
-      
-      case "location":
+
+      case 'location':
         // Geo URI format: geo:latitude,longitude
         if (latitude && longitude) {
           return `geo:${latitude},${longitude}`;
         }
-        return "";
-      
+        return '';
+
       default:
         return qrData;
     }
@@ -262,85 +292,85 @@ export function QRGenerator() {
 
   const handleGenerate = () => {
     // Validate required fields based on QR type
-    let validationError = "";
-    
+    let validationError = '';
+
     switch (qrType) {
-      case "url":
-        if (!qrData || qrData.trim() === "") {
-          validationError = "Please enter a URL";
+      case 'url':
+        if (!qrData || qrData.trim() === '') {
+          validationError = 'Please enter a URL';
         }
         break;
-      case "text":
-        if (!qrData || qrData.trim() === "") {
-          validationError = "Please enter some text";
+      case 'text':
+        if (!qrData || qrData.trim() === '') {
+          validationError = 'Please enter some text';
         }
         break;
-      case "email":
-        if (!emailAddress || emailAddress.trim() === "") {
-          validationError = "Please enter an email address";
+      case 'email':
+        if (!emailAddress || emailAddress.trim() === '') {
+          validationError = 'Please enter an email address';
         }
         break;
-      case "phone":
-        if (!phoneNumber || phoneNumber.trim() === "") {
-          validationError = "Please enter a phone number";
+      case 'phone':
+        if (!phoneNumber || phoneNumber.trim() === '') {
+          validationError = 'Please enter a phone number';
         }
         break;
-      case "sms":
-        if (!smsNumber || smsNumber.trim() === "") {
-          validationError = "Please enter a phone number";
+      case 'sms':
+        if (!smsNumber || smsNumber.trim() === '') {
+          validationError = 'Please enter a phone number';
         }
         break;
-      case "wifi":
-        if (!wifiSSID || wifiSSID.trim() === "") {
-          validationError = "Please enter WiFi network name (SSID)";
+      case 'wifi':
+        if (!wifiSSID || wifiSSID.trim() === '') {
+          validationError = 'Please enter WiFi network name (SSID)';
         }
         break;
-      case "vcard":
-        if (!vcardName || vcardName.trim() === "") {
-          validationError = "Please enter at least a name for the contact";
+      case 'vcard':
+        if (!vcardName || vcardName.trim() === '') {
+          validationError = 'Please enter at least a name for the contact';
         }
         break;
-      case "location":
+      case 'location':
         if (!latitude || !longitude) {
-          validationError = "Please enter both latitude and longitude";
+          validationError = 'Please enter both latitude and longitude';
         }
         break;
     }
-    
+
     if (validationError) {
       toast({
-        title: "Data Required",
+        title: 'Data Required',
         description: validationError,
-        variant: "destructive",
+        variant: 'destructive',
       });
       return;
     }
-    
+
     const data = generateQRData();
-    
-    if (!data || data.trim() === "") {
+
+    if (!data || data.trim() === '') {
       toast({
-        title: "Data Required",
-        description: "Please enter the required information",
-        variant: "destructive",
+        title: 'Data Required',
+        description: 'Please enter the required information',
+        variant: 'destructive',
       });
       return;
     }
 
     if (!qrCode) {
       toast({
-        title: "Error",
-        description: "QR Code generator is not ready. Please refresh the page.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'QR Code generator is not ready. Please refresh the page.',
+        variant: 'destructive',
       });
       return;
     }
 
     if (!qrRef.current) {
       toast({
-        title: "Error",
-        description: "QR Code container is not ready.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'QR Code container is not ready.',
+        variant: 'destructive',
       });
       return;
     }
@@ -353,17 +383,17 @@ export function QRGenerator() {
         margin: margin,
         qrOptions: {
           typeNumber: 0,
-          mode: "Byte",
-          errorCorrectionLevel: "Q"
+          mode: 'Byte',
+          errorCorrectionLevel: 'Q',
         },
         imageOptions: {
           hideBackgroundDots: true,
           imageSize: 0.4,
-          margin: 0
+          margin: 0,
         },
         dotsOptions: {
           color: dotsColor,
-          type: dotStyle as any
+          type: dotStyle as any,
         },
         backgroundOptions: {
           color: backgroundColor,
@@ -375,38 +405,38 @@ export function QRGenerator() {
         cornersDotOptions: {
           color: cornerDotColor,
           type: cornerDotStyle as any,
-        }
+        },
       });
-      
+
       // Clear previous QR code
-      qrRef.current.innerHTML = "";
+      qrRef.current.innerHTML = '';
       qrCode.append(qrRef.current);
       setIsGenerated(true);
-      
+
       toast({
-        title: "✨ QR Code Generated!",
-        description: "Your QR code is ready to download",
+        title: '✨ QR Code Generated!',
+        description: 'Your QR code is ready to download',
       });
     } catch (error) {
-      console.error("QR Code generation error:", error);
+      console.error('QR Code generation error:', error);
       toast({
-        title: "Generation Failed",
-        description: "Failed to generate QR code. Please try again.",
-        variant: "destructive",
+        title: 'Generation Failed',
+        description: 'Failed to generate QR code. Please try again.',
+        variant: 'destructive',
       });
     }
   };
 
-  const handleDownload = (format: "png" | "svg") => {
+  const handleDownload = (format: 'png' | 'svg') => {
     if (!qrCode || !isGenerated) return;
-    
+
     qrCode.download({
       name: `qrcode-${Date.now()}`,
-      extension: format
+      extension: format,
     });
-    
+
     toast({
-      title: "✅ Download Started",
+      title: '✅ Download Started',
       description: `Your QR code is being downloaded as ${format.toUpperCase()}`,
     });
   };
@@ -418,30 +448,30 @@ export function QRGenerator() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
       toast({
-        title: "📋 Copied!",
-        description: "QR code data copied to clipboard",
+        title: '📋 Copied!',
+        description: 'QR code data copied to clipboard',
       });
     } catch (error) {
       toast({
-        title: "Copy Failed",
-        description: "Failed to copy to clipboard",
-        variant: "destructive",
+        title: 'Copy Failed',
+        description: 'Failed to copy to clipboard',
+        variant: 'destructive',
       });
     }
   };
 
   const renderInputFields = () => {
-    const typeInfo = qrTypes.find(t => t.value === qrType);
+    const typeInfo = qrTypes.find((t) => t.value === qrType);
     const Icon = typeInfo?.icon || FileText;
-    
+
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-2 mb-4">
           <Icon className="h-5 w-5 text-blue-500" />
           <h3 className="text-lg font-semibold">{typeInfo?.label} Details</h3>
         </div>
-        
-        {qrType === "url" && (
+
+        {qrType === 'url' && (
           <div className="space-y-2">
             <Label htmlFor="url">Website URL</Label>
             <Input
@@ -453,8 +483,8 @@ export function QRGenerator() {
             />
           </div>
         )}
-        
-        {qrType === "text" && (
+
+        {qrType === 'text' && (
           <div className="space-y-2">
             <Label htmlFor="text">Text Content</Label>
             <Textarea
@@ -466,8 +496,8 @@ export function QRGenerator() {
             />
           </div>
         )}
-        
-        {qrType === "email" && (
+
+        {qrType === 'email' && (
           <>
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
@@ -500,8 +530,8 @@ export function QRGenerator() {
             </div>
           </>
         )}
-        
-        {qrType === "phone" && (
+
+        {qrType === 'phone' && (
           <div className="space-y-2">
             <Label htmlFor="phone">Phone Number</Label>
             <Input
@@ -513,8 +543,8 @@ export function QRGenerator() {
             />
           </div>
         )}
-        
-        {qrType === "sms" && (
+
+        {qrType === 'sms' && (
           <>
             <div className="space-y-2">
               <Label htmlFor="smsNumber">Phone Number</Label>
@@ -538,8 +568,8 @@ export function QRGenerator() {
             </div>
           </>
         )}
-        
-        {qrType === "wifi" && (
+
+        {qrType === 'wifi' && (
           <>
             <div className="space-y-2">
               <Label htmlFor="ssid">Network Name (SSID)</Label>
@@ -575,8 +605,8 @@ export function QRGenerator() {
             </div>
           </>
         )}
-        
-        {qrType === "vcard" && (
+
+        {qrType === 'vcard' && (
           <>
             <div className="space-y-2">
               <Label htmlFor="vcardName">Full Name</Label>
@@ -628,8 +658,8 @@ export function QRGenerator() {
             </div>
           </>
         )}
-        
-        {qrType === "location" && (
+
+        {qrType === 'location' && (
           <>
             <div className="space-y-2">
               <Label htmlFor="latitude">Latitude</Label>
@@ -666,7 +696,7 @@ export function QRGenerator() {
           <TabsTrigger value="content">Content</TabsTrigger>
           <TabsTrigger value="style">Style</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="content" className="space-y-6 mt-6">
           {/* QR Type Selection */}
           <div className="space-y-3">
@@ -681,9 +711,7 @@ export function QRGenerator() {
                   <Card
                     key={type.value}
                     className={`cursor-pointer transition-all duration-300 hover:scale-105 ${
-                      qrType === type.value
-                        ? "ring-2 ring-blue-500 shadow-lg"
-                        : "hover:shadow-md"
+                      qrType === type.value ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'
                     }`}
                     onClick={() => setQrType(type.value)}
                   >
@@ -710,13 +738,15 @@ export function QRGenerator() {
             Generate QR Code
           </Button>
         </TabsContent>
-        
+
         <TabsContent value="style" className="space-y-6 mt-6">
           {isGenerated && (
             <div className="glass-effect p-4 rounded-lg border border-blue-500/20 mb-4">
               <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
                 <Sparkles className="h-4 w-4 animate-pulse" />
-                <span className="font-medium">Live Preview Active - Changes apply automatically</span>
+                <span className="font-medium">
+                  Live Preview Active - Changes apply automatically
+                </span>
               </div>
             </div>
           )}
@@ -884,27 +914,29 @@ export function QRGenerator() {
       </Tabs>
 
       {/* QR Code Preview - Always render the ref container */}
-      <div className={`space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700 ${!isGenerated ? 'hidden' : ''}`}>
+      <div
+        className={`space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700 ${!isGenerated ? 'hidden' : ''}`}
+      >
         <h3 className="text-lg font-semibold flex items-center gap-2">
           <QrCode className="h-5 w-5 text-yellow-500" />
           Your QR Code
         </h3>
-        
+
         <div className="flex flex-col items-center gap-4">
           <Card className="p-6 bg-white dark:bg-gray-900">
             <div ref={qrRef} className="flex items-center justify-center" />
           </Card>
-          
+
           <div className="flex flex-wrap gap-3 justify-center">
             <Button
-              onClick={() => handleDownload("png")}
+              onClick={() => handleDownload('png')}
               className="bolt-gradient text-white font-semibold px-6 hover:scale-105 transition-transform"
             >
               <Download className="h-4 w-4 mr-2" />
               Download PNG
             </Button>
             <Button
-              onClick={() => handleDownload("svg")}
+              onClick={() => handleDownload('svg')}
               variant="outline"
               className="border-gray-300 dark:border-gray-600 hover:scale-105 transition-transform"
             >

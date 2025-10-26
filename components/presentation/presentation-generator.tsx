@@ -1,31 +1,52 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { PresentationPreview } from "@/components/presentation/presentation-preview";
-import { PresentationTemplates } from "@/components/presentation/presentation-templates";
-import { SlideOutlinePreview } from "@/components/presentation/slide-outline-preview";
-import { useToast } from "@/hooks/use-toast";
-import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
-import { ExportAuthDialog } from "@/components/ui/export-auth-dialog";
-import { Loader2, Sparkles, Presentation as LayoutPresentation, Lock, Download, Wand2, Sliders as Slides, Palette, Eye, ArrowRight, CheckCircle, Play, Brain, Zap, Star, Share2, Copy, Globe, ExternalLink, Maximize2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { PresentationPreview } from '@/components/presentation/presentation-preview';
+import { PresentationTemplates } from '@/components/presentation/presentation-templates';
+import { SlideOutlinePreview } from '@/components/presentation/slide-outline-preview';
+import { useToast } from '@/hooks/use-toast';
+import { useAuthGuard, PROTECTED_ACTIVITIES } from '@/lib/auth-utils';
+import { ExportAuthDialog } from '@/components/ui/export-auth-dialog';
+import {
+  Loader2,
+  Sparkles,
+  Presentation as LayoutPresentation,
+  Lock,
+  Download,
+  Wand2,
+  Sliders as Slides,
+  Palette,
+  Eye,
+  ArrowRight,
+  CheckCircle,
+  Play,
+  Brain,
+  Zap,
+  Star,
+  Share2,
+  Copy,
+  Globe,
+  ExternalLink,
+  Maximize2,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 type GenerationStep = 'input' | 'outline' | 'theme' | 'generated';
 
 export function PresentationGenerator() {
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [slides, setSlides] = useState<any[]>([]);
   const [slideOutlines, setSlideOutlines] = useState<any[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState("modern-business");
+  const [selectedTemplate, setSelectedTemplate] = useState('modern-business');
   const [pageCount, setPageCount] = useState(5);
   const [isExporting, setIsExporting] = useState(false);
   const [currentStep, setCurrentStep] = useState<GenerationStep>('input');
@@ -47,20 +68,20 @@ export function PresentationGenerator() {
   const generateSlideOutlines = async () => {
     if (!prompt.trim()) {
       toast({
-        title: "Please enter a prompt",
-        description: "Describe the presentation you want to generate",
-        variant: "destructive",
+        title: 'Please enter a prompt',
+        description: 'Describe the presentation you want to generate',
+        variant: 'destructive',
       });
       return;
     }
 
     if (pageCount > (isPro ? MAX_PRO_PAGES : MAX_FREE_PAGES)) {
       toast({
-        title: "Page limit exceeded",
+        title: 'Page limit exceeded',
         description: isPro
           ? `Maximum ${MAX_PRO_PAGES} pages allowed`
           : `Upgrade to Pro to create presentations with up to ${MAX_PRO_PAGES} pages`,
-        variant: "destructive",
+        variant: 'destructive',
       });
       return;
     }
@@ -73,26 +94,28 @@ export function PresentationGenerator() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          prompt, 
+        body: JSON.stringify({
+          prompt,
           pageCount,
-          userId: user?.id // Pass user ID for subscription check
+          userId: user?.id, // Pass user ID for subscription check
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        
+
         // Handle subscription limit errors
         if (response.status === 403 && errorData.upgradeRequired) {
           toast({
-            title: "Upgrade Required",
-            description: errorData.error || `Free users can create up to ${MAX_FREE_PAGES} slides. Upgrade to create up to ${MAX_PRO_PAGES} slides!`,
-            variant: "destructive",
+            title: 'Upgrade Required',
+            description:
+              errorData.error ||
+              `Free users can create up to ${MAX_FREE_PAGES} slides. Upgrade to create up to ${MAX_PRO_PAGES} slides!`,
+            variant: 'destructive',
           });
           return;
         }
-        
+
         throw new Error(errorData.error || 'Failed to generate outline');
       }
 
@@ -101,14 +124,15 @@ export function PresentationGenerator() {
       setCurrentStep('outline');
 
       toast({
-        title: "🎯 AI Outline Created!",
+        title: '🎯 AI Outline Created!',
         description: `${data.outlines.length} slides intelligently structured with professional images and charts. Choose your style!`,
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to generate outline. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description:
+          error instanceof Error ? error.message : 'Failed to generate outline. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsGenerating(false);
@@ -127,10 +151,10 @@ export function PresentationGenerator() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          outlines: slideOutlines, 
+        body: JSON.stringify({
+          outlines: slideOutlines,
           template: selectedTemplate,
-          prompt 
+          prompt,
         }),
       });
 
@@ -139,28 +163,28 @@ export function PresentationGenerator() {
       }
 
       const data = await response.json();
-      
+
       if (isPreview) {
         setPreviewSlides(data.slides);
         setIsPreviewMode(true);
         setCurrentStep('generated');
         toast({
-          title: "👀 Preview Ready!",
+          title: '👀 Preview Ready!',
           description: `${data.slides.length} slides generated. Review and regenerate if needed, or keep this version.`,
         });
       } else {
         setSlides(data.slides);
         setIsPreviewMode(false);
         toast({
-          title: "🎉 Professional Presentation Ready!",
+          title: '🎉 Professional Presentation Ready!',
           description: `${data.slides.length} slides created with Canva-style design, professional images, and interactive charts!`,
         });
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to generate presentation. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to generate presentation. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsGenerating(false);
@@ -175,10 +199,10 @@ export function PresentationGenerator() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          outlines: slideOutlines, 
+        body: JSON.stringify({
+          outlines: slideOutlines,
           template: selectedTemplate,
-          prompt 
+          prompt,
         }),
       });
 
@@ -188,16 +212,16 @@ export function PresentationGenerator() {
 
       const data = await response.json();
       setPreviewSlides(data.slides);
-      
+
       toast({
-        title: "🔄 Presentation Regenerated!",
+        title: '🔄 Presentation Regenerated!',
         description: `New version created with ${data.slides.length} slides. Review or regenerate again.`,
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to regenerate presentation. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to regenerate presentation. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsGenerating(false);
@@ -208,41 +232,41 @@ export function PresentationGenerator() {
     setSlides(previewSlides);
     setIsPreviewMode(false);
     toast({
-      title: "✅ Presentation Saved!",
-      description: "You can now export or share your presentation.",
+      title: '✅ Presentation Saved!',
+      description: 'You can now export or share your presentation.',
     });
   };
 
   const exportToPDF = async () => {
     if (!slides.length) return;
-    
+
     // Check if user is authenticated
     if (!isAuthenticated) {
       setShowAuthDialog(true);
       return;
     }
-    
+
     setIsExporting(true);
 
     try {
       const pdf = new jsPDF('landscape', 'pt', 'a4');
-      
+
       for (let i = 0; i < slides.length; i++) {
         if (i > 0) pdf.addPage();
-        
+
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
-        
+
         // Add background based on template
         const templateStyles = getTemplateBackground(selectedTemplate);
         pdf.setFillColor(templateStyles.r, templateStyles.g, templateStyles.b);
         pdf.rect(0, 0, pdfWidth, pdfHeight, 'F');
-        
+
         // Add title
         pdf.setFontSize(28);
         pdf.setTextColor(0, 0, 0);
         pdf.text(slides[i].title, 50, 80);
-        
+
         // Add content
         pdf.setFontSize(16);
         const splitContent = pdf.splitTextToSize(slides[i].content, pdfWidth - 100);
@@ -251,14 +275,14 @@ export function PresentationGenerator() {
 
       pdf.save(`${prompt.slice(0, 30)}-presentation.pdf`);
       toast({
-        title: "📄 PDF Exported!",
-        description: "Your professional presentation has been downloaded",
+        title: '📄 PDF Exported!',
+        description: 'Your professional presentation has been downloaded',
       });
     } catch (error) {
       toast({
-        title: "Export failed",
-        description: "Failed to export presentation to PDF. Please try again.",
-        variant: "destructive",
+        title: 'Export failed',
+        description: 'Failed to export presentation to PDF. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsExporting(false);
@@ -267,13 +291,13 @@ export function PresentationGenerator() {
 
   const exportToPPTX = async () => {
     if (!slides.length) return;
-    
+
     // Check if user is authenticated
     if (!isAuthenticated) {
       setShowAuthDialog(true);
       return;
     }
-    
+
     setIsExporting(true);
 
     try {
@@ -286,7 +310,7 @@ export function PresentationGenerator() {
         body: JSON.stringify({
           slides,
           template: selectedTemplate,
-          fileName: `${prompt.slice(0, 30)}-presentation`
+          fileName: `${prompt.slice(0, 30)}-presentation`,
         }),
       });
 
@@ -306,15 +330,15 @@ export function PresentationGenerator() {
       document.body.removeChild(a);
 
       toast({
-        title: "📊 PowerPoint Exported!",
-        description: "Your presentation is ready for editing in PowerPoint",
+        title: '📊 PowerPoint Exported!',
+        description: 'Your presentation is ready for editing in PowerPoint',
       });
     } catch (error) {
-      console.error("PPTX export error:", error);
+      console.error('PPTX export error:', error);
       toast({
-        title: "Export failed",
-        description: "Failed to export presentation to PowerPoint. Please try again.",
-        variant: "destructive",
+        title: 'Export failed',
+        description: 'Failed to export presentation to PowerPoint. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsExporting(false);
@@ -332,14 +356,14 @@ export function PresentationGenerator() {
     setSlides([]);
     setPreviewSlides([]);
     setIsPreviewMode(false);
-    setPrompt("");
+    setPrompt('');
     setShareUrl('');
     setPresentationId('');
   };
 
   const saveAndSharePresentation = async (isPublic: boolean = true) => {
     if (!slides.length) return;
-    
+
     setIsSaving(true);
     try {
       const response = await fetch('/api/presentations', {
@@ -352,7 +376,7 @@ export function PresentationGenerator() {
           slides,
           template: selectedTemplate,
           prompt,
-          isPublic
+          isPublic,
         }),
       });
 
@@ -368,20 +392,20 @@ export function PresentationGenerator() {
         // Copy to clipboard
         await navigator.clipboard.writeText(data.shareUrl);
         toast({
-          title: "🎉 Presentation Shared!",
-          description: "Share link copied to clipboard. Anyone can now view your presentation!",
+          title: '🎉 Presentation Shared!',
+          description: 'Share link copied to clipboard. Anyone can now view your presentation!',
         });
       } else {
         toast({
-          title: "💾 Presentation Saved!",
-          description: "Your presentation has been saved privately.",
+          title: '💾 Presentation Saved!',
+          description: 'Your presentation has been saved privately.',
         });
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to save presentation. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to save presentation. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsSaving(false);
@@ -390,25 +414,25 @@ export function PresentationGenerator() {
 
   const copyShareLink = async () => {
     if (!shareUrl) return;
-    
+
     try {
       await navigator.clipboard.writeText(shareUrl);
       toast({
-        title: "Link copied!",
-        description: "Share link has been copied to your clipboard",
+        title: 'Link copied!',
+        description: 'Share link has been copied to your clipboard',
       });
     } catch (error) {
       toast({
-        title: "Failed to copy",
-        description: "Please copy the URL manually",
-        variant: "destructive",
+        title: 'Failed to copy',
+        description: 'Please copy the URL manually',
+        variant: 'destructive',
       });
     }
   };
 
   const openFullView = async () => {
     if (!slides.length) return;
-    
+
     // Save presentation first if not already saved
     if (!presentationId) {
       setIsSaving(true);
@@ -423,7 +447,7 @@ export function PresentationGenerator() {
             slides,
             template: selectedTemplate,
             prompt,
-            isPublic: false
+            isPublic: false,
           }),
         });
 
@@ -433,14 +457,14 @@ export function PresentationGenerator() {
 
         const data = await response.json();
         setPresentationId(data.id);
-        
+
         // Open full view in new tab
         window.open(`/presentation/fullview/${data.id}`, '_blank');
       } catch (error) {
         toast({
-          title: "Error",
-          description: "Failed to open full view. Please try again.",
-          variant: "destructive",
+          title: 'Error',
+          description: 'Failed to open full view. Please try again.',
+          variant: 'destructive',
         });
       } finally {
         setIsSaving(false);
@@ -462,7 +486,7 @@ export function PresentationGenerator() {
       'minimalist-pro': { r: 249, g: 250, b: 251 },
       'tech-modern': { r: 15, g: 23, b: 42 },
       'elegant-dark': { r: 17, g: 24, b: 39 },
-      'startup-pitch': { r: 240, g: 253, b: 244 }
+      'startup-pitch': { r: 240, g: 253, b: 244 },
     };
     return backgrounds[template as keyof typeof backgrounds] || backgrounds['modern-business'];
   };
@@ -474,7 +498,7 @@ export function PresentationGenerator() {
       'minimalist-pro': { background: 'F9FAFB', textColor: '374151', accentColor: '6B7280' },
       'tech-modern': { background: '0F172A', textColor: 'FFFFFF', accentColor: '06B6D4' },
       'elegant-dark': { background: '111827', textColor: 'FFFFFF', accentColor: 'FBBF24' },
-      'startup-pitch': { background: 'F0FDF4', textColor: '065F46', accentColor: '10B981' }
+      'startup-pitch': { background: 'F0FDF4', textColor: '065F46', accentColor: '10B981' },
     };
     return colors[template as keyof typeof colors] || colors['modern-business'];
   };
@@ -482,30 +506,46 @@ export function PresentationGenerator() {
   const renderStepIndicator = () => (
     <div className="w-full overflow-x-auto mb-6 sm:mb-8 pb-2 scrollbar-hide">
       <div className="flex items-center justify-start sm:justify-center gap-2 sm:gap-4 min-w-max px-4 sm:px-0">
-        <div className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap ${
-          currentStep === 'input' ? 'bolt-gradient text-white shadow-lg' : 'glass-effect hover:scale-105'
-        }`}>
+        <div
+          className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap ${
+            currentStep === 'input'
+              ? 'bolt-gradient text-white shadow-lg'
+              : 'glass-effect hover:scale-105'
+          }`}
+        >
           <Brain className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
           <span className="text-xs sm:text-sm font-medium">1. Describe</span>
         </div>
         <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
-        <div className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap ${
-          currentStep === 'outline' ? 'bolt-gradient text-white shadow-lg' : 'glass-effect hover:scale-105'
-        }`}>
+        <div
+          className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap ${
+            currentStep === 'outline'
+              ? 'bolt-gradient text-white shadow-lg'
+              : 'glass-effect hover:scale-105'
+          }`}
+        >
           <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
           <span className="text-xs sm:text-sm font-medium">2. AI Structure</span>
         </div>
         <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
-        <div className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap ${
-          currentStep === 'theme' ? 'bolt-gradient text-white shadow-lg' : 'glass-effect hover:scale-105'
-        }`}>
+        <div
+          className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap ${
+            currentStep === 'theme'
+              ? 'bolt-gradient text-white shadow-lg'
+              : 'glass-effect hover:scale-105'
+          }`}
+        >
           <Palette className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
           <span className="text-xs sm:text-sm font-medium">3. Style</span>
         </div>
         <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
-        <div className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap ${
-          currentStep === 'generated' ? 'bolt-gradient text-white shadow-lg' : 'glass-effect hover:scale-105'
-        }`}>
+        <div
+          className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full transition-all whitespace-nowrap ${
+            currentStep === 'generated'
+              ? 'bolt-gradient text-white shadow-lg'
+              : 'glass-effect hover:scale-105'
+          }`}
+        >
           <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
           <span className="text-xs sm:text-sm font-medium">4. Present</span>
         </div>
@@ -539,8 +579,8 @@ export function PresentationGenerator() {
                 What's your presentation about?
               </h2>
               <p className="text-muted-foreground">
-                Our AI will create a professional presentation with Canva-style design, 
-                high-quality images, and meaningful charts
+                Our AI will create a professional presentation with Canva-style design, high-quality
+                images, and meaningful charts
               </p>
             </div>
 
@@ -557,14 +597,23 @@ export function PresentationGenerator() {
                     min="1"
                     max={isPro ? MAX_PRO_PAGES : MAX_FREE_PAGES}
                     value={pageCount}
-                    onChange={(e) => setPageCount(Math.min(parseInt(e.target.value) || 1, isPro ? MAX_PRO_PAGES : MAX_FREE_PAGES))}
+                    onChange={(e) =>
+                      setPageCount(
+                        Math.min(
+                          parseInt(e.target.value) || 1,
+                          isPro ? MAX_PRO_PAGES : MAX_FREE_PAGES,
+                        ),
+                      )
+                    }
                     className="w-24 glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20"
                     disabled={isGenerating}
                   />
                   {!isPro && (
                     <div className="flex items-center text-xs text-muted-foreground glass-effect px-3 py-2 rounded-full">
                       <Lock className="h-3 w-3 mr-1" />
-                      <span className="hidden sm:inline">Max {MAX_FREE_PAGES} slides (Pro: {MAX_PRO_PAGES})</span>
+                      <span className="hidden sm:inline">
+                        Max {MAX_FREE_PAGES} slides (Pro: {MAX_PRO_PAGES})
+                      </span>
                       <span className="sm:hidden">Max {MAX_FREE_PAGES}</span>
                     </div>
                   )}
@@ -605,10 +654,8 @@ export function PresentationGenerator() {
                     </>
                   )}
                 </div>
-                
-                {!isGenerating && (
-                  <div className="absolute inset-0 shimmer opacity-30"></div>
-                )}
+
+                {!isGenerating && <div className="absolute inset-0 shimmer opacity-30"></div>}
               </Button>
             </div>
           </div>
@@ -619,7 +666,9 @@ export function PresentationGenerator() {
                 <Star className="h-3 w-3 text-blue-500" />
                 <span className="text-xs font-medium">Professional Features</span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold bolt-gradient-text">Canva-Style Quality</h2>
+              <h2 className="text-xl sm:text-2xl font-bold bolt-gradient-text">
+                Canva-Style Quality
+              </h2>
             </div>
 
             <Card className="glass-effect border border-yellow-400/20 p-6 relative overflow-hidden">
@@ -631,7 +680,9 @@ export function PresentationGenerator() {
                   </div>
                   <div>
                     <h3 className="font-semibold">Professional Images</h3>
-                    <p className="text-sm text-muted-foreground">High-quality Pexels images selected by AI for each slide</p>
+                    <p className="text-sm text-muted-foreground">
+                      High-quality Pexels images selected by AI for each slide
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -640,7 +691,9 @@ export function PresentationGenerator() {
                   </div>
                   <div>
                     <h3 className="font-semibold">Interactive Charts</h3>
-                    <p className="text-sm text-muted-foreground">Meaningful data visualizations with professional styling</p>
+                    <p className="text-sm text-muted-foreground">
+                      Meaningful data visualizations with professional styling
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -649,7 +702,9 @@ export function PresentationGenerator() {
                   </div>
                   <div>
                     <h3 className="font-semibold">Canva-Style Design</h3>
-                    <p className="text-sm text-muted-foreground">Professional templates with consistent branding</p>
+                    <p className="text-sm text-muted-foreground">
+                      Professional templates with consistent branding
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -658,7 +713,9 @@ export function PresentationGenerator() {
                   </div>
                   <div>
                     <h3 className="font-semibold">Full-Screen Presentation</h3>
-                    <p className="text-sm text-muted-foreground">Present like a pro with smooth transitions and controls</p>
+                    <p className="text-sm text-muted-foreground">
+                      Present like a pro with smooth transitions and controls
+                    </p>
                   </div>
                 </div>
               </div>
@@ -679,8 +736,8 @@ export function PresentationGenerator() {
               🎯 Perfect! Your presentation structure is ready
             </h2>
             <p className="text-muted-foreground max-w-3xl mx-auto">
-              Our AI analyzed your topic and created an intelligent slide flow with professional images, 
-              meaningful charts, and compelling content. Now choose your style!
+              Our AI analyzed your topic and created an intelligent slide flow with professional
+              images, meaningful charts, and compelling content. Now choose your style!
             </p>
           </div>
 
@@ -717,8 +774,8 @@ export function PresentationGenerator() {
               🎨 Choose your professional style
             </h2>
             <p className="text-muted-foreground max-w-3xl mx-auto">
-              Select a Canva-style template that matches your audience and purpose. 
-              Each template includes optimized colors, typography, and visual elements.
+              Select a Canva-style template that matches your audience and purpose. Each template
+              includes optimized colors, typography, and visual elements.
             </p>
           </div>
 
@@ -788,8 +845,9 @@ export function PresentationGenerator() {
                   👀 Preview Your Presentation
                 </h2>
                 <p className="text-muted-foreground max-w-3xl mx-auto">
-                  Review the generated presentation. You can regenerate for a different version or keep this one.
-                  Your presentation won't be saved until you click "Keep This Version".
+                  Review the generated presentation. You can regenerate for a different version or
+                  keep this one. Your presentation won't be saved until you click "Keep This
+                  Version".
                 </p>
               </>
             ) : (
@@ -802,20 +860,23 @@ export function PresentationGenerator() {
                   🎉 Your Canva-Style Presentation is Ready!
                 </h2>
                 <p className="text-muted-foreground max-w-3xl mx-auto">
-                  Complete with professional design, high-quality images, interactive charts, and compelling content. 
-                  Present in full-screen mode or export to PowerPoint!
+                  Complete with professional design, high-quality images, interactive charts, and
+                  compelling content. Present in full-screen mode or export to PowerPoint!
                 </p>
               </>
             )}
           </div>
 
           {(isPreviewMode ? previewSlides : slides).length > 0 && (
-            <div id="presentation-preview" className="glass-effect border border-yellow-400/20 rounded-xl overflow-hidden relative">
+            <div
+              id="presentation-preview"
+              className="glass-effect border border-yellow-400/20 rounded-xl overflow-hidden relative"
+            >
               <div className="absolute inset-0 shimmer opacity-10"></div>
               <div className="relative z-10">
-                <PresentationPreview 
-                  slides={isPreviewMode ? previewSlides : slides} 
-                  template={selectedTemplate} 
+                <PresentationPreview
+                  slides={isPreviewMode ? previewSlides : slides}
+                  template={selectedTemplate}
                 />
               </div>
             </div>
@@ -829,10 +890,14 @@ export function PresentationGenerator() {
                   <Globe className="h-4 w-4 text-green-500" />
                   <span className="text-sm font-medium">Presentation Shared</span>
                 </div>
-                <h3 className="text-lg font-semibold bolt-gradient-text">Your presentation is live!</h3>
-                <p className="text-sm text-muted-foreground">Anyone with this link can view your presentation</p>
+                <h3 className="text-lg font-semibold bolt-gradient-text">
+                  Your presentation is live!
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Anyone with this link can view your presentation
+                </p>
               </div>
-              
+
               <div className="flex items-center gap-2 mb-4">
                 <input
                   type="text"
@@ -843,8 +908,8 @@ export function PresentationGenerator() {
                 <Button onClick={copyShareLink} size="sm" variant="outline">
                   <Copy className="h-4 w-4" />
                 </Button>
-                <Button 
-                  onClick={() => window.open(shareUrl, '_blank')} 
+                <Button
+                  onClick={() => window.open(shareUrl, '_blank')}
                   size="sm"
                   className="bolt-gradient text-white"
                 >
@@ -859,11 +924,11 @@ export function PresentationGenerator() {
             <div className="space-y-4">
               <div className="glass-effect p-4 rounded-xl border border-blue-400/20 bg-blue-50/10">
                 <p className="text-center text-sm text-muted-foreground mb-4">
-                  💡 <strong>Preview Mode:</strong> This presentation is not saved yet. 
-                  Regenerate for a different version or keep this one to continue.
+                  💡 <strong>Preview Mode:</strong> This presentation is not saved yet. Regenerate
+                  for a different version or keep this one to continue.
                 </p>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <Button
                   onClick={() => setCurrentStep('theme')}
@@ -919,7 +984,7 @@ export function PresentationGenerator() {
                 <Palette className="mr-2 h-4 w-4" />
                 Change Style
               </Button>
-              
+
               {/* Full View button */}
               <Button
                 onClick={openFullView}
@@ -933,7 +998,7 @@ export function PresentationGenerator() {
                 )}
                 Full View
               </Button>
-              
+
               {/* Share button */}
               {!shareUrl && (
                 <Button
@@ -950,7 +1015,7 @@ export function PresentationGenerator() {
                   Share
                 </Button>
               )}
-              
+
               <div className="flex flex-col sm:flex-row gap-2">
                 <Button
                   onClick={exportToPDF}

@@ -1,6 +1,6 @@
-import { Template } from "@/types";
+import { Template } from '@/types';
 
-export const TEMPLATE_TYPES = ["resume", "presentation", "letter", "cv"] as const;
+export const TEMPLATE_TYPES = ['resume', 'presentation', 'letter', 'cv'] as const;
 
 export const getTemplateTypeLabel = (type: string): string => {
   switch (type) {
@@ -116,7 +116,7 @@ export const getDefaultTemplateContent = (type: string): any => {
 
 export const validateTemplateContent = (type: string, content: any): boolean => {
   if (!content) return false;
-  
+
   const requiredFields: Record<string, string[]> = {
     resume: ['personalInfo', 'sections'],
     presentation: ['title', 'slides'],
@@ -125,12 +125,12 @@ export const validateTemplateContent = (type: string, content: any): boolean => 
   };
 
   const typeFields = requiredFields[type as keyof typeof requiredFields] || [];
-  return typeFields.every(field => content[field] !== undefined);
+  return typeFields.every((field) => content[field] !== undefined);
 };
 
 export const getTemplatePreview = (template: Template): string => {
   if (!template.content) return 'No content available';
-  
+
   switch (template.type) {
     case 'resume':
     case 'cv':

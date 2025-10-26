@@ -1,9 +1,11 @@
 # Navbar Overlap Fix - Summary
 
 ## Problem
+
 Text content was being hidden behind the fixed navbar because there was no proper spacing/padding on the page content.
 
 ## Solution
+
 Fixed the layout by:
 
 1. **Made sponsor banner fixed** at the top
@@ -14,24 +16,29 @@ Fixed the layout by:
 ## Changes Made
 
 ### 1. Sponsor Banner (`components/sponsor-banner.tsx`)
+
 ```tsx
 // Added fixed positioning
-className="sponsor-banner fixed top-0 left-0 right-0 z-50 py-2 sm:py-3 px-2 sm:px-4 text-center overflow-hidden w-full bg-background/95 backdrop-blur-sm border-b border-border/40"
+className =
+  'sponsor-banner fixed top-0 left-0 right-0 z-50 py-2 sm:py-3 px-2 sm:px-4 text-center overflow-hidden w-full bg-background/95 backdrop-blur-sm border-b border-border/40';
 ```
 
 ### 2. Site Header (`components/site-header.tsx`)
+
 ```tsx
 // Positioned below sponsor banner
-className="fixed top-[44px] sm:top-[52px] z-40 w-full nav-professional"
+className = 'fixed top-[44px] sm:top-[52px] z-40 w-full nav-professional';
 ```
 
 ### 3. Homepage (`app/page.tsx`)
+
 ```tsx
 // Added padding for both sponsor banner + navbar
 <main className="flex-1 pt-[100px] sm:pt-[116px]">
 ```
 
 ### 4. Global CSS (`app/globals.css`)
+
 ```css
 /* Page with fixed header and sponsor banner */
 .page-with-header {
@@ -57,6 +64,7 @@ className="fixed top-[44px] sm:top-[52px] z-40 w-full nav-professional"
 ```
 
 ### 5. About Page (`app/about/page.tsx`)
+
 ```tsx
 // Applied utility class
 <main className="flex-1 page-with-header-only">
@@ -80,10 +88,12 @@ className="fixed top-[44px] sm:top-[52px] z-40 w-full nav-professional"
 ## Spacing Breakdown
 
 ### Homepage (with sponsor banner)
+
 - Mobile: `100px` = 44px (banner) + 56px (navbar)
 - Desktop: `116px` = 52px (banner) + 64px (navbar)
 
 ### Other Pages (navbar only)
+
 - Mobile: `56px` = navbar height
 - Desktop: `64px` = navbar height
 
@@ -92,9 +102,11 @@ className="fixed top-[44px] sm:top-[52px] z-40 w-full nav-professional"
 All pages that use `<SiteHeader />` should apply the appropriate class:
 
 **With Sponsor Banner:**
+
 - `app/page.tsx` ✅ (already fixed)
 
 **Without Sponsor Banner (use `.page-with-header-only`):**
+
 - `app/about/page.tsx` ✅ (already fixed)
 - `app/resume/page.tsx`
 - `app/presentation/page.tsx`
@@ -115,16 +127,19 @@ All pages that use `<SiteHeader />` should apply the appropriate class:
 ## How to Apply Fix to Other Pages
 
 Replace:
+
 ```tsx
 <main className="flex-1">
 ```
 
 With:
+
 ```tsx
 <main className="flex-1 page-with-header-only">
 ```
 
 Or if the page has custom padding, add the class:
+
 ```tsx
 <main className="flex-1 pt-20"> // Old
 <main className="flex-1 page-with-header-only"> // New

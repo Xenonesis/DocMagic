@@ -11,11 +11,11 @@ interface InfoBannerProps {
   variant?: 'info' | 'success' | 'warning' | 'tip';
 }
 
-export function InfoBanner({ 
-  title, 
-  message, 
-  dismissible = true, 
-  variant = 'info' 
+export function InfoBanner({
+  title,
+  message,
+  dismissible = true,
+  variant = 'info',
 }: InfoBannerProps) {
   const [isVisible, setIsVisible] = useState(true);
 
@@ -23,8 +23,10 @@ export function InfoBanner({
 
   const variantStyles = {
     info: 'bg-blue-50/50 dark:bg-blue-950/20 border-blue-200/30 text-blue-900 dark:text-blue-100',
-    success: 'bg-green-50/50 dark:bg-green-950/20 border-green-200/30 text-green-900 dark:text-green-100',
-    warning: 'bg-yellow-50/50 dark:bg-yellow-950/20 border-yellow-200/30 text-yellow-900 dark:text-yellow-100',
+    success:
+      'bg-green-50/50 dark:bg-green-950/20 border-green-200/30 text-green-900 dark:text-green-100',
+    warning:
+      'bg-yellow-50/50 dark:bg-yellow-950/20 border-yellow-200/30 text-yellow-900 dark:text-yellow-100',
     tip: 'bg-purple-50/50 dark:bg-purple-950/20 border-purple-200/30 text-purple-900 dark:text-purple-100',
   };
 
@@ -40,9 +42,7 @@ export function InfoBanner({
       <div className="flex items-start gap-3">
         <Info className={`h-5 w-5 mt-0.5 flex-shrink-0 ${iconColor[variant]}`} />
         <div className="flex-1">
-          {title && (
-            <h3 className="font-semibold text-sm mb-1">{title}</h3>
-          )}
+          {title && <h3 className="font-semibold text-sm mb-1">{title}</h3>}
           <p className="text-sm">{message}</p>
         </div>
         {dismissible && (

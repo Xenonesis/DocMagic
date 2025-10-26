@@ -1,9 +1,9 @@
-"use client";
-import { SiteHeader } from "@/components/site-header";
-import { IconGenerator } from "@/components/icon/icon-generator";
-import { Sparkles, Palette, Zap, Star, Wand2, Download, Image, Layers } from "lucide-react";
-import { useEffect, useState } from "react";
-import { IconGeneratorSkeleton } from "@/components/ui/skeleton";
+'use client';
+import { SiteHeader } from '@/components/site-header';
+import { IconGenerator } from '@/components/icon/icon-generator';
+import { Sparkles, Palette, Zap, Star, Wand2, Download, Image, Layers } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { IconGeneratorSkeleton } from '@/components/ui/skeleton';
 
 export default function IconPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +42,7 @@ export default function IconPage() {
             </div>
 
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6 leading-tight px-4">
-              Create Stunning{" "}
+              Create Stunning{' '}
               <span className="bolt-gradient-text relative inline-block">
                 AI-Powered Icons
                 <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
@@ -52,31 +52,17 @@ export default function IconPage() {
             </h1>
 
             <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-6 sm:leading-7 md:leading-8 text-muted-foreground max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-6 md:px-0">
-              Generate{" "}
-              <span className="font-semibold text-yellow-600">
-                unique icons
-              </span>
-              ,{" "}
-              <span className="font-semibold text-blue-600">
-                logos
-              </span>
-              , and{" "}
-              <span className="font-semibold text-purple-600">
-                graphics
-              </span>{" "}
-              with{" "}
-              <span className="font-semibold bolt-gradient-text">
-                AI-powered creativity
-              </span>
+              Generate <span className="font-semibold text-yellow-600">unique icons</span>,{' '}
+              <span className="font-semibold text-blue-600">logos</span>, and{' '}
+              <span className="font-semibold text-purple-600">graphics</span> with{' '}
+              <span className="font-semibold bolt-gradient-text">AI-powered creativity</span>
             </p>
 
             {/* Stats bar */}
             <div className="mt-4 sm:mt-6 md:mt-8 flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 px-4">
               <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <Sparkles className="inline h-3 w-3 sm:h-4 sm:w-4 text-yellow-500 mr-1" />
-                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">
-                  AI-Powered
-                </span>
+                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">AI-Powered</span>
               </div>
               <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <Layers className="inline h-3 w-3 sm:h-4 sm:w-4 text-blue-500 mr-1" />
@@ -86,21 +72,13 @@ export default function IconPage() {
               </div>
               <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <Download className="inline h-3 w-3 sm:h-4 sm:w-4 text-green-500 mr-1" />
-                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">
-                  High-Res
-                </span>
-                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">
-                  Export
-                </span>
+                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">High-Res</span>
+                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">Export</span>
               </div>
               <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <Palette className="inline h-3 w-3 sm:h-4 sm:w-4 text-purple-500 mr-1" />
-                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">
-                  Custom
-                </span>
-                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">
-                  Colors
-                </span>
+                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">Custom</span>
+                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">Colors</span>
               </div>
             </div>
           </div>
@@ -117,16 +95,12 @@ export default function IconPage() {
             <div className="absolute bottom-4 left-4">
               <Star
                 className="h-4 w-4 text-blue-500 animate-spin"
-                style={{ animationDuration: "3s" }}
+                style={{ animationDuration: '3s' }}
               />
             </div>
 
             <div className="relative z-10">
-              {isLoading ? (
-                <IconGeneratorSkeleton />
-              ) : (
-                <IconGenerator />
-              )}
+              {isLoading ? <IconGeneratorSkeleton /> : <IconGenerator />}
             </div>
           </div>
 
@@ -148,15 +122,11 @@ export default function IconPage() {
                 <div className="flex flex-wrap justify-center gap-3">
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Palette className="inline h-3 w-3 text-yellow-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Multiple Styles
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Multiple Styles</span>
                   </div>
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Zap className="inline h-3 w-3 text-blue-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Instant Generation
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Instant Generation</span>
                   </div>
                 </div>
               </div>

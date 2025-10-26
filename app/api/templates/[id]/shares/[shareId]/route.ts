@@ -4,11 +4,11 @@ import { NextResponse } from 'next/server';
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string; shareId: string } }
+  { params }: { params: { id: string; shareId: string } },
 ) {
   const { id, shareId } = params;
   const cookieStore = await cookies();
-  
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -24,11 +24,13 @@ export async function DELETE(
           cookieStore.set({ name, value: '', ...options });
         },
       },
-    }
+    },
   );
-  
+
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -50,10 +52,7 @@ export async function DELETE(
     }
 
     // Delete the share
-    const { error } = await supabase
-      .from('template_shares')
-      .delete()
-      .eq('id', shareId);
+    const { error } = await supabase.from('template_shares').delete().eq('id', shareId);
 
     if (error) throw error;
 
@@ -66,11 +65,11 @@ export async function DELETE(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string; shareId: string } }
+  { params }: { params: { id: string; shareId: string } },
 ) {
   const { id, shareId } = params;
   const cookieStore = await cookies();
-  
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -86,11 +85,13 @@ export async function PATCH(
           cookieStore.set({ name, value: '', ...options });
         },
       },
-    }
+    },
   );
-  
+
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return new NextResponse('Unauthorized', { status: 401 });
     }

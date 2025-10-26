@@ -1,89 +1,101 @@
 'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { FileText, Presentation, Mail, FileUser, Network, Palette, QrCode, ArrowRight, Sparkles, Zap, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import {
+  FileText,
+  Presentation,
+  Mail,
+  FileUser,
+  Network,
+  Palette,
+  QrCode,
+  ArrowRight,
+  Sparkles,
+  Zap,
+  Star,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const documentTypes = [
   {
-    title: "Resume",
-    description: "ATS-optimized resumes that get you noticed by recruiters and hiring managers",
+    title: 'Resume',
+    description: 'ATS-optimized resumes that get you noticed by recruiters and hiring managers',
     icon: FileText,
-    href: "/resume",
-    gradient: "bolt-gradient",
-    borderColor: "border-blue-200/30",
-    features: ["ATS Optimized", "Multiple Templates", "AI-Powered"],
-    badge: "Most Popular"
+    href: '/resume',
+    gradient: 'bolt-gradient',
+    borderColor: 'border-blue-200/30',
+    features: ['ATS Optimized', 'Multiple Templates', 'AI-Powered'],
+    badge: 'Most Popular',
   },
   {
-    title: "Presentation",
-    description: "Stunning slide decks that captivate your audience and deliver your message",
+    title: 'Presentation',
+    description: 'Stunning slide decks that captivate your audience and deliver your message',
     icon: Presentation,
-    href: "/presentation",
-    gradient: "sunset-gradient",
-    borderColor: "border-amber-200/30",
-    features: ["Visual Design", "Data Charts", "Export to PPTX"],
-    badge: "Trending"
+    href: '/presentation',
+    gradient: 'sunset-gradient',
+    borderColor: 'border-amber-200/30',
+    features: ['Visual Design', 'Data Charts', 'Export to PPTX'],
+    badge: 'Trending',
   },
   {
-    title: "Cover Letter",
-    description: "Personalized cover letters that complement your resume perfectly",
+    title: 'Cover Letter',
+    description: 'Personalized cover letters that complement your resume perfectly',
     icon: Mail,
-    href: "/letter",
-    gradient: "forest-gradient",
-    borderColor: "border-emerald-200/30",
-    features: ["Personalized", "Industry-Specific", "Quick Generate"],
-    badge: "Essential"
+    href: '/letter',
+    gradient: 'forest-gradient',
+    borderColor: 'border-emerald-200/30',
+    features: ['Personalized', 'Industry-Specific', 'Quick Generate'],
+    badge: 'Essential',
   },
   {
-    title: "CV",
-    description: "Comprehensive CVs for academic and research positions",
+    title: 'CV',
+    description: 'Comprehensive CVs for academic and research positions',
     icon: FileUser,
-    href: "/cv",
-    gradient: "cosmic-gradient",
-    borderColor: "border-purple-200/30",
-    features: ["Academic Format", "Publications", "Research Focus"],
-    badge: "Professional"
+    href: '/cv',
+    gradient: 'cosmic-gradient',
+    borderColor: 'border-purple-200/30',
+    features: ['Academic Format', 'Publications', 'Research Focus'],
+    badge: 'Professional',
   },
   {
-    title: "Diagram",
-    description: "Professional diagrams and flowcharts for technical documentation",
+    title: 'Diagram',
+    description: 'Professional diagrams and flowcharts for technical documentation',
     icon: Network,
-    href: "/diagram",
-    gradient: "ocean-gradient",
-    borderColor: "border-cyan-200/30",
-    features: ["Flowcharts", "Mind Maps", "Export SVG"],
-    badge: "New"
+    href: '/diagram',
+    gradient: 'ocean-gradient',
+    borderColor: 'border-cyan-200/30',
+    features: ['Flowcharts', 'Mind Maps', 'Export SVG'],
+    badge: 'New',
   },
   {
-    title: "Icon",
-    description: "AI-generated custom icons and graphics for your brand",
+    title: 'Icon',
+    description: 'AI-generated custom icons and graphics for your brand',
     icon: Palette,
-    href: "/icon",
-    gradient: "sunset-gradient",
-    borderColor: "border-pink-200/30",
-    features: ["Multiple Styles", "High-Res", "Custom Colors"],
-    badge: "New"
+    href: '/icon',
+    gradient: 'sunset-gradient',
+    borderColor: 'border-pink-200/30',
+    features: ['Multiple Styles', 'High-Res', 'Custom Colors'],
+    badge: 'New',
   },
   {
-    title: "QR Code",
-    description: "Custom QR codes with styling options for any purpose",
+    title: 'QR Code',
+    description: 'Custom QR codes with styling options for any purpose',
     icon: QrCode,
-    href: "/qr",
-    gradient: "cosmic-gradient",
-    borderColor: "border-indigo-200/30",
-    features: ["Multiple Types", "Custom Colors", "High Quality"],
-    badge: "New"
-  }
+    href: '/qr',
+    gradient: 'cosmic-gradient',
+    borderColor: 'border-indigo-200/30',
+    features: ['Multiple Types', 'Custom Colors', 'High Quality'],
+    badge: 'New',
+  },
 ];
 
 export function DocumentTypesSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const router = useRouter();
-  
+
   const handleHeadingClick = (e: React.MouseEvent) => {
     e.preventDefault();
     const nextIndex = (currentIndex + 1) % documentTypes.length;
@@ -103,18 +115,22 @@ export function DocumentTypesSection() {
         <div className="text-center mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full glass-effect mb-6 border border-blue-200/30">
             <Sparkles className="h-4 w-4 text-blue-600" />
-            <span className="text-sm font-semibold bolt-gradient-text">Choose Your Document Type</span>
+            <span className="text-sm font-semibold bolt-gradient-text">
+              Choose Your Document Type
+            </span>
           </div>
-          
-          <div 
-            onClick={handleHeadingClick}
-            className="block group/heading cursor-pointer"
-          >
+
+          <div onClick={handleHeadingClick} className="block group/heading cursor-pointer">
             <h2 className="modern-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 leading-tight transition-transform duration-300 group-hover/heading:scale-105">
-              <span className="block">What would you like to <span className="bolt-gradient-text group-hover/heading:underline">create today?</span></span>
+              <span className="block">
+                What would you like to{' '}
+                <span className="bolt-gradient-text group-hover/heading:underline">
+                  create today?
+                </span>
+              </span>
             </h2>
           </div>
-          
+
           <p className="modern-body text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Select a document type and let our AI help you create professional content in seconds
           </p>
@@ -123,7 +139,7 @@ export function DocumentTypesSection() {
         {/* Document Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {documentTypes.map((doc, index) => (
-            <Card 
+            <Card
               key={doc.title}
               className="group relative !bg-white dark:!bg-gray-900 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 !border !border-gray-200 dark:!border-gray-700 overflow-hidden animate-fade-in-up rounded-xl"
               style={{ animationDelay: `${index * 100}ms` }}
@@ -139,10 +155,14 @@ export function DocumentTypesSection() {
               )}
 
               {/* Gradient background overlay */}
-              <div className={`absolute inset-0 ${doc.gradient} opacity-0 group-hover:opacity-10 dark:group-hover:opacity-20 transition-opacity duration-300`}></div>
+              <div
+                className={`absolute inset-0 ${doc.gradient} opacity-0 group-hover:opacity-10 dark:group-hover:opacity-20 transition-opacity duration-300`}
+              ></div>
 
               <CardHeader className="pb-4 relative z-10">
-                <div className={`w-16 h-16 ${doc.gradient} rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
+                <div
+                  className={`w-16 h-16 ${doc.gradient} rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}
+                >
                   <doc.icon className="h-8 w-8 text-white" />
                 </div>
                 <CardTitle className="text-xl font-bold text-gray-900 dark:text-white group-hover:bolt-gradient-text transition-colors">
@@ -157,7 +177,7 @@ export function DocumentTypesSection() {
                 {/* Features */}
                 <div className="flex flex-wrap gap-2">
                   {doc.features.map((feature) => (
-                    <div 
+                    <div
                       key={feature}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                     >
@@ -168,12 +188,15 @@ export function DocumentTypesSection() {
                 </div>
 
                 {/* CTA Button */}
-                <Button 
+                <Button
                   asChild
                   className="w-full group/btn !bg-white dark:!bg-gray-800 hover:!bg-gray-50 dark:hover:!bg-gray-700 !text-gray-900 dark:!text-white hover:!text-gray-900 dark:hover:!text-white !border-2 !border-gray-300 dark:!border-gray-600 hover:!border-blue-500 dark:hover:!border-blue-400 transition-all"
                   variant="outline"
                 >
-                  <Link href={doc.href} className="flex items-center justify-center gap-2 !text-gray-900 dark:!text-white hover:!text-gray-900 dark:hover:!text-white">
+                  <Link
+                    href={doc.href}
+                    className="flex items-center justify-center gap-2 !text-gray-900 dark:!text-white hover:!text-gray-900 dark:hover:!text-white"
+                  >
                     <span className="font-semibold">Create {doc.title}</span>
                     <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                   </Link>
@@ -188,7 +211,7 @@ export function DocumentTypesSection() {
           <p className="text-sm text-muted-foreground mb-4">
             Not sure which one to choose? Start with our most popular option
           </p>
-          <Button 
+          <Button
             asChild
             size="lg"
             className="bolt-gradient text-white font-bold px-8 py-6 rounded-full hover:scale-105 transition-all duration-300"

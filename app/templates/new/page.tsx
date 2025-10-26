@@ -1,8 +1,8 @@
-"use client";
-import { SiteHeader } from "@/components/site-header";
-import { CreateTemplateForm } from "@/components/templates/create-template-form";
-import { Sparkles, FileText, Zap, Star, Wand2, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+'use client';
+import { SiteHeader } from '@/components/site-header';
+import { CreateTemplateForm } from '@/components/templates/create-template-form';
+import { Sparkles, FileText, Zap, Star, Wand2, Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 // Define the page component
 export default function NewTemplatePage() {
@@ -42,7 +42,7 @@ export default function NewTemplatePage() {
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-              Create Your Perfect{" "}
+              Create Your Perfect{' '}
               <span className="bolt-gradient-text relative inline-block">
                 Document Template
                 <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
@@ -52,15 +52,9 @@ export default function NewTemplatePage() {
             </h1>
 
             <p className="text-base sm:text-lg lg:text-xl leading-7 sm:leading-8 text-muted-foreground max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-0">
-              Build{" "}
-              <span className="font-semibold text-yellow-600">
-                professional templates
-              </span>{" "}
-              with our{" "}
-              <span className="font-semibold text-blue-600">
-                AI-powered creator
-              </span>
-              . Get started in seconds with{" "}
+              Build <span className="font-semibold text-yellow-600">professional templates</span>{' '}
+              with our <span className="font-semibold text-blue-600">AI-powered creator</span>. Get
+              started in seconds with{' '}
               <span className="font-semibold bolt-gradient-text">
                 intelligent suggestions and customizable designs
               </span>
@@ -70,25 +64,15 @@ export default function NewTemplatePage() {
             <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4 sm:gap-6">
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
                 <span className="bolt-gradient-text font-bold text-sm">AI</span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Powered
-                </span>
+                <span className="text-muted-foreground text-xs ml-1">Powered</span>
               </div>
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Smart
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Suggestions
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">Smart</span>
+                <span className="text-muted-foreground text-xs ml-1">Suggestions</span>
               </div>
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Custom
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Design
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">Custom</span>
+                <span className="text-muted-foreground text-xs ml-1">Design</span>
               </div>
             </div>
           </div>
@@ -105,7 +89,7 @@ export default function NewTemplatePage() {
             <div className="absolute bottom-4 left-4">
               <Star
                 className="h-4 w-4 text-blue-500 animate-spin"
-                style={{ animationDuration: "3s" }}
+                style={{ animationDuration: '3s' }}
               />
             </div>
 
@@ -147,15 +131,11 @@ export default function NewTemplatePage() {
                 <div className="flex flex-wrap justify-center gap-3">
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <FileText className="inline h-3 w-3 text-yellow-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Professional Quality
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Professional Quality</span>
                   </div>
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Zap className="inline h-3 w-3 text-blue-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      AI-Enhanced
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">AI-Enhanced</span>
                   </div>
                 </div>
               </div>

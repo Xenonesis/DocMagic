@@ -6,18 +6,29 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Template } from '@/types/templates';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getDefaultTemplateContent, validateTemplateContent, TEMPLATE_TYPES } from '@/lib/templates';
+import {
+  getDefaultTemplateContent,
+  validateTemplateContent,
+  TEMPLATE_TYPES,
+} from '@/lib/templates';
 import { TemplateContent, TemplateSection, TemplateItem } from '@/types/templates';
 
 // Create a type from the TEMPLATE_TYPES array
-type TemplateType = typeof TEMPLATE_TYPES[number];
+type TemplateType = (typeof TEMPLATE_TYPES)[number];
 
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -44,59 +55,60 @@ export function TemplateContentEditor({
 }: TemplateContentEditorProps) {
   const [activeTab, setActiveTab] = useState('content');
   const [contentError, setContentError] = useState<string | null>(null);
-  
+
   const defaultValues: Partial<TemplateFormValues> = {
     title: template?.title || 'Untitled Template',
     description: template?.description || '',
     type: (template?.type as TemplateType) || 'resume',
     isPublic: template?.is_public || false,
-    content: template?.content || getDefaultTemplateContent(template?.type as TemplateType || 'resume'),
+    content:
+      template?.content || getDefaultTemplateContent((template?.type as TemplateType) || 'resume'),
   };
-  
+
   const form = useForm<TemplateFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
-  
+
   const watchType = form.watch('type');
   const watchContent = form.watch('content');
-  
+
   // Reset content when type changes
   useEffect(() => {
     if (template?.id) return; // Don't reset content for existing templates
-    
+
     form.setValue('content', getDefaultTemplateContent(watchType as TemplateType));
   }, [watchType, form, template?.id]);
-  
+
   // Validate content when it changes
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
       if (name === 'content' || !name) {
         const isValid = validateTemplateContent(
           form.getValues('type') as TemplateType,
-          form.getValues('content')
+          form.getValues('content'),
         );
         setContentError(isValid ? null : 'Content is not valid for the selected template type');
       }
     });
-    
+
     return () => subscription.unsubscribe();
   }, [form]);
-  
+
   const handleSubmit = (values: TemplateFormValues) => {
     const isValid = validateTemplateContent(values.type as TemplateType, values.content);
-    
+
     if (!isValid) {
       setContentError('Content is not valid for the selected template type');
       return;
     }
-    
+
     onSubmit(values);
   };
-  
+
   const renderContentEditor = () => {
     const type = form.getValues('type') as TemplateType;
-    
+
     switch (type) {
       case 'resume':
       case 'cv':
@@ -133,7 +145,7 @@ export function TemplateContentEditor({
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Label>Summary</Label>
               <FormField
@@ -153,7 +165,7 @@ export function TemplateContentEditor({
                 )}
               />
             </div>
-            
+
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <Label>Work Experience</Label>
@@ -177,7 +189,7 @@ export function TemplateContentEditor({
                   Add Experience
                 </Button>
               </div>
-              
+
               {/* Dynamic experience fields */}
               {form.getValues('content.sections')?.map((exp: any, index: number) => (
                 <Card key={exp.id} className="p-4 space-y-2">
@@ -191,14 +203,14 @@ export function TemplateContentEditor({
                         const experiences = form.getValues('content.sections') || [];
                         form.setValue(
                           'content.sections',
-                          experiences.filter((e: any) => e.id !== exp.id)
+                          experiences.filter((e: any) => e.id !== exp.id),
                         );
                       }}
                     >
                       Remove
                     </Button>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
@@ -227,7 +239,7 @@ export function TemplateContentEditor({
                       )}
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
@@ -256,7 +268,7 @@ export function TemplateContentEditor({
                       )}
                     />
                   </div>
-                  
+
                   <FormField
                     control={form.control}
                     name={`content.sections.${index}.description`}
@@ -279,7 +291,7 @@ export function TemplateContentEditor({
             </div>
           </div>
         );
-        
+
       case 'presentation':
         return (
           <div className="space-y-4">
@@ -296,7 +308,7 @@ export function TemplateContentEditor({
                 </FormItem>
               )}
             />
-            
+
             <div className="space-y-2">
               <Label>Slides</Label>
               <div className="space-y-4">
@@ -312,14 +324,14 @@ export function TemplateContentEditor({
                           const slides = form.getValues('content.slides') || [];
                           form.setValue(
                             'content.slides',
-                            slides.filter((s: any) => s.id !== slide.id)
+                            slides.filter((s: any) => s.id !== slide.id),
                           );
                         }}
                       >
                         Remove
                       </Button>
                     </div>
-                    
+
                     <FormField
                       control={form.control}
                       name={`content.slides.${index}.content.title`}
@@ -333,7 +345,7 @@ export function TemplateContentEditor({
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name={`content.slides.${index}.content.subtitle`}
@@ -347,7 +359,7 @@ export function TemplateContentEditor({
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name={`content.slides.${index}.content.body`}
@@ -367,7 +379,7 @@ export function TemplateContentEditor({
                     />
                   </Card>
                 ))}
-                
+
                 <Button
                   type="button"
                   variant="outline"
@@ -392,7 +404,7 @@ export function TemplateContentEditor({
             </div>
           </div>
         );
-        
+
       case 'letter':
         return (
           <div className="space-y-4">
@@ -453,7 +465,7 @@ export function TemplateContentEditor({
                 />
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <FormField
                 control={form.control}
@@ -468,7 +480,7 @@ export function TemplateContentEditor({
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="content.content.body"
@@ -486,7 +498,7 @@ export function TemplateContentEditor({
                   </FormItem>
                 )}
               />
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -518,7 +530,7 @@ export function TemplateContentEditor({
             </div>
           </div>
         );
-        
+
       default:
         return (
           <div className="flex items-center justify-center h-32 text-muted-foreground">
@@ -527,24 +539,20 @@ export function TemplateContentEditor({
         );
     }
   };
-  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        <Tabs 
-          value={activeTab} 
-          onValueChange={setActiveTab}
-          className="w-full"
-        >
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="content" className="space-y-4">
             {renderContentEditor()}
           </TabsContent>
-          
+
           <TabsContent value="settings" className="space-y-4">
             <Card>
               <CardHeader>
@@ -564,7 +572,7 @@ export function TemplateContentEditor({
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
                   name="description"
@@ -582,7 +590,7 @@ export function TemplateContentEditor({
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
                   name="type"
@@ -606,25 +614,20 @@ export function TemplateContentEditor({
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
                   name="isPublic"
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
-                        <FormLabel className="text-base">
-                          Make this template public
-                        </FormLabel>
+                        <FormLabel className="text-base">Make this template public</FormLabel>
                         <p className="text-sm text-muted-foreground">
                           Anyone with the link can view this template
                         </p>
                       </div>
                       <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
                       </FormControl>
                     </FormItem>
                   )}
@@ -633,20 +636,13 @@ export function TemplateContentEditor({
             </Card>
           </TabsContent>
         </Tabs>
-        
+
         {contentError && (
-          <div className="p-4 bg-destructive/10 text-destructive rounded-md">
-            {contentError}
-          </div>
+          <div className="p-4 bg-destructive/10 text-destructive rounded-md">{contentError}</div>
         )}
-        
+
         <div className="flex justify-end space-x-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            disabled={isSubmitting}
-          >
+          <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
             Cancel
           </Button>
           <Button type="submit" disabled={isSubmitting || !!contentError}>

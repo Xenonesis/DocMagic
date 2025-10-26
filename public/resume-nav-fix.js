@@ -1,8 +1,8 @@
 // Resume Navigation Fix - Improves visibility of the "Info" section
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   // Create a style element
   const style = document.createElement('style');
-  
+
   // Add the CSS rules
   style.textContent = `
     /* Resume Builder Navigation Styles */
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   `;
-  
+
   // Append the style element to the head
   document.head.appendChild(style);
 });

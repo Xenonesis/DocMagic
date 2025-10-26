@@ -9,7 +9,7 @@ export const useTemplateSharing = (templateId?: string) => {
 
   const fetchTemplateShares = async (): Promise<TemplateShare[]> => {
     if (!templateId) return [];
-    
+
     const response = await fetch(`/api/templates/${templateId}/shares`);
     if (!response.ok) {
       throw new Error('Failed to fetch template shares');
@@ -19,13 +19,13 @@ export const useTemplateSharing = (templateId?: string) => {
 
   const shareTemplate = async (email: string, canEdit: boolean): Promise<void> => {
     if (!templateId) throw new Error('Template ID is required');
-    
+
     const response = await fetch(`/api/templates/${templateId}/shares`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, can_edit: canEdit }),
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || 'Failed to share template');
@@ -34,13 +34,13 @@ export const useTemplateSharing = (templateId?: string) => {
 
   const updateShare = async (shareId: string, canEdit: boolean): Promise<void> => {
     if (!templateId) throw new Error('Template ID is required');
-    
+
     const response = await fetch(`/api/templates/${templateId}/shares/${shareId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ can_edit: canEdit }),
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || 'Failed to update share');
@@ -49,11 +49,11 @@ export const useTemplateSharing = (templateId?: string) => {
 
   const removeShare = async (shareId: string): Promise<void> => {
     if (!templateId) throw new Error('Template ID is required');
-    
+
     const response = await fetch(`/api/templates/${templateId}/shares/${shareId}`, {
       method: 'DELETE',
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || 'Failed to remove share');
@@ -101,14 +101,14 @@ export const useTemplateSharing = (templateId?: string) => {
   // Check if a user has a specific permission on the template
   const hasPermission = (template: TemplateWithShares, permission: 'view' | 'edit'): boolean => {
     if (!userId) return false;
-    
+
     // Owner has all permissions
     if (template.user_id === userId) return true;
-    
+
     // Check shared permissions
-    const share = template.shares?.find(s => s.user_id === userId);
+    const share = template.shares?.find((s) => s.user_id === userId);
     if (!share) return false;
-    
+
     return permission === 'view' || (permission === 'edit' && share.can_edit);
   };
 

@@ -10,10 +10,7 @@ export async function POST(request: Request) {
     const { to, subject, content, fromName, fromEmail, letterContent } = body;
 
     if (!to || !subject || !letterContent) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     // Create a test SMTP transporter using Ethereal
@@ -58,11 +55,12 @@ export async function POST(request: Request) {
     `;
 
     // Additional personal message if provided
-    const personalMessage = content ? 
-      `<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+    const personalMessage = content
+      ? `<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
         <p><em>Personal message:</em></p>
         <p>${content}</p>
-      </div>` : '';
+      </div>`
+      : '';
 
     // Send email
     const info = await transporter.sendMail({
@@ -79,13 +77,13 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       messageId: info.messageId,
-      previewUrl
+      previewUrl,
     });
   } catch (error) {
     console.error('Error sending email:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to send email' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

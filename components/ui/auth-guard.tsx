@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useAuthGuard, getActivityDescription } from "@/lib/auth-utils";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Lock, Sparkles, ArrowRight, Star, Zap } from "lucide-react";
-import Link from "next/link";
+import { useAuthGuard, getActivityDescription } from '@/lib/auth-utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Lock, Sparkles, ArrowRight, Star, Zap } from 'lucide-react';
+import Link from 'next/link';
 
 interface AuthGuardProps {
   activity: string;
@@ -51,7 +51,9 @@ export function AuthGuard({
 
   const activityDescription = getActivityDescription(activity);
   const defaultTitle = title || `Sign in to ${activityDescription}`;
-  const defaultDescription = description || `You need to be signed in to ${activityDescription}. Join thousands of professionals using docverse.`;
+  const defaultDescription =
+    description ||
+    `You need to be signed in to ${activityDescription}. Join thousands of professionals using docverse.`;
 
   return (
     <div className={className}>
@@ -61,9 +63,7 @@ export function AuthGuard({
             <Lock className="h-6 w-6 text-white" />
           </div>
           <CardTitle className="text-xl font-bold">{defaultTitle}</CardTitle>
-          <CardDescription className="text-base">
-            {defaultDescription}
-          </CardDescription>
+          <CardDescription className="text-base">{defaultDescription}</CardDescription>
         </CardHeader>
         <CardContent className="text-center space-y-4">
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -82,7 +82,7 @@ export function AuthGuard({
               </Link>
             </Button>
           </div>
-          
+
           <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground mt-6">
             <div className="flex items-center gap-1">
               <Zap className="h-4 w-4 text-yellow-500" />
@@ -181,8 +181,8 @@ export function InlineAuthPrompt({
           className="text-blue-600 hover:text-blue-700 underline font-medium"
         >
           Sign in
-        </button>
-        {" "}to {activityDescription}
+        </button>{' '}
+        to {activityDescription}
       </span>
     </div>
   );

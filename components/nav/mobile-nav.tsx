@@ -1,22 +1,17 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Menu, FileText, Sparkles, Zap, User, LogOut, X, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/components/auth-provider";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetClose,
-} from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { navItems } from "./nav-items";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { Menu, FileText, Sparkles, Zap, User, LogOut, X, ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/components/auth-provider';
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { navItems } from './nav-items';
 
 export function MobileNav() {
   const pathname = usePathname();
@@ -46,7 +41,10 @@ export function MobileNav() {
           aria-label="Open navigation menu"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/0 to-orange-500/0 group-hover:from-yellow-500/10 group-hover:to-orange-500/10 rounded-lg transition-all duration-300" />
-          <Menu className="h-6 w-6 relative z-10 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
+          <Menu
+            className="h-6 w-6 relative z-10 group-hover:scale-110 transition-transform"
+            strokeWidth={1.5}
+          />
         </Button>
       </SheetTrigger>
       <SheetContent
@@ -56,25 +54,15 @@ export function MobileNav() {
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b">
-            <Link
-              href="/"
-              onClick={handleNavClick}
-              className="flex items-center gap-2 group"
-            >
+            <Link href="/" onClick={handleNavClick} className="flex items-center gap-2 group">
               <div className="relative">
                 <FileText className="h-6 w-6 bolt-gradient-text group-hover:scale-110 transition-transform" />
                 <Sparkles className="absolute -top-1 -right-1 h-2.5 w-2.5 text-yellow-500 animate-pulse" />
               </div>
-              <span className="font-bold text-xl bolt-gradient-text">
-                docverse
-              </span>
+              <span className="font-bold text-xl bolt-gradient-text">docverse</span>
             </Link>
             <SheetClose asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 rounded-full hover:bg-accent"
-              >
+              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-accent">
                 <X className="h-4 w-4" />
               </Button>
             </SheetClose>
@@ -87,20 +75,14 @@ export function MobileNav() {
                 <Avatar className="h-12 w-12 ring-2 ring-yellow-400/30 ring-offset-2 ring-offset-background">
                   <AvatarImage src={user.user_metadata?.avatar_url} />
                   <AvatarFallback className="bolt-gradient text-white font-bold">
-                    {(
-                      user.user_metadata?.name?.[0] ||
-                      user.email?.[0] ||
-                      "U"
-                    ).toUpperCase()}
+                    {(user.user_metadata?.name?.[0] || user.email?.[0] || 'U').toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold truncate">
-                    {user.user_metadata?.name || "User"}
+                    {user.user_metadata?.name || 'User'}
                   </p>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {user.email}
-                  </p>
+                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                 </div>
               </div>
             </div>
@@ -124,10 +106,10 @@ export function MobileNav() {
                           href={item.href}
                           onClick={handleNavClick}
                           className={cn(
-                            "flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden",
+                            'flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden',
                             isActive
-                              ? "bg-gradient-to-r from-yellow-500/10 to-orange-500/10 text-foreground shadow-sm"
-                              : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                              ? 'bg-gradient-to-r from-yellow-500/10 to-orange-500/10 text-foreground shadow-sm'
+                              : 'text-muted-foreground hover:text-foreground hover:bg-accent/50',
                           )}
                         >
                           {isActive && (
@@ -135,10 +117,10 @@ export function MobileNav() {
                           )}
                           <div
                             className={cn(
-                              "flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200",
+                              'flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200',
                               isActive
-                                ? "bg-gradient-to-br from-yellow-500 to-orange-500 text-white shadow-md"
-                                : "bg-accent/50 group-hover:bg-accent group-hover:scale-110"
+                                ? 'bg-gradient-to-br from-yellow-500 to-orange-500 text-white shadow-md'
+                                : 'bg-accent/50 group-hover:bg-accent group-hover:scale-110',
                             )}
                           >
                             <Icon className="h-4 w-4" />
@@ -151,10 +133,10 @@ export function MobileNav() {
                           </div>
                           <ChevronRight
                             className={cn(
-                              "h-4 w-4 transition-all duration-200",
+                              'h-4 w-4 transition-all duration-200',
                               isActive
-                                ? "text-yellow-600 translate-x-0"
-                                : "text-muted-foreground/50 -translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
+                                ? 'text-yellow-600 translate-x-0'
+                                : 'text-muted-foreground/50 -translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100',
                             )}
                           />
                         </Link>
@@ -181,18 +163,20 @@ export function MobileNav() {
                           href={item.href}
                           onClick={handleNavClick}
                           className={cn(
-                            "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group",
+                            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group',
                             isActive
-                              ? "bg-accent text-foreground"
-                              : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                              ? 'bg-accent text-foreground'
+                              : 'text-muted-foreground hover:text-foreground hover:bg-accent/50',
                           )}
                         >
                           <Icon className="h-4 w-4" />
                           <span>{item.label}</span>
                           <ChevronRight
                             className={cn(
-                              "h-4 w-4 ml-auto transition-transform duration-200",
-                              isActive ? "text-yellow-600" : "text-muted-foreground/50 group-hover:translate-x-1"
+                              'h-4 w-4 ml-auto transition-transform duration-200',
+                              isActive
+                                ? 'text-yellow-600'
+                                : 'text-muted-foreground/50 group-hover:translate-x-1',
                             )}
                           />
                         </Link>

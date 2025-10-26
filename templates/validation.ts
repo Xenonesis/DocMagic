@@ -27,39 +27,39 @@ export const validationRules = {
   title: {
     minLength: 10,
     maxLength: 100,
-    required: true
+    required: true,
   },
   description: {
     minLength: 50,
     maxLength: 500,
-    required: true
+    required: true,
   },
   content: {
     required: true,
-    minSections: 3
+    minSections: 3,
   },
   metadata: {
     tagsMinCount: 2,
-    tagsMaxCount: 10
-  }
+    tagsMaxCount: 10,
+  },
 };
 
 // Quality Standards
 export const qualityStandards = {
   professionalLanguage: {
     bannedWords: ['awesome', 'amazing', 'incredible', 'fantastic'],
-    preferredWords: ['professional', 'comprehensive', 'effective', 'strategic']
+    preferredWords: ['professional', 'comprehensive', 'effective', 'strategic'],
   },
   formatting: {
     consistentHeadings: true,
     properBulletPoints: true,
-    standardSections: true
+    standardSections: true,
   },
   completeness: {
     hasExamples: true,
     hasGuidance: true,
-    hasCustomizationTips: true
-  }
+    hasCustomizationTips: true,
+  },
 };
 
 /**
@@ -76,7 +76,10 @@ export function validateTemplate(template: TemplateContent): ValidationResult {
     score -= 15;
   }
 
-  if (!template.description || template.description.length < validationRules.description.minLength) {
+  if (
+    !template.description ||
+    template.description.length < validationRules.description.minLength
+  ) {
     errors.push(`Description must be at least ${validationRules.description.minLength} characters`);
     score -= 15;
   }
@@ -108,14 +111,18 @@ export function validateTemplate(template: TemplateContent): ValidationResult {
     isValid: errors.length === 0,
     errors,
     warnings,
-    score: Math.max(0, score)
+    score: Math.max(0, score),
   };
 }
 
 /**
  * Validates template based on its type
  */
-function validateByType(template: TemplateContent): { errors: string[], warnings: string[], scoreDeduction: number } {
+function validateByType(template: TemplateContent): {
+  errors: string[];
+  warnings: string[];
+  scoreDeduction: number;
+} {
   const errors: string[] = [];
   const warnings: string[] = [];
   let scoreDeduction = 0;
@@ -140,7 +147,11 @@ function validateByType(template: TemplateContent): { errors: string[], warnings
 /**
  * Validates resume template structure
  */
-function validateResumeTemplate(template: TemplateContent): { errors: string[], warnings: string[], scoreDeduction: number } {
+function validateResumeTemplate(template: TemplateContent): {
+  errors: string[];
+  warnings: string[];
+  scoreDeduction: number;
+} {
   const errors: string[] = [];
   const warnings: string[] = [];
   let scoreDeduction = 0;
@@ -166,7 +177,11 @@ function validateResumeTemplate(template: TemplateContent): { errors: string[], 
 /**
  * Validates presentation template structure
  */
-function validatePresentationTemplate(template: TemplateContent): { errors: string[], warnings: string[], scoreDeduction: number } {
+function validatePresentationTemplate(template: TemplateContent): {
+  errors: string[];
+  warnings: string[];
+  scoreDeduction: number;
+} {
   const errors: string[] = [];
   const warnings: string[] = [];
   let scoreDeduction = 0;
@@ -192,7 +207,11 @@ function validatePresentationTemplate(template: TemplateContent): { errors: stri
 /**
  * Validates letter template structure
  */
-function validateLetterTemplate(template: TemplateContent): { errors: string[], warnings: string[], scoreDeduction: number } {
+function validateLetterTemplate(template: TemplateContent): {
+  errors: string[];
+  warnings: string[];
+  scoreDeduction: number;
+} {
   const errors: string[] = [];
   const warnings: string[] = [];
   let scoreDeduction = 0;
@@ -218,7 +237,11 @@ function validateLetterTemplate(template: TemplateContent): { errors: string[], 
 /**
  * Validates CV template structure
  */
-function validateCVTemplate(template: TemplateContent): { errors: string[], warnings: string[], scoreDeduction: number } {
+function validateCVTemplate(template: TemplateContent): {
+  errors: string[];
+  warnings: string[];
+  scoreDeduction: number;
+} {
   const errors: string[] = [];
   const warnings: string[] = [];
   let scoreDeduction = 0;
@@ -244,7 +267,10 @@ function validateCVTemplate(template: TemplateContent): { errors: string[], warn
 /**
  * Validates content quality
  */
-function validateContentQuality(template: TemplateContent): { warnings: string[], scoreDeduction: number } {
+function validateContentQuality(template: TemplateContent): {
+  warnings: string[];
+  scoreDeduction: number;
+} {
   const warnings: string[] = [];
   let scoreDeduction = 0;
 
@@ -276,7 +302,7 @@ function validateContentQuality(template: TemplateContent): { warnings: string[]
 /**
  * Validates template metadata
  */
-function validateMetadata(metadata: any): { warnings: string[], scoreDeduction: number } {
+function validateMetadata(metadata: any): { warnings: string[]; scoreDeduction: number } {
   const warnings: string[] = [];
   let scoreDeduction = 0;
 
@@ -308,7 +334,7 @@ function validateMetadata(metadata: any): { warnings: string[], scoreDeduction: 
  */
 export function generateQualityReport(template: TemplateContent): string {
   const validation = validateTemplate(template);
-  
+
   let report = `Template Quality Report: ${template.title}\n`;
   report += `Overall Score: ${validation.score}/100\n\n`;
 
@@ -338,10 +364,12 @@ export function generateQualityReport(template: TemplateContent): string {
 /**
  * Batch validates multiple templates
  */
-export function validateTemplates(templates: TemplateContent[]): { [key: string]: ValidationResult } {
+export function validateTemplates(templates: TemplateContent[]): {
+  [key: string]: ValidationResult;
+} {
   const results: { [key: string]: ValidationResult } = {};
-  
-  templates.forEach(template => {
+
+  templates.forEach((template) => {
     results[template.id] = validateTemplate(template);
   });
 
@@ -353,5 +381,5 @@ export default {
   generateQualityReport,
   validateTemplates,
   validationRules,
-  qualityStandards
+  qualityStandards,
 };

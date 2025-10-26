@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState, useCallback } from "react";
-import type { CursorPosition, CursorHookOptions } from "@/types/cursor";
+import { useEffect, useRef, useState, useCallback } from 'react';
+import type { CursorPosition, CursorHookOptions } from '@/types/cursor';
 
 export function useTrailingCursor({
   trailSpeed = 0.15,
@@ -21,8 +21,10 @@ export function useTrailingCursor({
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const isSmallScreen = window.innerWidth < 768;
     const userAgent = navigator.userAgent.toLowerCase();
-    const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
-    
+    const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+      userAgent,
+    );
+
     setIsMobile(isTouchDevice || isSmallScreen || isMobileUA);
   }, []);
 
@@ -33,14 +35,17 @@ export function useTrailingCursor({
   }, [checkMobile]);
 
   // Mouse move handler
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    mousePosition.current = { x: e.clientX, y: e.clientY };
-    
-    if (!isVisible) {
-      setIsVisible(true);
-      trailPosition.current = { x: e.clientX, y: e.clientY };
-    }
-  }, [isVisible]);
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      mousePosition.current = { x: e.clientX, y: e.clientY };
+
+      if (!isVisible) {
+        setIsVisible(true);
+        trailPosition.current = { x: e.clientX, y: e.clientY };
+      }
+    },
+    [isVisible],
+  );
 
   const handleMouseLeave = useCallback(() => {
     setIsVisible(false);
@@ -50,11 +55,17 @@ export function useTrailingCursor({
   const handleMouseOver = useCallback((e: Event) => {
     const target = e.target as HTMLElement;
     const interactiveSelectors = [
-      'a', 'button', 'input', 'textarea', 'select',
-      '[role="button"]', '[tabindex]', '.cursor-pointer',
-      '[data-interactive]'
+      'a',
+      'button',
+      'input',
+      'textarea',
+      'select',
+      '[role="button"]',
+      '[tabindex]',
+      '.cursor-pointer',
+      '[data-interactive]',
     ].join(', ');
-    
+
     if (target.matches(interactiveSelectors) || target.closest(interactiveSelectors)) {
       setIsHovering(true);
     }
@@ -63,11 +74,17 @@ export function useTrailingCursor({
   const handleMouseOut = useCallback((e: Event) => {
     const target = e.target as HTMLElement;
     const interactiveSelectors = [
-      'a', 'button', 'input', 'textarea', 'select',
-      '[role="button"]', '[tabindex]', '.cursor-pointer',
-      '[data-interactive]'
+      'a',
+      'button',
+      'input',
+      'textarea',
+      'select',
+      '[role="button"]',
+      '[tabindex]',
+      '.cursor-pointer',
+      '[data-interactive]',
     ].join(', ');
-    
+
     if (target.matches(interactiveSelectors) || target.closest(interactiveSelectors)) {
       setIsHovering(false);
     }
@@ -102,7 +119,7 @@ export function useTrailingCursor({
     // Only continue animation if there's significant movement
     const deltaX = Math.abs(mousePosition.current.x - trailPosition.current.x);
     const deltaY = Math.abs(mousePosition.current.y - trailPosition.current.y);
-    
+
     if (deltaX > 0.1 || deltaY > 0.1) {
       animationId.current = requestAnimationFrame(animate);
     }

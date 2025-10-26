@@ -76,7 +76,7 @@ declare module '@supabase/auth-helpers-nextjs' {
   }): Promise<User | null>;
 
   export function withApiAuth(
-    handler: (req: NextApiRequest, res: NextApiResponse, supabase: SupabaseClient) => Promise<void>
+    handler: (req: NextApiRequest, res: NextApiResponse, supabase: SupabaseClient) => Promise<void>,
   ): (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 
   export function withPageAuth({
@@ -86,7 +86,10 @@ declare module '@supabase/auth-helpers-nextjs' {
   }?: {
     authRequired?: boolean;
     redirectTo?: string;
-    getServerSideProps?: (context: GetServerSidePropsContext, supabase: SupabaseClient) => Promise<{ props: any }>;
+    getServerSideProps?: (
+      context: GetServerSidePropsContext,
+      supabase: SupabaseClient,
+    ) => Promise<{ props: any }>;
   }): (context: GetServerSidePropsContext) => Promise<{ props: any }>;
 
   export function withMiddlewareAuth({
@@ -98,6 +101,6 @@ declare module '@supabase/auth-helpers-nextjs' {
   }): (req: NextApiRequest, res: NextApiResponse, next: () => void) => Promise<void>;
 
   export const supabaseServerClient: (context: GetServerSidePropsContext) => SupabaseClient;
-  
+
   export const getServerSession: (context: GetServerSidePropsContext) => Promise<Session | null>;
 }

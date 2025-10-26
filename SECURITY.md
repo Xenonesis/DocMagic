@@ -5,18 +5,21 @@ This document outlines the security measures implemented in docverse and best pr
 ## 🔒 Security Features Implemented
 
 ### 1. Authentication & Authorization
+
 - **Supabase Auth Integration**: Secure JWT-based authentication
 - **Protected Routes**: Middleware-based route protection
 - **Session Management**: Automatic token refresh and secure session handling
 - **Password Requirements**: Strong password validation (8+ chars, mixed case, numbers)
 
 ### 2. Input Validation & Sanitization
+
 - **Zod Schema Validation**: Type-safe input validation for all API endpoints
 - **SQL Injection Protection**: Pattern detection and input sanitization
 - **XSS Prevention**: HTML sanitization and Content Security Policy
 - **Rate Limiting**: API endpoint protection against abuse
 
 ### 3. Security Headers
+
 - **Content Security Policy (CSP)**: Prevents XSS and code injection
 - **X-Frame-Options**: Prevents clickjacking attacks
 - **X-Content-Type-Options**: Prevents MIME type sniffing
@@ -25,12 +28,14 @@ This document outlines the security measures implemented in docverse and best pr
 - **Referrer-Policy**: Controls referrer information
 
 ### 4. API Security
+
 - **CORS Configuration**: Restrictive cross-origin policies
 - **Webhook Signature Verification**: Stripe webhook security
 - **Environment Variable Validation**: Runtime checks for required secrets
 - **Error Handling**: Secure error responses without sensitive data exposure
 
 ### 5. Data Protection
+
 - **Environment Variables**: No hardcoded secrets in code
 - **Secure Headers**: All sensitive data transmitted securely
 - **Input Length Limits**: Prevents buffer overflow attacks
@@ -39,6 +44,7 @@ This document outlines the security measures implemented in docverse and best pr
 ## 🛡️ Security Configuration
 
 ### Environment Variables
+
 Ensure these environment variables are properly configured:
 
 ```bash
@@ -54,13 +60,17 @@ STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
 ```
 
 ### Rate Limiting Configuration
+
 Current rate limits (per IP address):
+
 - **Authentication endpoints**: 10 requests per 15 minutes
 - **Generation endpoints**: 20 requests per 15 minutes
 - **General API endpoints**: 100 requests per 15 minutes
 
 ### Content Security Policy
+
 The CSP header allows:
+
 - Scripts from self and Stripe
 - Styles from self and Google Fonts
 - Images from self, data URLs, and HTTPS sources
@@ -94,7 +104,9 @@ The CSP header allows:
 ## 🔍 Security Monitoring
 
 ### Logging
+
 Security events are logged for:
+
 - Failed authentication attempts
 - Rate limit violations
 - Invalid input detection
@@ -102,6 +114,7 @@ Security events are logged for:
 - CSRF protection triggers
 
 ### Monitoring Checklist
+
 - [ ] Review authentication logs regularly
 - [ ] Monitor API rate limit violations
 - [ ] Check for unusual traffic patterns
@@ -111,6 +124,7 @@ Security events are logged for:
 ## 🚀 Deployment Security
 
 ### Vercel Deployment
+
 ```json
 {
   "headers": [
@@ -127,7 +141,9 @@ Security events are logged for:
 ```
 
 ### Netlify Deployment
+
 Security headers are configured in `netlify.toml` with:
+
 - CSP policy
 - Frame protection
 - XSS protection
@@ -136,6 +152,7 @@ Security headers are configured in `netlify.toml` with:
 ## 🔧 Security Testing
 
 ### Manual Testing
+
 1. Test authentication flows
 2. Verify rate limiting works
 3. Check input validation
@@ -143,7 +160,9 @@ Security headers are configured in `netlify.toml` with:
 5. Verify webhook signatures
 
 ### Automated Testing
+
 Consider implementing:
+
 - Security scanning in CI/CD
 - Dependency vulnerability checks
 - Automated penetration testing
@@ -152,12 +171,14 @@ Consider implementing:
 ## 📞 Security Incident Response
 
 ### If you discover a security vulnerability:
+
 1. **Do not** create a public issue
 2. Email security concerns to: [your-security-email]
 3. Include detailed reproduction steps
 4. Allow time for investigation and patching
 
 ### Incident Response Plan:
+
 1. Assess the severity and impact
 2. Implement immediate containment
 3. Develop and test a fix

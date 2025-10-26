@@ -12,18 +12,15 @@ export async function POST(request: Request) {
     console.log('Diagram generation request:', { prompt, diagramType });
 
     if (!prompt) {
-      return NextResponse.json(
-        { error: 'Missing prompt' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing prompt' }, { status: 400 });
     }
 
     const diagram = await generateDiagram({ prompt, diagramType });
-    
+
     console.log('Diagram generated successfully:', {
       hasCode: !!diagram.code,
       hasTitle: !!diagram.title,
-      type: diagram.type
+      type: diagram.type,
     });
 
     // Ensure the response has the expected format
@@ -36,11 +33,11 @@ export async function POST(request: Request) {
     console.error('Error generating diagram:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to generate diagram',
-        details: errorMessage 
+        details: errorMessage,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
-import { ExportAuthDialog } from "@/components/ui/export-auth-dialog";
-import { useRouter } from "next/navigation";
+import { useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { useAuthGuard, PROTECTED_ACTIVITIES } from '@/lib/auth-utils';
+import { ExportAuthDialog } from '@/components/ui/export-auth-dialog';
+import { useRouter } from 'next/navigation';
 import {
   AlertCircle,
   CheckCircle2,
@@ -19,11 +19,11 @@ import {
   XCircle,
   Sparkles,
   Download,
-} from "lucide-react";
+} from 'lucide-react';
 
 export function ATSAnalyzer() {
   const [file, setFile] = useState<File | null>(null);
-  const [jobDescription, setJobDescription] = useState("");
+  const [jobDescription, setJobDescription] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<any>(null);
   const [showAuthDialog, setShowAuthDialog] = useState(false);
@@ -33,10 +33,10 @@ export function ATSAnalyzer() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
-      "application/pdf": [".pdf"],
-      "application/msword": [".doc"],
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
-      "text/plain": [".txt"],
+      'application/pdf': ['.pdf'],
+      'application/msword': ['.doc'],
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+      'text/plain': ['.txt'],
     },
     maxFiles: 1,
     onDrop: (acceptedFiles) => {
@@ -44,9 +44,9 @@ export function ATSAnalyzer() {
     },
     onDropRejected: () => {
       toast({
-        title: "Invalid file",
-        description: "Please upload a .txt, .pdf, .doc, or .docx file",
-        variant: "destructive",
+        title: 'Invalid file',
+        description: 'Please upload a .txt, .pdf, .doc, or .docx file',
+        variant: 'destructive',
       });
     },
   });
@@ -59,9 +59,9 @@ export function ATSAnalyzer() {
   const analyzeResume = async () => {
     if (!file || !jobDescription.trim()) {
       toast({
-        title: "Missing information",
-        description: "Please upload a resume and enter the job description",
-        variant: "destructive",
+        title: 'Missing information',
+        description: 'Please upload a resume and enter the job description',
+        variant: 'destructive',
       });
       return;
     }
@@ -77,11 +77,11 @@ export function ATSAnalyzer() {
 
     try {
       const formData = new FormData();
-      formData.append("file", file);
-      formData.append("jobDescription", jobDescription);
+      formData.append('file', file);
+      formData.append('jobDescription', jobDescription);
 
-      const res = await fetch("/api/analyze/resume", {
-        method: "POST",
+      const res = await fetch('/api/analyze/resume', {
+        method: 'POST',
         body: formData,
       });
 
@@ -94,15 +94,15 @@ export function ATSAnalyzer() {
       setAnalysis(data);
 
       toast({
-        title: "Analysis Complete",
+        title: 'Analysis Complete',
         description: `Your resume scored ${data.score}% ATS compatibility`,
       });
     } catch (err: any) {
-      console.error("Error analyzing resume:", err);
+      console.error('Error analyzing resume:', err);
       toast({
-        title: "Error",
-        description: err.message || "Something went wrong. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: err.message || 'Something went wrong. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsAnalyzing(false);
@@ -122,7 +122,8 @@ export function ATSAnalyzer() {
               <div>
                 <p className="font-medium text-sm mb-1">Free ATS Analysis Preview</p>
                 <p className="text-sm text-muted-foreground">
-                  Upload your resume and job description to see how it works. Sign in to get your full detailed ATS analysis report.
+                  Upload your resume and job description to see how it works. Sign in to get your
+                  full detailed ATS analysis report.
                 </p>
               </div>
             </div>
@@ -138,18 +139,16 @@ export function ATSAnalyzer() {
               <div
                 {...getRootProps()}
                 className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
-                  isDragActive ? "border-primary bg-primary/5" : "border-muted"
+                  isDragActive ? 'border-primary bg-primary/5' : 'border-muted'
                 }`}
               >
                 <input {...getInputProps()} />
                 <div className="flex flex-col items-center gap-2">
                   <Upload className="h-8 w-8 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
-                    {file ? file.name : "Drag & drop your resume, or click to select"}
+                    {file ? file.name : 'Drag & drop your resume, or click to select'}
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    Supports PDF, DOC, DOCX, and TXT
-                  </p>
+                  <p className="text-xs text-muted-foreground">Supports PDF, DOC, DOCX, and TXT</p>
                 </div>
               </div>
             </CardContent>
@@ -162,11 +161,7 @@ export function ATSAnalyzer() {
             onChange={(e) => setJobDescription(e.target.value)}
           />
 
-          <Button
-            onClick={analyzeResume}
-            disabled={isAnalyzing}
-            className="w-full"
-          >
+          <Button onClick={analyzeResume} disabled={isAnalyzing} className="w-full">
             {isAnalyzing ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -190,10 +185,10 @@ export function ATSAnalyzer() {
                 <div
                   className={`inline-flex items-center justify-center h-20 w-20 rounded-full bg-background border-4 mb-4 ${
                     displayAnalysis.score >= 80
-                      ? "border-green-500"
+                      ? 'border-green-500'
                       : displayAnalysis.score >= 60
-                      ? "border-yellow-500"
-                      : "border-red-500"
+                        ? 'border-yellow-500'
+                        : 'border-red-500'
                   }`}
                 >
                   <span className="text-2xl font-bold">{displayAnalysis.score}%</span>
@@ -201,10 +196,10 @@ export function ATSAnalyzer() {
                 <h3 className="text-xl font-semibold">ATS Compatibility Score</h3>
                 <p className="text-muted-foreground text-sm mt-1">
                   {displayAnalysis.score >= 80
-                    ? "Excellent match!"
+                    ? 'Excellent match!'
                     : displayAnalysis.score >= 60
-                    ? "Good match, but could improve"
-                    : "Needs significant improvements"}
+                      ? 'Good match, but could improve'
+                      : 'Needs significant improvements'}
                 </p>
               </div>
 
@@ -222,7 +217,7 @@ export function ATSAnalyzer() {
                           </div>
                           <Progress value={score as number} />
                         </div>
-                      )
+                      ),
                     )}
                   </div>
                 </div>
@@ -239,11 +234,16 @@ export function ATSAnalyzer() {
                         Found ({displayAnalysis.analysis.keywordMatch.found?.length || 0})
                       </h5>
                       <div className="flex flex-wrap gap-1">
-                        {displayAnalysis.analysis.keywordMatch.found?.map((k: string, i: number) => (
-                          <span key={i} className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
-                            {k}
-                          </span>
-                        ))}
+                        {displayAnalysis.analysis.keywordMatch.found?.map(
+                          (k: string, i: number) => (
+                            <span
+                              key={i}
+                              className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700"
+                            >
+                              {k}
+                            </span>
+                          ),
+                        )}
                       </div>
                     </div>
                     <div>
@@ -252,11 +252,16 @@ export function ATSAnalyzer() {
                         Missing ({displayAnalysis.analysis.keywordMatch.missing?.length || 0})
                       </h5>
                       <div className="flex flex-wrap gap-1">
-                        {displayAnalysis.analysis.keywordMatch.missing?.map((k: string, i: number) => (
-                          <span key={i} className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700">
-                            {k}
-                          </span>
-                        ))}
+                        {displayAnalysis.analysis.keywordMatch.missing?.map(
+                          (k: string, i: number) => (
+                            <span
+                              key={i}
+                              className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700"
+                            >
+                              {k}
+                            </span>
+                          ),
+                        )}
                       </div>
                     </div>
                   </div>
@@ -296,12 +301,14 @@ export function ATSAnalyzer() {
                 <div>
                   <h4 className="font-medium mb-2">AI Suggestions</h4>
                   <div className="space-y-2">
-                    {displayAnalysis.improvements.aiSuggestions.map((suggestion: string, i: number) => (
-                      <div key={i} className="flex gap-2 p-3 bg-blue-50 rounded-lg text-sm">
-                        <Sparkles className="h-4 w-4 mt-1 flex-shrink-0 text-blue-500" />
-                        {suggestion}
-                      </div>
-                    ))}
+                    {displayAnalysis.improvements.aiSuggestions.map(
+                      (suggestion: string, i: number) => (
+                        <div key={i} className="flex gap-2 p-3 bg-blue-50 rounded-lg text-sm">
+                          <Sparkles className="h-4 w-4 mt-1 flex-shrink-0 text-blue-500" />
+                          {suggestion}
+                        </div>
+                      ),
+                    )}
                   </div>
                 </div>
               )}
@@ -312,8 +319,8 @@ export function ATSAnalyzer() {
                 <FileText className="h-12 w-12 mx-auto text-muted-foreground" />
                 <p className="text-muted-foreground mt-3">
                   {isAnalyzing
-                    ? "Analyzing your resume with AI..."
-                    : "Upload your resume and job description to get started"}
+                    ? 'Analyzing your resume with AI...'
+                    : 'Upload your resume and job description to get started'}
                 </p>
               </CardContent>
             </Card>

@@ -16,8 +16,8 @@ if (!supabaseUrl || !supabaseServiceKey) {
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
-    persistSession: false
-  }
+    persistSession: false,
+  },
 });
 
 // Sample templates to insert
@@ -33,9 +33,9 @@ const sampleTemplates = [
         name: 'John Doe',
         email: 'john.doe@email.com',
         phone: '+1 (555) 123-4567',
-        location: 'New York, NY'
+        location: 'New York, NY',
       },
-      sections: []
+      sections: [],
     },
     is_public: true,
     is_default: true,
@@ -45,7 +45,7 @@ const sampleTemplates = [
     rating: 4.8,
     preview_image: '/api/templates/1/preview',
     color_scheme: 'blue',
-    industry: 'technology'
+    industry: 'technology',
   },
   {
     id: '2',
@@ -58,9 +58,9 @@ const sampleTemplates = [
         name: 'Jane Smith',
         email: 'jane.smith@email.com',
         phone: '+1 (555) 987-6543',
-        location: 'San Francisco, CA'
+        location: 'San Francisco, CA',
       },
-      sections: []
+      sections: [],
     },
     is_public: true,
     is_default: true,
@@ -70,8 +70,8 @@ const sampleTemplates = [
     rating: 4.6,
     preview_image: '/api/templates/2/preview',
     color_scheme: 'purple',
-    industry: 'design'
-  }
+    industry: 'design',
+  },
 ];
 
 async function simpleSetup() {
@@ -80,25 +80,23 @@ async function simpleSetup() {
   try {
     // Test basic connection
     console.log('Testing connection...');
-    
+
     // Try to insert templates
     console.log('Attempting to insert templates...');
-    const { data, error } = await supabase
-      .from('templates')
-      .insert(sampleTemplates)
-      .select();
+    const { data, error } = await supabase.from('templates').insert(sampleTemplates).select();
 
     if (error) {
       console.error('Insert error:', error);
       console.log('This likely means the templates table does not exist yet.');
-      console.log('Please create the table manually in the Supabase dashboard using the SQL from scripts/supabase-setup.sql');
+      console.log(
+        'Please create the table manually in the Supabase dashboard using the SQL from scripts/supabase-setup.sql',
+      );
       return;
     }
 
     console.log('Success! Inserted templates:', data?.length || 0);
     console.log('Templates:');
-    data?.forEach(t => console.log(`  - ${t.title} (${t.id})`));
-
+    data?.forEach((t) => console.log(`  - ${t.title} (${t.id})`));
   } catch (error) {
     console.error('Setup failed:', error);
   }

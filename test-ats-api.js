@@ -76,17 +76,17 @@ We are looking for a Senior Software Engineer with experience in:
       console.log(`\nFormatting Score: ${result.analysis.formattingScore}%`);
       console.log(`\nKeywords Found: ${result.analysis.keywordMatch.found.length}`);
       console.log(`Keywords Missing: ${result.analysis.keywordMatch.missing.length}`);
-      
+
       if (result.improvements.critical.length > 0) {
         console.log('\n⚠️  Critical Improvements:');
-        result.improvements.critical.forEach(imp => console.log(`  - ${imp}`));
+        result.improvements.critical.forEach((imp) => console.log(`  - ${imp}`));
       }
-      
+
       if (result.improvements.aiSuggestions.length > 0) {
         console.log('\n💡 AI Suggestions:');
-        result.improvements.aiSuggestions.forEach(sug => console.log(`  - ${sug}`));
+        result.improvements.aiSuggestions.forEach((sug) => console.log(`  - ${sug}`));
       }
-      
+
       console.log('\n✅ ATS Analyzer is working correctly!');
     } else {
       console.error('❌ API Test Failed!');

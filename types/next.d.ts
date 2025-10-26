@@ -17,13 +17,13 @@ interface Window {
 declare module 'next' {
   // Define ReactNode type locally to avoid import
   type ReactNode = any;
-  
+
   interface Metadata {
     title?: string;
     description?: string;
     // Add other metadata properties as needed
   }
-  
+
   interface PageProps {
     params?: { [key: string]: string | string[] };
     searchParams?: { [key: string]: string | string[] | undefined };

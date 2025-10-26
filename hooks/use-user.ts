@@ -8,13 +8,15 @@ export function useUser() {
   const [isLoading, setIsLoading] = useState(true);
   const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 
   useEffect(() => {
     const getUser = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         setUser(user);
       } catch (error) {
         console.error('Error fetching user:', error);
@@ -25,7 +27,9 @@ export function useUser() {
 
     getUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: string, session: Session | null) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event: string, session: Session | null) => {
       setUser(session?.user ?? null);
     });
 

@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Simple SVG preview generator for templates
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   const { id } = params;
-  
+
   // Color schemes for different template types
   const colorSchemes = {
     '1': { bg: '#f0f9ff', accent: '#3b82f6', text: '#1e40af' }, // Professional - Blue
@@ -27,19 +24,32 @@ export async function GET(
     '16': { bg: '#fef2f2', accent: '#ef4444', text: '#dc2626' }, // Medical - Red
     '17': { bg: '#f0fdf4', accent: '#22c55e', text: '#16a34a' }, // International - Green
   };
-  
+
   const colors = colorSchemes[id as keyof typeof colorSchemes] || colorSchemes['1'];
-  
+
   // Template type indicators
   const typeIcons = {
-    '1': '📄', '2': '🎨', '6': '💼', '7': '🎓', '8': '🏥',
-    '3': '📊', '9': '🚀', '10': '📚', '11': '💰',
-    '4': '✉️', '12': '📋', '13': '👋', '14': '🙏',
-    '5': '🎓', '15': '🔬', '16': '⚕️', '17': '🌍'
+    '1': '📄',
+    '2': '🎨',
+    '6': '💼',
+    '7': '🎓',
+    '8': '🏥',
+    '3': '📊',
+    '9': '🚀',
+    '10': '📚',
+    '11': '💰',
+    '4': '✉️',
+    '12': '📋',
+    '13': '👋',
+    '14': '🙏',
+    '5': '🎓',
+    '15': '🔬',
+    '16': '⚕️',
+    '17': '🌍',
   };
-  
+
   const icon = typeIcons[id as keyof typeof typeIcons] || '📄';
-  
+
   // Generate SVG preview
   const svg = `
     <svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">
@@ -82,7 +92,7 @@ export async function GET(
       <circle cx="270" cy="350" r="15" fill="${colors.accent}" opacity="0.1"/>
     </svg>
   `;
-  
+
   return new NextResponse(svg, {
     headers: {
       'Content-Type': 'image/svg+xml',

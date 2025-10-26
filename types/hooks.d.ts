@@ -12,10 +12,15 @@ declare module '@/hooks/use-toast' {
       description?: string;
       variant?: 'default' | 'destructive';
     }>;
-    toast: (toast: Omit<{ id: string; title: string; description?: string; variant?: 'default' | 'destructive' }, 'id'>) => void;
+    toast: (
+      toast: Omit<
+        { id: string; title: string; description?: string; variant?: 'default' | 'destructive' },
+        'id'
+      >,
+    ) => void;
     dismissToast: (id: string) => void;
   };
-  
+
   export function ToastProvider({ children }: { children: React.ReactNode }): JSX.Element;
 }
 
@@ -32,7 +37,7 @@ declare module '@/hooks/use-template-sharing' {
 
 declare module '@/hooks/use-templates' {
   import { Template } from '@/types';
-  
+
   export function useTemplates(): {
     templates: Template[];
     loading: boolean;

@@ -12,10 +12,19 @@ import {
   Award,
   Link as LinkIcon,
   CheckCircle,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react';
 
-type ResumeStep = 'personal' | 'summary' | 'experience' | 'education' | 'skills' | 'projects' | 'certifications' | 'links' | 'review';
+type ResumeStep =
+  | 'personal'
+  | 'summary'
+  | 'experience'
+  | 'education'
+  | 'skills'
+  | 'projects'
+  | 'certifications'
+  | 'links'
+  | 'review';
 
 interface ResumeNavigationProps {
   currentStep: ResumeStep;
@@ -23,7 +32,11 @@ interface ResumeNavigationProps {
   progress?: number;
 }
 
-export function ResumeNavigation({ currentStep, onStepChange, progress = 0 }: ResumeNavigationProps) {
+export function ResumeNavigation({
+  currentStep,
+  onStepChange,
+  progress = 0,
+}: ResumeNavigationProps) {
   const steps: { id: ResumeStep; title: string; icon: any }[] = [
     { id: 'personal', title: 'Info', icon: User },
     { id: 'summary', title: 'Professional Summary', icon: FileText },
@@ -33,7 +46,7 @@ export function ResumeNavigation({ currentStep, onStepChange, progress = 0 }: Re
     { id: 'projects', title: 'Projects', icon: Zap },
     { id: 'certifications', title: 'Certifications', icon: Award },
     { id: 'links', title: 'Professional Links', icon: LinkIcon },
-    { id: 'review', title: 'Review', icon: CheckCircle }
+    { id: 'review', title: 'Review', icon: CheckCircle },
   ];
 
   return (
@@ -43,10 +56,10 @@ export function ResumeNavigation({ currentStep, onStepChange, progress = 0 }: Re
           <div key={step.id} className="flex items-center">
             <button
               className={cn(
-                "flex items-center gap-2 px-3 py-2 rounded-full transition-all whitespace-nowrap cursor-pointer resume-nav-item",
+                'flex items-center gap-2 px-3 py-2 rounded-full transition-all whitespace-nowrap cursor-pointer resume-nav-item',
                 currentStep === step.id
-                  ? "active bg-primary text-white font-semibold shadow-md"
-                  : "hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                  ? 'active bg-primary text-white font-semibold shadow-md'
+                  : 'hover:bg-blue-50 dark:hover:bg-blue-900/20',
               )}
               onClick={() => onStepChange(step.id)}
             >
@@ -60,10 +73,10 @@ export function ResumeNavigation({ currentStep, onStepChange, progress = 0 }: Re
           </div>
         ))}
       </div>
-      
+
       <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden resume-nav-progress">
-        <div 
-          className="h-full bg-blue-600 dark:bg-blue-500 rounded-full resume-nav-progress-bar" 
+        <div
+          className="h-full bg-blue-600 dark:bg-blue-500 rounded-full resume-nav-progress-bar"
           style={{ width: `${progress}%` }}
         />
       </div>

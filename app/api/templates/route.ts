@@ -7,7 +7,10 @@ export async function GET(request: Request) {
   const supabase = createRoute();
   try {
     // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       // If no user is authenticated, return public templates only
       let query = supabase
@@ -27,18 +30,15 @@ export async function GET(request: Request) {
       if (templatesError) {
         console.log('Database error:', templatesError.message);
         return new Response(JSON.stringify([]), {
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json' },
         });
       }
       return new Response(JSON.stringify(templates || []), {
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
     }
     // Base query for user's templates
-    let query = supabase
-      .from('templates')
-      .select('*')
-      .eq('user_id', user.id);
+    let query = supabase.from('templates').select('*').eq('user_id', user.id);
     // Add type filter if provided
     if (type) {
       query = query.eq('type', type);
@@ -59,7 +59,7 @@ export async function GET(request: Request) {
       // Combine user's templates with public templates
       const allTemplates = [...(userTemplates || []), ...(publicTemplates || [])];
       return new Response(JSON.stringify(allTemplates), {
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
     }
     // Just return user's templates
@@ -67,28 +67,31 @@ export async function GET(request: Request) {
     if (templatesError) {
       console.log('Database error:', templatesError.message);
       return new Response(JSON.stringify([]), {
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
     }
     return new Response(JSON.stringify(templates || []), {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Error fetching templates:', error);
-    return new Response(
-      JSON.stringify({ error: 'Failed to fetch templates' }), 
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ error: 'Failed to fetch templates' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
 export async function POST(request: Request) {
   const supabase = createRoute();
   try {
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
     }
     const body = await request.json();
@@ -96,19 +99,19 @@ export async function POST(request: Request) {
 
     // Validate required fields
     if (!title || !type) {
-      return new Response(
-        JSON.stringify({ error: 'Title and type are required' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'Title and type are required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Validate type
     const validTypes = ['resume', 'presentation', 'letter', 'cv'];
     if (!validTypes.includes(type)) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid template type' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'Invalid template type' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Generate a unique ID for the template
@@ -125,8 +128,8 @@ export async function POST(request: Request) {
           type,
           content: content || {},
           is_public: Boolean(isPublic),
-          is_default: false
-        }
+          is_default: false,
+        },
       ])
       .select()
       .single();
@@ -134,18 +137,18 @@ export async function POST(request: Request) {
       console.error('Error creating template:', error);
       return new Response(
         JSON.stringify({ error: 'Failed to create template', details: error.message }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        { status: 500, headers: { 'Content-Type': 'application/json' } },
       );
     }
     return new Response(JSON.stringify(template), {
       status: 201,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Error creating template:', error);
-    return new Response(
-      JSON.stringify({ error: 'Failed to create template' }), 
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ error: 'Failed to create template' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }

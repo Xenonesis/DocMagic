@@ -22,12 +22,14 @@ Dashboard → Authentication → Providers → Web3 Wallet
 **Toggle**: Enable Sign in with Ethereum ✅
 
 **Settings**:
+
 - **Enabled**: ON
-- **Rate Limits**: 
+- **Rate Limits**:
   - Requests per hour: 100 (default, adjust as needed)
   - Requests per minute: 10 (default, adjust as needed)
 
 **What it does**:
+
 - Allows users to sign in using MetaMask and other Ethereum wallets
 - Implements EIP-4361 (Sign-In with Ethereum) standard
 - Verifies wallet ownership through cryptographic signatures
@@ -37,12 +39,14 @@ Dashboard → Authentication → Providers → Web3 Wallet
 **Toggle**: Enable Sign in with Solana ✅
 
 **Settings**:
+
 - **Enabled**: ON
 - **Rate Limits**:
   - Requests per hour: 100 (default, adjust as needed)
   - Requests per minute: 10 (default, adjust as needed)
 
 **What it does**:
+
 - Allows users to sign in using Phantom and other Solana wallets
 - Implements SIWS (Sign-In with Solana) standard
 - Verifies wallet ownership through cryptographic signatures
@@ -58,20 +62,24 @@ Click the **Save** button at the bottom of the page.
 Adjust rate limits based on your application needs:
 
 **Low Traffic** (Default):
+
 - 100 requests/hour
 - 10 requests/minute
 
 **Medium Traffic**:
+
 - 500 requests/hour
 - 50 requests/minute
 
 **High Traffic**:
+
 - 1000 requests/hour
 - 100 requests/minute
 
 ### Additional Security
 
 Consider enabling:
+
 - **Email confirmation** for new accounts
 - **Multi-factor authentication** (MFA)
 - **Session timeout** settings
@@ -141,7 +149,8 @@ After configuration, verify:
 
 ### "Web3 Wallet option not visible"
 
-**Solution**: 
+**Solution**:
+
 - Ensure you're on a recent Supabase version
 - Check if your project supports Web3 authentication
 - Contact Supabase support if needed
@@ -149,6 +158,7 @@ After configuration, verify:
 ### "Configuration not saving"
 
 **Solution**:
+
 - Check for error messages
 - Verify you have admin permissions
 - Try refreshing the page
@@ -157,6 +167,7 @@ After configuration, verify:
 ### "Authentication failing after enabling"
 
 **Solution**:
+
 - Verify environment variables are set correctly
 - Check that `NEXT_PUBLIC_ENABLE_WEB3_AUTH=true`
 - Ensure Supabase URL and keys are correct

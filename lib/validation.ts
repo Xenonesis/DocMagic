@@ -8,7 +8,10 @@ export const passwordSchema = z
   .string()
   .min(8, 'Password must be at least 8 characters')
   .max(128, 'Password must be less than 128 characters')
-  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain at least one lowercase letter, one uppercase letter, and one number');
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+    'Password must contain at least one lowercase letter, one uppercase letter, and one number',
+  );
 
 // Name validation schema
 export const nameSchema = z
@@ -26,7 +29,12 @@ export const registrationSchema = z.object({
 
 // Resume generation schema
 export const resumeGenerationSchema = z.object({
-  prompt: z.string().min(1, 'Prompt must be at least 1 character').max(5000, 'Prompt too long').optional().or(z.literal('')),
+  prompt: z
+    .string()
+    .min(1, 'Prompt must be at least 1 character')
+    .max(5000, 'Prompt too long')
+    .optional()
+    .or(z.literal('')),
   name: z.string().max(100, 'Name must be less than 100 characters').optional().or(z.literal('')),
   email: z.string().max(254, 'Email must be less than 254 characters').optional().or(z.literal('')),
 });
@@ -42,7 +50,10 @@ export const presentationGenerationSchema = z.object({
 export const letterGenerationSchema = z.object({
   type: z.enum(['cover', 'recommendation', 'resignation', 'complaint', 'thank-you']),
   recipient: nameSchema,
-  content: z.string().min(50, 'Content must be at least 50 characters').max(3000, 'Content too long'),
+  content: z
+    .string()
+    .min(50, 'Content must be at least 50 characters')
+    .max(3000, 'Content too long'),
 });
 
 // Sanitize HTML input to prevent XSS
@@ -63,11 +74,11 @@ export function sanitizeInput(input: string): string {
 // Validate and sanitize request body
 export function validateAndSanitize<T>(schema: z.ZodSchema<T>, data: unknown): T {
   const result = schema.safeParse(data);
-  
+
   if (!result.success) {
-    throw new Error(`Validation failed: ${result.error.errors.map(e => e.message).join(', ')}`);
+    throw new Error(`Validation failed: ${result.error.errors.map((e) => e.message).join(', ')}`);
   }
-  
+
   return result.data;
 }
 
@@ -79,8 +90,8 @@ export function detectSqlInjection(input: string): boolean {
     /(--|\/\*|\*\/)/,
     /(\b(SCRIPT|JAVASCRIPT|VBSCRIPT)\b)/i,
   ];
-  
-  return sqlPatterns.some(pattern => pattern.test(input));
+
+  return sqlPatterns.some((pattern) => pattern.test(input));
 }
 
 // Rate limiting key generator

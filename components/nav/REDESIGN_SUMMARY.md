@@ -7,12 +7,14 @@ The mobile navigation has been completely redesigned with a modern, user-friendl
 ### Visual Improvements
 
 #### Before
+
 - Basic list layout
 - Simple text links
 - Minimal visual hierarchy
 - Generic styling
 
 #### After
+
 - **Organized sections** with category headers
 - **Icon badges** with gradient backgrounds for main items
 - **Rich visual feedback** with hover states and animations
@@ -83,12 +85,14 @@ The mobile navigation has been completely redesigned with a modern, user-friendl
 **File**: `components/nav/mobile-nav.tsx`
 
 **New Dependencies**:
+
 - `ScrollArea` - For scrollable content
 - `Separator` - For visual dividers
 - `ChevronRight` - For navigation indicators
 - `X` icon - For close button
 
 **Removed**:
+
 - `SheetHeader`, `SheetTitle`, `SheetDescription` - Replaced with custom header
 
 **State**: No changes to state management

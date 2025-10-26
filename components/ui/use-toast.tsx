@@ -24,17 +24,20 @@ interface ToastProviderProps {
 export function ToastProvider({ children }: ToastProviderProps) {
   const [toasts, setToasts] = React.useState<Toast[]>([]);
 
-  const toast = React.useCallback(({ title, description, variant = 'default' }: Omit<Toast, 'id'>) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    setToasts((prev) => [...prev, { id, title, description, variant }]);
-    
-    // Auto-dismiss after 5 seconds
-    const timer = window.setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 5000);
+  const toast = React.useCallback(
+    ({ title, description, variant = 'default' }: Omit<Toast, 'id'>) => {
+      const id = Math.random().toString(36).substr(2, 9);
+      setToasts((prev) => [...prev, { id, title, description, variant }]);
 
-    return () => window.clearTimeout(timer);
-  }, []);
+      // Auto-dismiss after 5 seconds
+      const timer = window.setTimeout(() => {
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+      }, 5000);
+
+      return () => window.clearTimeout(timer);
+    },
+    [],
+  );
 
   const dismissToast = React.useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -46,14 +49,10 @@ export function ToastProvider({ children }: ToastProviderProps) {
       toast,
       dismissToast,
     }),
-    [toasts, toast, dismissToast]
+    [toasts, toast, dismissToast],
   );
 
-  return (
-    <ToastContext.Provider value={contextValue}>
-      {children}
-    </ToastContext.Provider>
-  );
+  return <ToastContext.Provider value={contextValue}>{children}</ToastContext.Provider>;
 }
 
 export function useToast(): ToastContextType {

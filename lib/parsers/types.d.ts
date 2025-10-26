@@ -24,7 +24,7 @@ declare module 'mammoth' {
   }
 
   function extractRawText(options: { arrayBuffer: ArrayBuffer }): Promise<ExtractRawTextResult>;
-  
+
   const mammoth: {
     extractRawText: typeof extractRawText;
   };

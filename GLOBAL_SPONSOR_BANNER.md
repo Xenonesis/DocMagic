@@ -1,13 +1,15 @@
 # Global Sponsor Banner Implementation
 
 ## Overview
+
 The sponsor banner is now displayed on **every page** globally and is fully responsive across all screen sizes.
 
 ## Implementation
 
 ### 1. Global Layout (`app/layout.tsx`)
+
 ```tsx
-import { SponsorBanner } from "@/components/sponsor-banner";
+import { SponsorBanner } from '@/components/sponsor-banner';
 
 export default function RootLayout({ children }) {
   return (
@@ -22,29 +24,32 @@ export default function RootLayout({ children }) {
 ```
 
 ### 2. Responsive Sponsor Banner (`components/sponsor-banner.tsx`)
+
 ```tsx
-<div className="sponsor-banner fixed top-0 left-0 right-0 z-50 
-  py-1.5 xs:py-2 sm:py-2.5 md:py-3 
-  px-2 xs:px-3 sm:px-4 md:px-6 
+<div className="sponsor-banner fixed top-0 left-0 right-0 z-50
+  py-1.5 xs:py-2 sm:py-2.5 md:py-3
+  px-2 xs:px-3 sm:px-4 md:px-6
   text-[10px] xs:text-xs sm:text-sm">
 ```
 
 ### 3. Responsive Navbar (`components/site-header.tsx`)
+
 ```tsx
-<header className="fixed 
-  top-[32px] xs:top-[36px] sm:top-[40px] md:top-[48px] 
+<header className="fixed
+  top-[32px] xs:top-[36px] sm:top-[40px] md:top-[48px]
   z-40 w-full nav-professional">
 ```
 
 ### 4. Page Content Padding (`app/globals.css`)
+
 ```css
 .page-with-header {
-  padding-top: 88px;  /* Mobile */
+  padding-top: 88px; /* Mobile */
 }
 
 @media (min-width: 475px) {
   .page-with-header {
-    padding-top: 92px;  /* xs */
+    padding-top: 92px; /* xs */
   }
 }
 
@@ -64,6 +69,7 @@ export default function RootLayout({ children }) {
 ## Responsive Breakpoints
 
 ### Mobile (< 475px)
+
 - **Banner Height**: ~32px
 - **Navbar Height**: 56px
 - **Total Top Space**: 88px
@@ -72,6 +78,7 @@ export default function RootLayout({ children }) {
 - **Padding**: py-1.5, px-2
 
 ### Extra Small (475px - 639px)
+
 - **Banner Height**: ~36px
 - **Navbar Height**: 56px
 - **Total Top Space**: 92px
@@ -80,6 +87,7 @@ export default function RootLayout({ children }) {
 - **Padding**: py-2, px-3
 
 ### Small (640px - 767px)
+
 - **Banner Height**: ~40px
 - **Navbar Height**: 64px
 - **Total Top Space**: 104px
@@ -88,6 +96,7 @@ export default function RootLayout({ children }) {
 - **Padding**: py-2.5, px-4
 
 ### Medium+ (768px+)
+
 - **Banner Height**: ~48px
 - **Navbar Height**: 64px
 - **Total Top Space**: 112px
@@ -115,23 +124,27 @@ export default function RootLayout({ children }) {
 ## Features
 
 ### ✅ Fully Responsive
+
 - Adapts to all screen sizes from 320px to 4K
 - Smooth transitions between breakpoints
 - Optimized font and icon sizes
 - Proper spacing at all sizes
 
 ### ✅ Global Display
+
 - Shows on every page automatically
 - No need to import in individual pages
 - Consistent across the entire app
 
 ### ✅ Performance Optimized
+
 - Fixed positioning for smooth scrolling
 - Backdrop blur for modern effect
 - GPU-accelerated animations
 - Minimal layout shift
 
 ### ✅ Accessibility
+
 - Proper contrast ratios
 - Readable at all sizes
 - Touch-friendly on mobile
@@ -146,9 +159,7 @@ export default function YourPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
-      <main className="flex-1 page-with-header">
-        {/* Your content */}
-      </main>
+      <main className="flex-1 page-with-header">{/* Your content */}</main>
     </div>
   );
 }
@@ -157,16 +168,19 @@ export default function YourPage() {
 ## Responsive Design Details
 
 ### Text Wrapping
+
 - Uses `whitespace-nowrap` to prevent awkward breaks
 - Flexbox with `flex-wrap` for natural wrapping
 - Optimized gap spacing at each breakpoint
 
 ### Icon Scaling
+
 ```tsx
-className="h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4"
+className = 'h-2.5 w-2.5 xs:h-3 xs:w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4';
 ```
 
 ### Padding Progression
+
 ```
 Mobile:  py-1.5 (6px)  → Compact
 xs:      py-2   (8px)  → Slightly more space
@@ -175,6 +189,7 @@ md:      py-3   (12px) → Spacious
 ```
 
 ### Font Size Progression
+
 ```
 Mobile:  text-[10px]  → Very compact
 xs:      text-xs      → 12px
@@ -230,6 +245,7 @@ To adjust banner height at any breakpoint, update both:
 3. **Page padding** in `app/globals.css`
 
 Example for adding a new breakpoint:
+
 ```css
 @media (min-width: 1024px) {
   .page-with-header {

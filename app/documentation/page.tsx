@@ -3,15 +3,16 @@ export default function DocumentationPage() {
     <div className="container py-12 pt-24">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-8">Documentation</h1>
-        
+
         <div className="space-y-8">
           <section>
             <h2 className="text-2xl font-semibold mb-4">Getting Started</h2>
             <p className="text-gray-600">
-              Welcome to docverse! This documentation will help you get started with creating and managing your documents.
+              Welcome to docverse! This documentation will help you get started with creating and
+              managing your documents.
             </p>
           </section>
-          
+
           <section>
             <h2 className="text-2xl font-semibold mb-4">Features</h2>
             <ul className="list-disc pl-6 space-y-2 text-gray-600">
@@ -21,7 +22,7 @@ export default function DocumentationPage() {
               <li>Export in various formats</li>
             </ul>
           </section>
-          
+
           <section>
             <h2 className="text-2xl font-semibold mb-4">Need Help?</h2>
             <p className="text-gray-600">

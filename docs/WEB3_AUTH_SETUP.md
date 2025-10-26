@@ -5,6 +5,7 @@ This guide will help you set up Web3 wallet authentication (Ethereum and Solana)
 ## Overview
 
 Web3 authentication allows users to sign in using their cryptocurrency wallets:
+
 - **Ethereum**: MetaMask and other EIP-4361 compatible wallets
 - **Solana**: Phantom and other SIWS compatible wallets
 
@@ -52,11 +53,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key-here
 ## Step 3: Install Required Browser Extensions
 
 ### For Ethereum Testing
+
 1. Install [MetaMask](https://metamask.io/download/)
 2. Create or import a wallet
 3. Make sure you're on a supported network (Ethereum Mainnet, Goerli, etc.)
 
 ### For Solana Testing
+
 1. Install [Phantom Wallet](https://phantom.app/)
 2. Create or import a wallet
 3. Make sure you have some SOL for testing (use devnet for testing)
@@ -64,6 +67,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key-here
 ## Step 4: Test the Integration
 
 1. Start your development server:
+
    ```bash
    npm run dev
    ```
@@ -119,12 +123,12 @@ Example API route structure:
 // app/api/auth/web3/verify/route.ts
 export async function POST(request: Request) {
   const { address, signature, message, provider } = await request.json();
-  
+
   // Verify signature
   // Check nonce
   // Validate timestamp
   // Create Supabase session
-  
+
   return Response.json({ success: true });
 }
 ```
@@ -162,6 +166,7 @@ export async function POST(request: Request) {
 ## Support
 
 If you encounter any issues:
+
 1. Check the browser console for error messages
 2. Review the Supabase logs in your dashboard
 3. Open an issue on the GitHub repository

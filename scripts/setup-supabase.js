@@ -2,15 +2,15 @@
 
 /**
  * Supabase Database Setup Script
- * 
+ *
  * This script helps you set up your Supabase database with all necessary tables,
  * policies, and seed data for the docverse application.
- * 
+ *
  * Prerequisites:
  * 1. Create a Supabase project at https://supabase.com
  * 2. Add your Supabase credentials to .env.local
  * 3. Install dependencies: npm install
- * 
+ *
  * Usage:
  *   npm run setup-db
  *   OR
@@ -76,8 +76,8 @@ if (!supabaseUrl || !supabaseServiceKey) {
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
-    persistSession: false
-  }
+    persistSession: false,
+  },
 });
 
 /**
@@ -85,35 +85,36 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
  */
 async function runMigrations() {
   log('\n📦 Running database migrations...', colors.bright);
-  
+
   const migrationsDir = path.join(__dirname, '..', 'supabase', 'migrations');
-  
+
   if (!fs.existsSync(migrationsDir)) {
     logError('Migrations directory not found!');
     return false;
   }
 
-  const migrationFiles = fs.readdirSync(migrationsDir)
-    .filter(file => file.endsWith('.sql'))
+  const migrationFiles = fs
+    .readdirSync(migrationsDir)
+    .filter((file) => file.endsWith('.sql'))
     .sort(); // Ensure migrations run in order
 
   for (const file of migrationFiles) {
     const filePath = path.join(migrationsDir, file);
     const sql = fs.readFileSync(filePath, 'utf8');
-    
+
     logInfo(`Running migration: ${file}`);
-    
+
     try {
       const { error } = await supabase.rpc('exec_sql', { sql });
-      
+
       if (error) {
         // Try direct execution if RPC fails
-        const lines = sql.split(';').filter(line => line.trim());
+        const lines = sql.split(';').filter((line) => line.trim());
         for (const line of lines) {
           if (line.trim()) {
             const { error: execError } = await supabase.from('_migrations').insert({
               name: file,
-              executed_at: new Date().toISOString()
+              executed_at: new Date().toISOString(),
             });
             if (execError && !execError.message.includes('already exists')) {
               throw execError;
@@ -121,14 +122,14 @@ async function runMigrations() {
           }
         }
       }
-      
+
       logSuccess(`✓ ${file}`);
     } catch (error) {
       // Check if error is due to already existing objects
-      if (error.message && (
-        error.message.includes('already exists') ||
-        error.message.includes('duplicate')
-      )) {
+      if (
+        error.message &&
+        (error.message.includes('already exists') || error.message.includes('duplicate'))
+      ) {
         logWarning(`⊙ ${file} (already applied)`);
       } else {
         logError(`✗ ${file}: ${error.message}`);
@@ -150,7 +151,8 @@ async function seedTemplates() {
     {
       user_id: '00000000-0000-0000-0000-000000000000', // System user
       title: 'Professional Resume Template',
-      description: 'A clean and modern resume template perfect for professionals in tech, finance, and corporate environments',
+      description:
+        'A clean and modern resume template perfect for professionals in tech, finance, and corporate environments',
       type: 'resume',
       content: {
         personalInfo: {
@@ -159,21 +161,22 @@ async function seedTemplates() {
           phone: '+1 (555) 123-4567',
           location: 'New York, NY',
           website: 'johndoe.com',
-          summary: 'Experienced software engineer with 5+ years in full-stack development'
+          summary: 'Experienced software engineer with 5+ years in full-stack development',
         },
         sections: [
           { id: 'experience', title: 'Work Experience', items: [] },
           { id: 'education', title: 'Education', items: [] },
-          { id: 'skills', title: 'Skills', items: [] }
-        ]
+          { id: 'skills', title: 'Skills', items: [] },
+        ],
       },
       is_public: true,
-      is_default: true
+      is_default: true,
     },
     {
       user_id: '00000000-0000-0000-0000-000000000000',
       title: 'Creative Resume Template',
-      description: 'A colorful and creative resume template for designers, artists, and creative professionals',
+      description:
+        'A colorful and creative resume template for designers, artists, and creative professionals',
       type: 'resume',
       content: {
         personalInfo: {
@@ -182,22 +185,23 @@ async function seedTemplates() {
           phone: '+1 (555) 987-6543',
           location: 'San Francisco, CA',
           website: 'janesmith.design',
-          summary: 'Creative designer with expertise in UI/UX and brand identity'
+          summary: 'Creative designer with expertise in UI/UX and brand identity',
         },
         sections: [
           { id: 'experience', title: 'Work Experience', items: [] },
           { id: 'education', title: 'Education', items: [] },
           { id: 'skills', title: 'Skills', items: [] },
-          { id: 'portfolio', title: 'Portfolio', items: [] }
-        ]
+          { id: 'portfolio', title: 'Portfolio', items: [] },
+        ],
       },
       is_public: true,
-      is_default: true
+      is_default: true,
     },
     {
       user_id: '00000000-0000-0000-0000-000000000000',
       title: 'Business Presentation Template',
-      description: 'Professional presentation template for business meetings, quarterly reviews, and corporate presentations',
+      description:
+        'Professional presentation template for business meetings, quarterly reviews, and corporate presentations',
       type: 'presentation',
       content: {
         title: 'Business Presentation',
@@ -207,22 +211,22 @@ async function seedTemplates() {
             type: 'title',
             content: {
               title: 'Business Presentation',
-              subtitle: 'Professional Template'
-            }
+              subtitle: 'Professional Template',
+            },
           },
           {
             id: '2',
             type: 'content',
             content: {
               title: 'Agenda',
-              bullets: ['Introduction', 'Market Analysis', 'Strategy', 'Conclusion']
-            }
-          }
-        ]
+              bullets: ['Introduction', 'Market Analysis', 'Strategy', 'Conclusion'],
+            },
+          },
+        ],
       },
       is_public: true,
-      is_default: true
-    }
+      is_default: true,
+    },
   ];
 
   try {
@@ -238,9 +242,7 @@ async function seedTemplates() {
     }
 
     // Insert templates
-    const { error } = await supabase
-      .from('templates')
-      .insert(templates);
+    const { error } = await supabase.from('templates').insert(templates);
 
     if (error) {
       throw error;
@@ -265,17 +267,14 @@ async function verifySetup() {
     { name: 'subscriptions table', table: 'subscriptions' },
     { name: 'documents table', table: 'documents' },
     { name: 'templates table', table: 'templates' },
-    { name: 'template_shares table', table: 'template_shares' }
+    { name: 'template_shares table', table: 'template_shares' },
   ];
 
   let allPassed = true;
 
   for (const check of checks) {
     try {
-      const { error } = await supabase
-        .from(check.table)
-        .select('id')
-        .limit(1);
+      const { error } = await supabase.from(check.table).select('id').limit(1);
 
       if (error) {
         logError(`✗ ${check.name}: ${error.message}`);
@@ -333,7 +332,6 @@ async function main() {
       console.log('  4. Review the migration files in supabase/migrations/\n');
     }
     log('═'.repeat(50) + '\n', colors.bright);
-
   } catch (error) {
     logError(`\nSetup failed: ${error.message}`);
     console.error(error);

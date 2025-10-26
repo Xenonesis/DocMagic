@@ -1,8 +1,8 @@
 'use client';
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Zap, Star, Rocket, CheckCircle, TrendingUp } from "lucide-react";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Sparkles, Zap, Star, Rocket, CheckCircle, TrendingUp } from 'lucide-react';
 
 export function CTASection() {
   return (
@@ -29,7 +29,8 @@ export function CTASection() {
 
           {/* Description matching other sections */}
           <p className="modern-body text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-4">
-            Join <span className="bolt-gradient-text font-bold">10,000+</span> professionals creating stunning documents
+            Join <span className="bolt-gradient-text font-bold">10,000+</span> professionals
+            creating stunning documents
           </p>
           <p className="text-sm sm:text-base text-muted-foreground mb-10 max-w-2xl mx-auto">
             ✨ No credit card required • 🚀 Start in seconds • 💎 Free forever plan
@@ -37,7 +38,7 @@ export function CTASection() {
 
           {/* CTA Buttons matching other sections */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <Button 
+            <Button
               asChild
               size="lg"
               className="bolt-gradient text-white font-bold px-8 py-6 rounded-full hover:scale-105 transition-all duration-300 shadow-lg w-full sm:w-auto group"
@@ -49,7 +50,7 @@ export function CTASection() {
               </Link>
             </Button>
 
-            <Button 
+            <Button
               asChild
               size="lg"
               variant="outline"
@@ -71,7 +72,7 @@ export function CTASection() {
               <span className="text-base font-bold">Instant Generation</span>
               <span className="text-sm text-muted-foreground">Create in seconds</span>
             </div>
-            
+
             <div className="flex flex-col items-center gap-3 p-6 rounded-xl glass-effect border border-amber-200/30 hover:scale-105 transition-all duration-300">
               <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
                 <TrendingUp className="h-7 w-7 text-white" />
@@ -79,7 +80,7 @@ export function CTASection() {
               <span className="text-base font-bold">10K+ Happy Users</span>
               <span className="text-sm text-muted-foreground">Join the community</span>
             </div>
-            
+
             <div className="flex flex-col items-center gap-3 p-6 rounded-xl glass-effect border border-purple-200/30 hover:scale-105 transition-all duration-300">
               <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg">
                 <Zap className="h-7 w-7 text-white" />

@@ -1,7 +1,7 @@
-Contract Builder__ with legal clause libraries
+Contract Builder\_\_ with legal clause libraries
 
-- __Report Creator__ with data visualization integration
+- **Report Creator** with data visualization integration
 
-- __Business Card Designer__ with QR code integration
+- **Business Card Designer** with QR code integration
 
-- __Email Template Builder__ for professional communications
+- **Email Template Builder** for professional communications

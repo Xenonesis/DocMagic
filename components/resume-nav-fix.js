@@ -6,7 +6,7 @@ export default function ResumeNavFix() {
   useEffect(() => {
     // Create a style element
     const style = document.createElement('style');
-    
+
     // Add the CSS rules
     style.textContent = `
       /* Resume Builder Navigation Styles */
@@ -102,16 +102,16 @@ export default function ResumeNavFix() {
         }
       }
     `;
-    
+
     // Append the style element to the head
     document.head.appendChild(style);
-    
+
     // Clean up function
     return () => {
       document.head.removeChild(style);
     };
   }, []);
-  
+
   // This component doesn't render anything
   return null;
 }

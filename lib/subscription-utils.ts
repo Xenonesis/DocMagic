@@ -29,7 +29,7 @@ export interface SubscriptionStatus {
 export async function checkUserSubscription(userId: string): Promise<SubscriptionStatus> {
   try {
     const supabase = createRoute();
-    
+
     const { data: subscription, error } = await supabase
       .from('subscriptions')
       .select('*')
@@ -94,7 +94,7 @@ export async function getMaxSlidesForUser(userId?: string): Promise<number> {
  */
 export async function validateSlideCount(
   requestedSlides: number,
-  userId?: string
+  userId?: string,
 ): Promise<{ valid: boolean; maxAllowed: number; isPremium: boolean }> {
   const maxSlides = await getMaxSlidesForUser(userId);
   const isPremium = userId ? (await checkUserSubscription(userId)).isPremium : false;

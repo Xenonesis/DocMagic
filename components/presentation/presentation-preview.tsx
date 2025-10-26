@@ -1,10 +1,20 @@
-"use client";
+'use client';
 
-import { useState, useCallback, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, Quote, Maximize2, Minimize2, Play, Pause, RotateCcw, Image as ImageIcon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useState, useCallback, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Quote,
+  Maximize2,
+  Minimize2,
+  Play,
+  Pause,
+  RotateCcw,
+  Image as ImageIcon,
+} from 'lucide-react';
+import { useTheme } from 'next-themes';
 import {
   BarChart,
   Bar,
@@ -22,8 +32,8 @@ import {
   Area,
   ScatterChart,
   Scatter,
-  Legend
-} from "recharts";
+  Legend,
+} from 'recharts';
 
 interface PresentationPreviewProps {
   slides: any[];
@@ -35,7 +45,7 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [autoPlayInterval, setAutoPlayInterval] = useState<NodeJS.Timeout | null>(null);
-  const [imageLoadErrors, setImageLoadErrors] = useState<{[key: number]: boolean}>({});
+  const [imageLoadErrors, setImageLoadErrors] = useState<{ [key: number]: boolean }>({});
   const { theme } = useTheme();
 
   const nextSlide = useCallback(() => {
@@ -82,7 +92,7 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
   }, [autoPlayInterval]);
 
   const handleImageError = useCallback((slideIndex: number) => {
-    setImageLoadErrors(prev => ({ ...prev, [slideIndex]: true }));
+    setImageLoadErrors((prev) => ({ ...prev, [slideIndex]: true }));
   }, []);
 
   useEffect(() => {
@@ -125,8 +135,8 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
   const renderChart = (chart: any) => {
     if (!chart || !chart.data) return null;
 
-    const chartColors = chart.colors || ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"];
-    
+    const chartColors = chart.colors || ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
+
     const chartTheme = {
       stroke: theme === 'dark' ? 'white' : 'black',
       fill: theme === 'dark' ? 'white' : 'black',
@@ -134,31 +144,41 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
 
     const commonProps = {
       data: chart.data,
-      margin: { top: 20, right: 30, left: 20, bottom: 20 }
+      margin: { top: 20, right: 30, left: 20, bottom: 20 },
     };
 
     switch (chart.type) {
-      case "bar":
+      case 'bar':
         return (
           <ResponsiveContainer width="100%" height={400}>
             <BarChart {...commonProps}>
-              {chart.showGrid && <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#E5E7EB'} />}
-              <XAxis 
-                dataKey="name" 
+              {chart.showGrid && (
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke={theme === 'dark' ? '#374151' : '#E5E7EB'}
+                />
+              )}
+              <XAxis
+                dataKey="name"
                 tick={{ ...chartTheme, fontSize: 12 }}
                 axisLine={{ stroke: chartTheme.stroke }}
               />
-              <YAxis 
+              <YAxis
                 tick={{ ...chartTheme, fontSize: 12 }}
                 axisLine={{ stroke: chartTheme.stroke }}
-                label={{ value: chart.yAxis, angle: -90, position: 'insideLeft', style: chartTheme }}
+                label={{
+                  value: chart.yAxis,
+                  angle: -90,
+                  position: 'insideLeft',
+                  style: chartTheme,
+                }}
               />
-              <Tooltip 
-                contentStyle={{ 
+              <Tooltip
+                contentStyle={{
                   backgroundColor: theme === 'dark' ? '#1F2937' : 'white',
                   color: theme === 'dark' ? 'white' : 'black',
                   border: `1px solid ${theme === 'dark' ? '#374151' : '#E5E7EB'}`,
-                  borderRadius: '8px'
+                  borderRadius: '8px',
                 }}
               />
               {chart.showLegend && <Legend />}
@@ -166,8 +186,8 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
             </BarChart>
           </ResponsiveContainer>
         );
-        
-      case "pie":
+
+      case 'pie':
         return (
           <ResponsiveContainer width="100%" height={400}>
             <PieChart>
@@ -185,47 +205,57 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
                   <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
                 ))}
               </Pie>
-              <Tooltip 
-                contentStyle={{ 
+              <Tooltip
+                contentStyle={{
                   backgroundColor: theme === 'dark' ? '#1F2937' : 'white',
                   color: theme === 'dark' ? 'white' : 'black',
                   border: `1px solid ${theme === 'dark' ? '#374151' : '#E5E7EB'}`,
-                  borderRadius: '8px'
+                  borderRadius: '8px',
                 }}
               />
               {chart.showLegend && <Legend />}
             </PieChart>
           </ResponsiveContainer>
         );
-        
-      case "line":
+
+      case 'line':
         return (
           <ResponsiveContainer width="100%" height={400}>
             <LineChart {...commonProps}>
-              {chart.showGrid && <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#E5E7EB'} />}
-              <XAxis 
-                dataKey="name" 
+              {chart.showGrid && (
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke={theme === 'dark' ? '#374151' : '#E5E7EB'}
+                />
+              )}
+              <XAxis
+                dataKey="name"
                 tick={{ ...chartTheme, fontSize: 12 }}
                 axisLine={{ stroke: chartTheme.stroke }}
               />
-              <YAxis 
+              <YAxis
                 tick={{ ...chartTheme, fontSize: 12 }}
                 axisLine={{ stroke: chartTheme.stroke }}
-                label={{ value: chart.yAxis, angle: -90, position: 'insideLeft', style: chartTheme }}
+                label={{
+                  value: chart.yAxis,
+                  angle: -90,
+                  position: 'insideLeft',
+                  style: chartTheme,
+                }}
               />
-              <Tooltip 
-                contentStyle={{ 
+              <Tooltip
+                contentStyle={{
                   backgroundColor: theme === 'dark' ? '#1F2937' : 'white',
                   color: theme === 'dark' ? 'white' : 'black',
                   border: `1px solid ${theme === 'dark' ? '#374151' : '#E5E7EB'}`,
-                  borderRadius: '8px'
+                  borderRadius: '8px',
                 }}
               />
               {chart.showLegend && <Legend />}
-              <Line 
-                type="monotone" 
-                dataKey="value" 
-                stroke={chartColors[0]} 
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke={chartColors[0]}
                 strokeWidth={3}
                 dot={{ fill: chartColors[0], strokeWidth: 2, r: 6 }}
                 activeDot={{ r: 8, stroke: chartColors[0], strokeWidth: 2 }}
@@ -233,35 +263,45 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
             </LineChart>
           </ResponsiveContainer>
         );
-        
-      case "area":
+
+      case 'area':
         return (
           <ResponsiveContainer width="100%" height={400}>
             <AreaChart {...commonProps}>
-              {chart.showGrid && <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#E5E7EB'} />}
-              <XAxis 
-                dataKey="name" 
+              {chart.showGrid && (
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke={theme === 'dark' ? '#374151' : '#E5E7EB'}
+                />
+              )}
+              <XAxis
+                dataKey="name"
                 tick={{ ...chartTheme, fontSize: 12 }}
                 axisLine={{ stroke: chartTheme.stroke }}
               />
-              <YAxis 
+              <YAxis
                 tick={{ ...chartTheme, fontSize: 12 }}
                 axisLine={{ stroke: chartTheme.stroke }}
-                label={{ value: chart.yAxis, angle: -90, position: 'insideLeft', style: chartTheme }}
+                label={{
+                  value: chart.yAxis,
+                  angle: -90,
+                  position: 'insideLeft',
+                  style: chartTheme,
+                }}
               />
-              <Tooltip 
-                contentStyle={{ 
+              <Tooltip
+                contentStyle={{
                   backgroundColor: theme === 'dark' ? '#1F2937' : 'white',
                   color: theme === 'dark' ? 'white' : 'black',
                   border: `1px solid ${theme === 'dark' ? '#374151' : '#E5E7EB'}`,
-                  borderRadius: '8px'
+                  borderRadius: '8px',
                 }}
               />
               {chart.showLegend && <Legend />}
-              <Area 
-                type="monotone" 
-                dataKey="value" 
-                stroke={chartColors[0]} 
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke={chartColors[0]}
                 fill={chartColors[0]}
                 fillOpacity={0.3}
                 strokeWidth={3}
@@ -269,29 +309,39 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
             </AreaChart>
           </ResponsiveContainer>
         );
-        
-      case "scatter":
+
+      case 'scatter':
         return (
           <ResponsiveContainer width="100%" height={400}>
             <ScatterChart {...commonProps}>
-              {chart.showGrid && <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#E5E7EB'} />}
-              <XAxis 
-                dataKey="name" 
+              {chart.showGrid && (
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke={theme === 'dark' ? '#374151' : '#E5E7EB'}
+                />
+              )}
+              <XAxis
+                dataKey="name"
                 tick={{ ...chartTheme, fontSize: 12 }}
                 axisLine={{ stroke: chartTheme.stroke }}
               />
-              <YAxis 
+              <YAxis
                 dataKey="value"
                 tick={{ ...chartTheme, fontSize: 12 }}
                 axisLine={{ stroke: chartTheme.stroke }}
-                label={{ value: chart.yAxis, angle: -90, position: 'insideLeft', style: chartTheme }}
+                label={{
+                  value: chart.yAxis,
+                  angle: -90,
+                  position: 'insideLeft',
+                  style: chartTheme,
+                }}
               />
-              <Tooltip 
-                contentStyle={{ 
+              <Tooltip
+                contentStyle={{
                   backgroundColor: theme === 'dark' ? '#1F2937' : 'white',
                   color: theme === 'dark' ? 'white' : 'black',
                   border: `1px solid ${theme === 'dark' ? '#374151' : '#E5E7EB'}`,
-                  borderRadius: '8px'
+                  borderRadius: '8px',
                 }}
               />
               {chart.showLegend && <Legend />}
@@ -299,7 +349,7 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
             </ScatterChart>
           </ResponsiveContainer>
         );
-        
+
       default:
         return null;
     }
@@ -313,7 +363,7 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
         accent: 'text-blue-600',
         border: 'border-blue-200',
         cardBg: 'bg-white/80 backdrop-blur-sm',
-        shadow: 'shadow-blue-100'
+        shadow: 'shadow-blue-100',
       },
       'creative-gradient': {
         background: 'bg-gradient-to-br from-purple-100 via-pink-50 to-orange-50',
@@ -321,7 +371,7 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
         accent: 'text-purple-600',
         border: 'border-purple-200',
         cardBg: 'bg-white/90 backdrop-blur-sm',
-        shadow: 'shadow-purple-100'
+        shadow: 'shadow-purple-100',
       },
       'minimalist-pro': {
         background: 'bg-gradient-to-br from-gray-50 to-white',
@@ -329,7 +379,7 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
         accent: 'text-gray-600',
         border: 'border-gray-200',
         cardBg: 'bg-white/95 backdrop-blur-sm',
-        shadow: 'shadow-gray-100'
+        shadow: 'shadow-gray-100',
       },
       'tech-modern': {
         background: 'bg-gradient-to-br from-slate-900 to-gray-900',
@@ -337,7 +387,7 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
         accent: 'text-cyan-400',
         border: 'border-cyan-400',
         cardBg: 'bg-slate-800/80 backdrop-blur-sm',
-        shadow: 'shadow-cyan-500/20'
+        shadow: 'shadow-cyan-500/20',
       },
       'elegant-dark': {
         background: 'bg-gradient-to-br from-gray-900 to-black',
@@ -345,7 +395,7 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
         accent: 'text-yellow-400',
         border: 'border-yellow-400',
         cardBg: 'bg-gray-800/80 backdrop-blur-sm',
-        shadow: 'shadow-yellow-500/20'
+        shadow: 'shadow-yellow-500/20',
       },
       'startup-pitch': {
         background: 'bg-gradient-to-br from-green-50 to-emerald-50',
@@ -353,34 +403,33 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
         accent: 'text-green-600',
         border: 'border-green-200',
         cardBg: 'bg-white/90 backdrop-blur-sm',
-        shadow: 'shadow-green-100'
-      }
+        shadow: 'shadow-green-100',
+      },
     };
     return styles[template as keyof typeof styles] || styles['modern-business'];
   };
 
   const renderSlideContent = (slide: any, slideIndex: number) => {
     const templateStyles = getTemplateStyles(template);
-    
+
     const baseClasses = cn(
-      "h-full w-full transition-all duration-300 ease-in-out relative overflow-hidden",
+      'h-full w-full transition-all duration-300 ease-in-out relative overflow-hidden',
       templateStyles.background,
-      templateStyles.text
+      templateStyles.text,
     );
 
-    const backgroundImage = slide.image && !imageLoadErrors[slideIndex] 
-      ? `url(${slide.image})` 
-      : undefined;
+    const backgroundImage =
+      slide.image && !imageLoadErrors[slideIndex] ? `url(${slide.image})` : undefined;
 
     switch (slide.layout) {
-      case "cover":
+      case 'cover':
         return (
-          <div 
+          <div
             className={baseClasses}
             style={{
               backgroundImage,
-              backgroundSize: "cover",
-              backgroundPosition: slide.imagePosition || "center",
+              backgroundSize: 'cover',
+              backgroundPosition: slide.imagePosition || 'center',
             }}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60"></div>
@@ -402,8 +451,8 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
                 <ImageIcon className="h-16 w-16 text-gray-400" />
               </div>
             )}
-            <img 
-              src={slide.image} 
+            <img
+              src={slide.image}
               alt={slide.imageAlt || slide.title}
               className="hidden"
               onError={() => handleImageError(slideIndex)}
@@ -411,24 +460,32 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
           </div>
         );
 
-      case "split":
+      case 'split':
         return (
           <div className={baseClasses}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full p-8 sm:p-12">
               <div className="flex flex-col justify-center space-y-6">
-                <h2 className={cn("text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight", templateStyles.accent)}>
+                <h2
+                  className={cn(
+                    'text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight',
+                    templateStyles.accent,
+                  )}
+                >
                   {slide.title}
                 </h2>
                 {slide.content && (
-                  <p className="text-lg sm:text-xl leading-relaxed opacity-90">
-                    {slide.content}
-                  </p>
+                  <p className="text-lg sm:text-xl leading-relaxed opacity-90">{slide.content}</p>
                 )}
                 {slide.bullets && (
                   <ul className="space-y-4 text-lg">
                     {slide.bullets.map((bullet: string, i: number) => (
                       <li key={i} className="flex items-start gap-4">
-                        <div className={cn("w-3 h-3 rounded-full mt-2 flex-shrink-0", templateStyles.accent.replace('text-', 'bg-'))}></div>
+                        <div
+                          className={cn(
+                            'w-3 h-3 rounded-full mt-2 flex-shrink-0',
+                            templateStyles.accent.replace('text-', 'bg-'),
+                          )}
+                        ></div>
                         <span>{bullet}</span>
                       </li>
                     ))}
@@ -437,9 +494,15 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
               </div>
               <div className="flex items-center justify-center">
                 {slide.image && !imageLoadErrors[slideIndex] ? (
-                  <div className={cn("rounded-2xl overflow-hidden", templateStyles.shadow, "shadow-2xl")}>
-                    <img 
-                      src={slide.image} 
+                  <div
+                    className={cn(
+                      'rounded-2xl overflow-hidden',
+                      templateStyles.shadow,
+                      'shadow-2xl',
+                    )}
+                  >
+                    <img
+                      src={slide.image}
                       alt={slide.imageAlt || slide.title}
                       className="max-w-full h-auto object-cover"
                       style={{ maxHeight: '500px' }}
@@ -447,7 +510,14 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
                     />
                   </div>
                 ) : (
-                  <div className={cn("w-full h-80 rounded-2xl flex items-center justify-center", templateStyles.border, "border-2 border-dashed", templateStyles.cardBg)}>
+                  <div
+                    className={cn(
+                      'w-full h-80 rounded-2xl flex items-center justify-center',
+                      templateStyles.border,
+                      'border-2 border-dashed',
+                      templateStyles.cardBg,
+                    )}
+                  >
                     <ImageIcon className="h-16 w-16 text-gray-400" />
                   </div>
                 )}
@@ -456,30 +526,49 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
           </div>
         );
 
-      case "chart":
+      case 'chart':
         return (
-          <div className={cn(baseClasses, "p-8 sm:p-12")}>
+          <div className={cn(baseClasses, 'p-8 sm:p-12')}>
             <div className="h-full flex flex-col">
               <div className="text-center mb-8">
-                <h2 className={cn("text-3xl sm:text-4xl lg:text-5xl font-bold mb-4", templateStyles.accent)}>
+                <h2
+                  className={cn(
+                    'text-3xl sm:text-4xl lg:text-5xl font-bold mb-4',
+                    templateStyles.accent,
+                  )}
+                >
                   {slide.title}
                 </h2>
                 {slide.content && (
-                  <p className="text-lg sm:text-xl opacity-80 max-w-3xl mx-auto">
-                    {slide.content}
-                  </p>
+                  <p className="text-lg sm:text-xl opacity-80 max-w-3xl mx-auto">{slide.content}</p>
                 )}
               </div>
               <div className="flex-1 flex items-center justify-center">
                 {slide.charts ? (
-                  <div className={cn("w-full max-w-4xl p-6 rounded-2xl", templateStyles.cardBg, templateStyles.shadow, "shadow-xl")}>
+                  <div
+                    className={cn(
+                      'w-full max-w-4xl p-6 rounded-2xl',
+                      templateStyles.cardBg,
+                      templateStyles.shadow,
+                      'shadow-xl',
+                    )}
+                  >
                     {slide.charts.title && (
-                      <h3 className="text-xl font-semibold text-center mb-6">{slide.charts.title}</h3>
+                      <h3 className="text-xl font-semibold text-center mb-6">
+                        {slide.charts.title}
+                      </h3>
                     )}
                     {renderChart(slide.charts)}
                   </div>
                 ) : (
-                  <div className={cn("w-full h-80 rounded-2xl flex items-center justify-center", templateStyles.border, "border-2 border-dashed", templateStyles.cardBg)}>
+                  <div
+                    className={cn(
+                      'w-full h-80 rounded-2xl flex items-center justify-center',
+                      templateStyles.border,
+                      'border-2 border-dashed',
+                      templateStyles.cardBg,
+                    )}
+                  >
                     <span className="text-muted-foreground text-lg">Chart Visualization</span>
                   </div>
                 )}
@@ -488,12 +577,17 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
           </div>
         );
 
-      case "list":
+      case 'list':
         return (
-          <div className={cn(baseClasses, "p-8 sm:p-12")}>
+          <div className={cn(baseClasses, 'p-8 sm:p-12')}>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
               <div className="lg:col-span-2 flex flex-col justify-center">
-                <h2 className={cn("text-3xl sm:text-4xl lg:text-5xl font-bold mb-8 leading-tight", templateStyles.accent)}>
+                <h2
+                  className={cn(
+                    'text-3xl sm:text-4xl lg:text-5xl font-bold mb-8 leading-tight',
+                    templateStyles.accent,
+                  )}
+                >
                   {slide.title}
                 </h2>
                 {slide.content && (
@@ -505,7 +599,12 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
                   <ul className="space-y-6 text-lg sm:text-xl">
                     {slide.bullets.map((bullet: string, i: number) => (
                       <li key={i} className="flex items-start gap-4 group">
-                        <div className={cn("w-4 h-4 rounded-full mt-2 flex-shrink-0 group-hover:scale-110 transition-transform", templateStyles.accent.replace('text-', 'bg-'))}></div>
+                        <div
+                          className={cn(
+                            'w-4 h-4 rounded-full mt-2 flex-shrink-0 group-hover:scale-110 transition-transform',
+                            templateStyles.accent.replace('text-', 'bg-'),
+                          )}
+                        ></div>
                         <span className="leading-relaxed">{bullet}</span>
                       </li>
                     ))}
@@ -514,9 +613,15 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
               </div>
               <div className="flex items-center justify-center">
                 {slide.image && !imageLoadErrors[slideIndex] ? (
-                  <div className={cn("rounded-2xl overflow-hidden", templateStyles.shadow, "shadow-xl")}>
-                    <img 
-                      src={slide.image} 
+                  <div
+                    className={cn(
+                      'rounded-2xl overflow-hidden',
+                      templateStyles.shadow,
+                      'shadow-xl',
+                    )}
+                  >
+                    <img
+                      src={slide.image}
                       alt={slide.imageAlt || slide.title}
                       className="max-w-full h-auto object-cover"
                       style={{ maxHeight: '400px' }}
@@ -524,7 +629,14 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
                     />
                   </div>
                 ) : (
-                  <div className={cn("w-full h-64 rounded-2xl flex items-center justify-center", templateStyles.border, "border-2 border-dashed", templateStyles.cardBg)}>
+                  <div
+                    className={cn(
+                      'w-full h-64 rounded-2xl flex items-center justify-center',
+                      templateStyles.border,
+                      'border-2 border-dashed',
+                      templateStyles.cardBg,
+                    )}
+                  >
                     <ImageIcon className="h-12 w-12 text-gray-400" />
                   </div>
                 )}
@@ -533,31 +645,39 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
           </div>
         );
 
-      case "process":
+      case 'process':
         return (
-          <div className={cn(baseClasses, "p-8 sm:p-12")}>
+          <div className={cn(baseClasses, 'p-8 sm:p-12')}>
             <div className="h-full flex flex-col">
               <div className="text-center mb-12">
-                <h2 className={cn("text-3xl sm:text-4xl lg:text-5xl font-bold mb-4", templateStyles.accent)}>
+                <h2
+                  className={cn(
+                    'text-3xl sm:text-4xl lg:text-5xl font-bold mb-4',
+                    templateStyles.accent,
+                  )}
+                >
                   {slide.title}
                 </h2>
                 {slide.content && (
-                  <p className="text-lg sm:text-xl opacity-80 max-w-3xl mx-auto">
-                    {slide.content}
-                  </p>
+                  <p className="text-lg sm:text-xl opacity-80 max-w-3xl mx-auto">{slide.content}</p>
                 )}
               </div>
               <div className="flex-1 flex items-center justify-center">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full max-w-4xl">
                   {[1, 2, 3].map((step) => (
                     <div key={step} className="text-center group">
-                      <div className={cn("w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center text-white font-bold text-2xl group-hover:scale-110 transition-transform shadow-lg", templateStyles.accent.replace('text-', 'bg-'))}>
+                      <div
+                        className={cn(
+                          'w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center text-white font-bold text-2xl group-hover:scale-110 transition-transform shadow-lg',
+                          templateStyles.accent.replace('text-', 'bg-'),
+                        )}
+                      >
                         {step}
                       </div>
                       <h3 className="font-semibold text-xl mb-3">Step {step}</h3>
                       <p className="text-sm opacity-80 leading-relaxed">
-                        {slide.bullets && slide.bullets[step - 1] 
-                          ? slide.bullets[step - 1] 
+                        {slide.bullets && slide.bullets[step - 1]
+                          ? slide.bullets[step - 1]
                           : `Process description for step ${step}`}
                       </p>
                     </div>
@@ -570,20 +690,28 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
 
       default:
         return (
-          <div className={cn(baseClasses, "p-8 sm:p-12")}>
+          <div className={cn(baseClasses, 'p-8 sm:p-12')}>
             <div className="h-full flex flex-col justify-center max-w-4xl mx-auto">
-              <h2 className={cn("text-3xl sm:text-4xl lg:text-5xl font-bold mb-8 leading-tight", templateStyles.accent)}>
+              <h2
+                className={cn(
+                  'text-3xl sm:text-4xl lg:text-5xl font-bold mb-8 leading-tight',
+                  templateStyles.accent,
+                )}
+              >
                 {slide.title}
               </h2>
               <div className="text-lg sm:text-xl lg:text-2xl leading-relaxed space-y-6">
-                {slide.content && (
-                  <p className="opacity-90">{slide.content}</p>
-                )}
+                {slide.content && <p className="opacity-90">{slide.content}</p>}
                 {slide.bullets && (
                   <ul className="space-y-4">
                     {slide.bullets.map((bullet: string, i: number) => (
                       <li key={i} className="flex items-start gap-4">
-                        <div className={cn("w-3 h-3 rounded-full mt-3 flex-shrink-0", templateStyles.accent.replace('text-', 'bg-'))}></div>
+                        <div
+                          className={cn(
+                            'w-3 h-3 rounded-full mt-3 flex-shrink-0',
+                            templateStyles.accent.replace('text-', 'bg-'),
+                          )}
+                        ></div>
                         <span>{bullet}</span>
                       </li>
                     ))}
@@ -605,11 +733,11 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
   }
 
   return (
-    <div 
-      id="presentation-container" 
+    <div
+      id="presentation-container"
       className={cn(
-        "relative h-full min-h-[500px] sm:min-h-[600px]",
-        isFullscreen && "fixed inset-0 z-50 bg-black"
+        'relative h-full min-h-[500px] sm:min-h-[600px]',
+        isFullscreen && 'fixed inset-0 z-50 bg-black',
       )}
     >
       {/* Controls */}
@@ -617,7 +745,7 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
         <div className="bg-black/80 backdrop-blur-sm rounded-lg px-3 py-2 text-white text-sm">
           {currentSlide + 1} / {slides.length}
         </div>
-        
+
         <Button
           variant="outline"
           size="icon"
@@ -626,7 +754,7 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
         >
           <RotateCcw className="h-4 w-4" />
         </Button>
-        
+
         <Button
           variant="outline"
           size="icon"
@@ -635,34 +763,29 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
         >
           {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
         </Button>
-        
+
         <Button
           variant="outline"
           size="icon"
           onClick={toggleFullscreen}
           className="h-10 w-10 rounded-full bg-black/80 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
         >
-          {isFullscreen ? (
-            <Minimize2 className="h-4 w-4" />
-          ) : (
-            <Maximize2 className="h-4 w-4" />
-          )}
+          {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
         </Button>
       </div>
-      
+
       {/* Slide Content */}
-      <div className={cn(
-        "h-full overflow-hidden rounded-lg",
-        isFullscreen && "rounded-none"
-      )}>
+      <div className={cn('h-full overflow-hidden rounded-lg', isFullscreen && 'rounded-none')}>
         {renderSlideContent(slides[currentSlide], currentSlide)}
       </div>
 
       {/* Navigation */}
-      <div className={cn(
-        "absolute inset-x-0 bottom-4 flex justify-between items-center px-4",
-        isFullscreen && "px-8"
-      )}>
+      <div
+        className={cn(
+          'absolute inset-x-0 bottom-4 flex justify-between items-center px-4',
+          isFullscreen && 'px-8',
+        )}
+      >
         <Button
           variant="outline"
           size="icon"
@@ -671,7 +794,7 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
         >
           <ChevronLeft className="h-6 w-6" />
         </Button>
-        
+
         {/* Slide Indicators */}
         <div className="flex gap-2">
           {slides.map((_, index) => (
@@ -679,15 +802,13 @@ export function PresentationPreview({ slides, template }: PresentationPreviewPro
               key={index}
               onClick={() => setCurrentSlide(index)}
               className={cn(
-                "w-3 h-3 rounded-full transition-all",
-                index === currentSlide 
-                  ? "bg-white" 
-                  : "bg-white/40 hover:bg-white/60"
+                'w-3 h-3 rounded-full transition-all',
+                index === currentSlide ? 'bg-white' : 'bg-white/40 hover:bg-white/60',
               )}
             />
           ))}
         </div>
-        
+
         <Button
           variant="outline"
           size="icon"

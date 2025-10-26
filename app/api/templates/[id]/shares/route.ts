@@ -2,13 +2,10 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const cookieStore = await cookies();
-  
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -24,11 +21,13 @@ export async function GET(
           cookieStore.set({ name, value: '', ...options });
         },
       },
-    }
+    },
   );
-  
+
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -59,13 +58,10 @@ export async function GET(
   }
 }
 
-export async function POST(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const cookieStore = await cookies();
-  
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -81,11 +77,13 @@ export async function POST(
           cookieStore.set({ name, value: '', ...options });
         },
       },
-    }
+    },
   );
-  
+
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -140,8 +138,8 @@ export async function POST(
           template_id: id,
           shared_by: user.id,
           shared_with: targetUser.id,
-          can_edit: canEdit || false
-        }
+          can_edit: canEdit || false,
+        },
       ])
       .select()
       .single();

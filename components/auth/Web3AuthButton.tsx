@@ -1,31 +1,35 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
-import { BrowserProvider } from "ethers";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
+import { BrowserProvider } from 'ethers';
 
 interface Web3AuthButtonProps {
-  provider: "ethereum" | "solana";
+  provider: 'ethereum' | 'solana';
   redirectTo?: string;
   disabled?: boolean;
 }
 
-export function Web3AuthButton({ provider, redirectTo = "/", disabled = false }: Web3AuthButtonProps) {
+export function Web3AuthButton({
+  provider,
+  redirectTo = '/',
+  disabled = false,
+}: Web3AuthButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const handleEthereumAuth = async () => {
     try {
       // Check if MetaMask is installed
-      if (typeof window.ethereum === "undefined") {
+      if (typeof window.ethereum === 'undefined') {
         toast({
-          title: "MetaMask Not Found",
-          description: "Please install MetaMask extension to sign in with Ethereum.",
-          variant: "destructive",
+          title: 'MetaMask Not Found',
+          description: 'Please install MetaMask extension to sign in with Ethereum.',
+          variant: 'destructive',
         });
-        window.open("https://metamask.io/download/", "_blank");
+        window.open('https://metamask.io/download/', '_blank');
         return;
       }
 
@@ -33,17 +37,17 @@ export function Web3AuthButton({ provider, redirectTo = "/", disabled = false }:
 
       // Request account access
       const ethProvider = new BrowserProvider(window.ethereum);
-      const accounts = await ethProvider.send("eth_requestAccounts", []);
+      const accounts = await ethProvider.send('eth_requestAccounts', []);
       const address = accounts[0];
 
       if (!address) {
-        throw new Error("No Ethereum address found");
+        throw new Error('No Ethereum address found');
       }
 
       // Create a message to sign (EIP-4361: Sign-In with Ethereum)
       const domain = window.location.host;
       const origin = window.location.origin;
-      const statement = "Sign in to docverse with your Ethereum wallet";
+      const statement = 'Sign in to docverse with your Ethereum wallet';
       const nonce = Math.random().toString(36).substring(7);
       const issuedAt = new Date().toISOString();
 
@@ -71,11 +75,11 @@ Issued At: ${issuedAt}`;
       };
 
       // Store in localStorage for now (in production, verify on backend)
-      localStorage.setItem("web3_auth", JSON.stringify(authData));
-      localStorage.setItem("web3_provider", "ethereum");
+      localStorage.setItem('web3_auth', JSON.stringify(authData));
+      localStorage.setItem('web3_provider', 'ethereum');
 
       toast({
-        title: "Welcome! 🎉",
+        title: 'Welcome! 🎉',
         description: `Successfully signed in with Ethereum wallet: ${address.slice(0, 6)}...${address.slice(-4)}`,
       });
 
@@ -84,11 +88,11 @@ Issued At: ${issuedAt}`;
         window.location.href = redirectTo;
       }, 1000);
     } catch (error: any) {
-      console.error("Ethereum auth error:", error);
+      console.error('Ethereum auth error:', error);
       toast({
-        title: "Authentication Failed",
-        description: error.message || "Failed to sign in with Ethereum. Please try again.",
-        variant: "destructive",
+        title: 'Authentication Failed',
+        description: error.message || 'Failed to sign in with Ethereum. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -98,13 +102,13 @@ Issued At: ${issuedAt}`;
   const handleSolanaAuth = async () => {
     try {
       // Check if Phantom wallet is installed
-      if (typeof window.solana === "undefined" || !window.solana.isPhantom) {
+      if (typeof window.solana === 'undefined' || !window.solana.isPhantom) {
         toast({
-          title: "Phantom Wallet Not Found",
-          description: "Please install Phantom wallet extension to sign in with Solana.",
-          variant: "destructive",
+          title: 'Phantom Wallet Not Found',
+          description: 'Please install Phantom wallet extension to sign in with Solana.',
+          variant: 'destructive',
         });
-        window.open("https://phantom.app/", "_blank");
+        window.open('https://phantom.app/', '_blank');
         return;
       }
 
@@ -115,12 +119,12 @@ Issued At: ${issuedAt}`;
       const publicKey = resp.publicKey.toString();
 
       if (!publicKey) {
-        throw new Error("No Solana address found");
+        throw new Error('No Solana address found');
       }
 
       // Create message to sign (SIWS: Sign-In with Solana)
       const domain = window.location.host;
-      const statement = "Sign in to docverse with your Solana wallet";
+      const statement = 'Sign in to docverse with your Solana wallet';
       const nonce = Math.random().toString(36).substring(7);
       const issuedAt = new Date().toISOString();
 
@@ -135,8 +139,8 @@ Issued At: ${issuedAt}`;
       const message = new TextEncoder().encode(messageText);
 
       // Sign the message
-      const signedMessage = await window.solana.signMessage(message, "utf8");
-      const signature = Buffer.from(signedMessage.signature).toString("base64");
+      const signedMessage = await window.solana.signMessage(message, 'utf8');
+      const signature = Buffer.from(signedMessage.signature).toString('base64');
 
       // Store auth data (you'll need to verify this on your backend)
       const authData = {
@@ -147,11 +151,11 @@ Issued At: ${issuedAt}`;
       };
 
       // Store in localStorage for now (in production, verify on backend)
-      localStorage.setItem("web3_auth", JSON.stringify(authData));
-      localStorage.setItem("web3_provider", "solana");
+      localStorage.setItem('web3_auth', JSON.stringify(authData));
+      localStorage.setItem('web3_provider', 'solana');
 
       toast({
-        title: "Welcome! 🎉",
+        title: 'Welcome! 🎉',
         description: `Successfully signed in with Solana wallet: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`,
       });
 
@@ -160,18 +164,18 @@ Issued At: ${issuedAt}`;
         window.location.href = redirectTo;
       }, 1000);
     } catch (error: any) {
-      console.error("Solana auth error:", error);
+      console.error('Solana auth error:', error);
       toast({
-        title: "Authentication Failed",
-        description: error.message || "Failed to sign in with Solana. Please try again.",
-        variant: "destructive",
+        title: 'Authentication Failed',
+        description: error.message || 'Failed to sign in with Solana. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleAuth = provider === "ethereum" ? handleEthereumAuth : handleSolanaAuth;
+  const handleAuth = provider === 'ethereum' ? handleEthereumAuth : handleSolanaAuth;
 
   return (
     <Button
@@ -188,37 +192,26 @@ Issued At: ${issuedAt}`;
           </>
         ) : (
           <>
-            {provider === "ethereum" ? (
+            {provider === 'ethereum' ? (
               <>
                 <svg className="h-5 w-5" viewBox="0 0 256 417" fill="none">
                   <path
                     d="M127.961 0L125.635 7.89L125.635 285.168L127.961 287.492L255.922 212.32L127.961 0Z"
                     fill="#8C8C8C"
                   />
-                  <path
-                    d="M127.962 0L0 212.32L127.962 287.492V153.455V0Z"
-                    fill="#C0C0C0"
-                  />
+                  <path d="M127.962 0L0 212.32L127.962 287.492V153.455V0Z" fill="#C0C0C0" />
                   <path
                     d="M127.961 312.187L126.635 313.854V406.006L127.961 410.616L256 237.023L127.961 312.187Z"
                     fill="#8C8C8C"
                   />
-                  <path
-                    d="M127.962 410.616V312.187L0 237.023L127.962 410.616Z"
-                    fill="#C0C0C0"
-                  />
+                  <path d="M127.962 410.616V312.187L0 237.023L127.962 410.616Z" fill="#C0C0C0" />
                   <path
                     d="M127.961 287.492L255.922 212.32L127.961 153.455V287.492Z"
                     fill="#6C6C6C"
                   />
-                  <path
-                    d="M0 212.32L127.962 287.492V153.455L0 212.32Z"
-                    fill="#8C8C8C"
-                  />
+                  <path d="M0 212.32L127.962 287.492V153.455L0 212.32Z" fill="#8C8C8C" />
                 </svg>
-                <span className="font-semibold">
-                  Sign in with Ethereum
-                </span>
+                <span className="font-semibold">Sign in with Ethereum</span>
               </>
             ) : (
               <>
@@ -247,9 +240,7 @@ Issued At: ${issuedAt}`;
                     fill="url(#solana-gradient)"
                   />
                 </svg>
-                <span className="font-semibold">
-                  Sign in with Solana
-                </span>
+                <span className="font-semibold">Sign in with Solana</span>
               </>
             )}
           </>

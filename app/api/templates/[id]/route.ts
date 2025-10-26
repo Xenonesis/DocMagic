@@ -2,13 +2,10 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server.js';
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const cookieStore = await cookies();
-  
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -24,12 +21,14 @@ export async function GET(
           cookieStore.set({ name, value: '', ...options });
         },
       },
-    }
+    },
   );
-  
+
   try {
-    const { data: { user } } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
     const { data: template, error } = await supabase
       .from('templates')
       .select('*')
@@ -64,13 +63,10 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const cookieStore = await cookies();
-  
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -86,11 +82,13 @@ export async function PUT(
           cookieStore.set({ name, value: '', ...options });
         },
       },
-    }
+    },
   );
-  
+
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -115,7 +113,7 @@ export async function PUT(
         description,
         content,
         is_public: isPublic,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq('id', id)
       .select()
@@ -130,13 +128,10 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
   const cookieStore = await cookies();
-  
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -152,11 +147,13 @@ export async function DELETE(
           cookieStore.set({ name, value: '', ...options });
         },
       },
-    }
+    },
   );
-  
+
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -168,23 +165,20 @@ export async function DELETE(
       .eq('id', id)
       .single();
 
-    if (fetchError || !existingTemplate || 
-        existingTemplate.user_id !== user.id || 
-        existingTemplate.is_default) {
+    if (
+      fetchError ||
+      !existingTemplate ||
+      existingTemplate.user_id !== user.id ||
+      existingTemplate.is_default
+    ) {
       return new NextResponse('Not Found', { status: 404 });
     }
 
     // Delete related shares first
-    await supabase
-      .from('template_shares')
-      .delete()
-      .eq('template_id', id);
+    await supabase.from('template_shares').delete().eq('template_id', id);
 
     // Delete the template
-    const { error } = await supabase
-      .from('templates')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('templates').delete().eq('id', id);
 
     if (error) throw error;
 

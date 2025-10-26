@@ -3,19 +3,19 @@
  * Supports both OpenRouter and Gemini APIs with automatic fallback
  */
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import {
   getOpenRouterConfig,
   generateStructuredResponse as generateOpenRouterStructured,
   extractJsonFromMarkdown,
-} from "./openrouter";
+} from './openrouter';
 
 // Get AI provider configuration
 function getAIConfig() {
   const provider = process.env.AI_PROVIDER || 'openrouter';
   const openRouterKey = process.env.OPENROUTER_API_KEY;
   const geminiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-  
+
   return {
     provider,
     useOpenRouter: provider === 'openrouter' && !!openRouterKey,
@@ -32,13 +32,13 @@ function getGenAI(): GoogleGenerativeAI {
   if (!genAI) {
     const config = getAIConfig();
     if (!config.geminiKey) {
-      throw new Error("GEMINI_API_KEY environment variable is not set.");
+      throw new Error('GEMINI_API_KEY environment variable is not set.');
     }
     try {
       genAI = new GoogleGenerativeAI(config.geminiKey);
     } catch (error) {
-      console.error("Failed to initialize Google Generative AI:", error);
-      throw new Error("Failed to initialize Google Generative AI.");
+      console.error('Failed to initialize Google Generative AI:', error);
+      throw new Error('Failed to initialize Google Generative AI.');
     }
   }
   return genAI;
@@ -71,14 +71,16 @@ export async function generateAIResponse<T = any>({
       });
     } catch (error) {
       console.error('OpenRouter failed:', error);
-      
+
       // Only fall back to Gemini if it's explicitly available and valid
       // Don't fall back if OpenRouter is explicitly set as the provider
       if (config.provider === 'openrouter') {
-        console.error('OpenRouter is the configured provider and failed. Not falling back to Gemini.');
+        console.error(
+          'OpenRouter is the configured provider and failed. Not falling back to Gemini.',
+        );
         throw error;
       }
-      
+
       // If Gemini is available and provider is not explicitly openrouter, try fallback
       if (config.geminiKey) {
         console.log('Attempting fallback to Gemini API...');
@@ -91,21 +93,25 @@ export async function generateAIResponse<T = any>({
   // Use Gemini (either as primary or fallback)
   if (config.useGemini || config.geminiKey) {
     try {
-      const model = getGenAI().getGenerativeModel({ model: "gemini-2.0-flash" });
-      
+      const model = getGenAI().getGenerativeModel({ model: 'gemini-2.0-flash' });
+
       const fullPrompt = `${systemPrompt}\n\n${userPrompt}`;
       const result = await model.generateContent(fullPrompt);
       const response = await result.response;
       const jsonText = extractJsonFromMarkdown(response.text());
-      
+
       return JSON.parse(jsonText);
     } catch (error) {
       console.error('Gemini API error:', error);
-      throw new Error(`Failed to generate response: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to generate response: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
     }
   }
 
-  throw new Error('No AI provider configured. Please set either OPENROUTER_API_KEY or GEMINI_API_KEY.');
+  throw new Error(
+    'No AI provider configured. Please set either OPENROUTER_API_KEY or GEMINI_API_KEY.',
+  );
 }
 
 /**
@@ -121,7 +127,9 @@ export async function validateAIConnection(): Promise<boolean> {
 
   // Check if at least one API key is configured
   if (!config.openRouterKey && !config.geminiKey) {
-    throw new Error("No AI provider configured. Please set either OPENROUTER_API_KEY or GEMINI_API_KEY.");
+    throw new Error(
+      'No AI provider configured. Please set either OPENROUTER_API_KEY or GEMINI_API_KEY.',
+    );
   }
 
   // Simplified validation - just check if keys are present
@@ -135,7 +143,7 @@ export async function validateAIConnection(): Promise<boolean> {
 export function getAIProviderInfo() {
   const config = getAIConfig();
   const openRouterConfig = getOpenRouterConfig();
-  
+
   return {
     provider: config.provider,
     isOpenRouter: config.useOpenRouter,

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
 
 interface SubscriptionButtonProps {
   isPro: boolean;
@@ -17,24 +17,24 @@ export function SubscriptionButton({ isPro }: SubscriptionButtonProps) {
     try {
       setLoading(true);
 
-      const response = await fetch("/api/stripe/create-checkout", {
-        method: "POST",
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create checkout session");
+        throw new Error('Failed to create checkout session');
       }
 
       const data = await response.json();
       window.location.href = data.url;
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -45,24 +45,24 @@ export function SubscriptionButton({ isPro }: SubscriptionButtonProps) {
     try {
       setLoading(true);
 
-      const response = await fetch("/api/stripe/create-portal", {
-        method: "POST",
+      const response = await fetch('/api/stripe/create-portal', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create portal session");
+        throw new Error('Failed to create portal session');
       }
 
       const data = await response.json();
       window.location.href = data.url;
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -70,12 +70,9 @@ export function SubscriptionButton({ isPro }: SubscriptionButtonProps) {
   };
 
   return (
-    <Button
-      onClick={isPro ? handlePortal : handleSubscription}
-      disabled={loading}
-    >
+    <Button onClick={isPro ? handlePortal : handleSubscription} disabled={loading}>
       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-      {isPro ? "Manage Subscription" : "Upgrade to Pro"}
+      {isPro ? 'Manage Subscription' : 'Upgrade to Pro'}
     </Button>
   );
 }

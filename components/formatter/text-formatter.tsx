@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import {
   Copy,
   Download,
@@ -16,20 +16,20 @@ import {
   ArrowUpDown,
   Check,
   Sparkles,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 export function TextFormatter() {
-  const [inputText, setInputText] = useState("");
-  const [outputText, setOutputText] = useState("");
+  const [inputText, setInputText] = useState('');
+  const [outputText, setOutputText] = useState('');
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
@@ -37,94 +37,97 @@ export function TextFormatter() {
     let result = inputText;
 
     switch (operation) {
-      case "uppercase":
+      case 'uppercase':
         result = inputText.toUpperCase();
         break;
-      case "lowercase":
+      case 'lowercase':
         result = inputText.toLowerCase();
         break;
-      case "capitalize":
+      case 'capitalize':
         result = inputText
-          .split(" ")
+          .split(' ')
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-          .join(" ");
+          .join(' ');
         break;
-      case "sentence":
+      case 'sentence':
         result = inputText
           .toLowerCase()
-          .split(". ")
+          .split('. ')
           .map((sentence) => sentence.charAt(0).toUpperCase() + sentence.slice(1))
-          .join(". ");
+          .join('. ');
         break;
-      case "reverse":
-        result = inputText.split("").reverse().join("");
+      case 'reverse':
+        result = inputText.split('').reverse().join('');
         break;
-      case "removeSpaces":
-        result = inputText.replace(/\s+/g, "");
+      case 'removeSpaces':
+        result = inputText.replace(/\s+/g, '');
         break;
-      case "trimSpaces":
-        result = inputText.replace(/\s+/g, " ").trim();
+      case 'trimSpaces':
+        result = inputText.replace(/\s+/g, ' ').trim();
         break;
-      case "removeLineBreaks":
-        result = inputText.replace(/\n+/g, " ").replace(/\s+/g, " ").trim();
+      case 'removeLineBreaks':
+        result = inputText.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
         break;
-      case "sortLines":
-        result = inputText.split("\n").sort().join("\n");
+      case 'sortLines':
+        result = inputText.split('\n').sort().join('\n');
         break;
-      case "removeDuplicateLines":
-        result = [...new Set(inputText.split("\n"))].join("\n");
+      case 'removeDuplicateLines':
+        result = [...new Set(inputText.split('\n'))].join('\n');
         break;
-      case "addLineNumbers":
+      case 'addLineNumbers':
         result = inputText
-          .split("\n")
+          .split('\n')
           .map((line, index) => `${index + 1}. ${line}`)
-          .join("\n");
+          .join('\n');
         break;
-      case "urlEncode":
+      case 'urlEncode':
         result = encodeURIComponent(inputText);
         break;
-      case "urlDecode":
+      case 'urlDecode':
         try {
           result = decodeURIComponent(inputText);
         } catch (e) {
-          result = "Error: Invalid URL encoded text";
+          result = 'Error: Invalid URL encoded text';
         }
         break;
-      case "base64Encode":
+      case 'base64Encode':
         result = btoa(inputText);
         break;
-      case "base64Decode":
+      case 'base64Decode':
         try {
           result = atob(inputText);
         } catch (e) {
-          result = "Error: Invalid Base64 text";
+          result = 'Error: Invalid Base64 text';
         }
         break;
-      case "countWords":
-        const words = inputText.trim().split(/\s+/).filter(word => word.length > 0);
+      case 'countWords':
+        const words = inputText
+          .trim()
+          .split(/\s+/)
+          .filter((word) => word.length > 0);
         const chars = inputText.length;
-        const lines = inputText.split("\n").length;
+        const lines = inputText.split('\n').length;
         result = `Words: ${words.length}\nCharacters: ${chars}\nLines: ${lines}`;
         break;
-      case "extractEmails":
+      case 'extractEmails':
         const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
         const emails = inputText.match(emailRegex) || [];
-        result = emails.join("\n") || "No emails found";
+        result = emails.join('\n') || 'No emails found';
         break;
-      case "extractUrls":
+      case 'extractUrls':
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         const urls = inputText.match(urlRegex) || [];
-        result = urls.join("\n") || "No URLs found";
+        result = urls.join('\n') || 'No URLs found';
         break;
       default:
         result = inputText;
     }
 
     setOutputText(result);
-    
+
     toast({
-      title: "✨ Text Formatted",
-      description: "Your text has been formatted successfully!",
+      title: '✨ Text Formatted',
+      description: 'Your text has been formatted successfully!',
     });
   };
 
@@ -134,41 +137,41 @@ export function TextFormatter() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
       toast({
-        title: "📋 Copied!",
-        description: "Text copied to clipboard",
+        title: '📋 Copied!',
+        description: 'Text copied to clipboard',
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to copy text",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to copy text',
+        variant: 'destructive',
       });
     }
   };
 
   const downloadText = () => {
-    const blob = new Blob([outputText], { type: "text/plain" });
+    const blob = new Blob([outputText], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = "formatted-text.txt";
+    a.download = 'formatted-text.txt';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     toast({
-      title: "💾 Downloaded",
-      description: "Text file saved successfully!",
+      title: '💾 Downloaded',
+      description: 'Text file saved successfully!',
     });
   };
 
   const clearAll = () => {
-    setInputText("");
-    setOutputText("");
+    setInputText('');
+    setOutputText('');
     toast({
-      title: "🗑️ Cleared",
-      description: "All text has been cleared",
+      title: '🗑️ Cleared',
+      description: 'All text has been cleared',
     });
   };
 
@@ -192,9 +195,7 @@ export function TextFormatter() {
           <Label htmlFor="input-text" className="text-base font-semibold">
             Input Text
           </Label>
-          <Badge variant="outline">
-            {inputText.length} characters
-          </Badge>
+          <Badge variant="outline">{inputText.length} characters</Badge>
         </div>
         <Textarea
           id="input-text"
@@ -212,7 +213,7 @@ export function TextFormatter() {
             <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
               Text Operations
             </h3>
-            
+
             {/* Case Transformations */}
             <div>
               <p className="text-xs font-medium text-muted-foreground mb-2">Case Transformations</p>
@@ -220,7 +221,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("uppercase")}
+                  onClick={() => formatText('uppercase')}
                   disabled={!inputText}
                 >
                   UPPERCASE
@@ -228,7 +229,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("lowercase")}
+                  onClick={() => formatText('lowercase')}
                   disabled={!inputText}
                 >
                   lowercase
@@ -236,7 +237,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("capitalize")}
+                  onClick={() => formatText('capitalize')}
                   disabled={!inputText}
                 >
                   Capitalize Words
@@ -244,7 +245,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("sentence")}
+                  onClick={() => formatText('sentence')}
                   disabled={!inputText}
                 >
                   Sentence case
@@ -259,7 +260,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("reverse")}
+                  onClick={() => formatText('reverse')}
                   disabled={!inputText}
                 >
                   <ArrowUpDown className="h-3 w-3 mr-1" />
@@ -268,7 +269,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("removeSpaces")}
+                  onClick={() => formatText('removeSpaces')}
                   disabled={!inputText}
                 >
                   Remove Spaces
@@ -276,7 +277,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("trimSpaces")}
+                  onClick={() => formatText('trimSpaces')}
                   disabled={!inputText}
                 >
                   Trim Spaces
@@ -284,7 +285,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("removeLineBreaks")}
+                  onClick={() => formatText('removeLineBreaks')}
                   disabled={!inputText}
                 >
                   Remove Line Breaks
@@ -299,7 +300,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("sortLines")}
+                  onClick={() => formatText('sortLines')}
                   disabled={!inputText}
                 >
                   Sort Lines
@@ -307,7 +308,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("removeDuplicateLines")}
+                  onClick={() => formatText('removeDuplicateLines')}
                   disabled={!inputText}
                 >
                   Remove Duplicates
@@ -315,7 +316,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("addLineNumbers")}
+                  onClick={() => formatText('addLineNumbers')}
                   disabled={!inputText}
                 >
                   Add Line Numbers
@@ -330,7 +331,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("urlEncode")}
+                  onClick={() => formatText('urlEncode')}
                   disabled={!inputText}
                 >
                   URL Encode
@@ -338,7 +339,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("urlDecode")}
+                  onClick={() => formatText('urlDecode')}
                   disabled={!inputText}
                 >
                   URL Decode
@@ -346,7 +347,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("base64Encode")}
+                  onClick={() => formatText('base64Encode')}
                   disabled={!inputText}
                 >
                   Base64 Encode
@@ -354,7 +355,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("base64Decode")}
+                  onClick={() => formatText('base64Decode')}
                   disabled={!inputText}
                 >
                   Base64 Decode
@@ -364,12 +365,14 @@ export function TextFormatter() {
 
             {/* Analysis & Extraction */}
             <div>
-              <p className="text-xs font-medium text-muted-foreground mb-2">Analysis & Extraction</p>
+              <p className="text-xs font-medium text-muted-foreground mb-2">
+                Analysis & Extraction
+              </p>
               <div className="flex flex-wrap gap-2">
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("countWords")}
+                  onClick={() => formatText('countWords')}
                   disabled={!inputText}
                 >
                   Count Words
@@ -377,7 +380,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("extractEmails")}
+                  onClick={() => formatText('extractEmails')}
                   disabled={!inputText}
                 >
                   Extract Emails
@@ -385,7 +388,7 @@ export function TextFormatter() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => formatText("extractUrls")}
+                  onClick={() => formatText('extractUrls')}
                   disabled={!inputText}
                 >
                   Extract URLs

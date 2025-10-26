@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-export const runtime = "edge";
+export const runtime = 'edge';
 
 /**
  * Proxy endpoint to download icons from external URLs
@@ -11,37 +11,25 @@ export async function POST(request: Request) {
     const { url } = await request.json();
 
     if (!url || typeof url !== 'string') {
-      return NextResponse.json(
-        { error: "Invalid URL provided" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid URL provided' }, { status: 400 });
     }
 
     // Validate URL is from allowed domains
-    const allowedDomains = [
-      'image.pollinations.ai',
-      'pollinations.ai',
-    ];
-    
+    const allowedDomains = ['image.pollinations.ai', 'pollinations.ai'];
+
     let urlObj: URL;
     try {
       urlObj = new URL(url);
     } catch {
-      return NextResponse.json(
-        { error: "Invalid URL format" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid URL format' }, { status: 400 });
     }
 
-    const isAllowed = allowedDomains.some(domain => 
-      urlObj.hostname === domain || urlObj.hostname.endsWith(`.${domain}`)
+    const isAllowed = allowedDomains.some(
+      (domain) => urlObj.hostname === domain || urlObj.hostname.endsWith(`.${domain}`),
     );
 
     if (!isAllowed && !url.startsWith('data:')) {
-      return NextResponse.json(
-        { error: "URL domain not allowed" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: 'URL domain not allowed' }, { status: 403 });
     }
 
     // For data URLs, return as-is
@@ -51,7 +39,7 @@ export async function POST(request: Request) {
 
     // Fetch the image from the external URL
     const response = await fetch(url);
-    
+
     if (!response.ok) {
       throw new Error(`Failed to fetch image: ${response.statusText}`);
     }
@@ -71,12 +59,12 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error("Error downloading icon:", error);
+    console.error('Error downloading icon:', error);
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : "Failed to download icon",
+        error: error instanceof Error ? error.message : 'Failed to download icon',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

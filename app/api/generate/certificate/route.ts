@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     if (!recipientName || !achievement) {
       return NextResponse.json(
         { error: 'Missing required fields: recipientName, achievement' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -43,9 +43,6 @@ export async function POST(request: Request) {
     return NextResponse.json(payload);
   } catch (error) {
     console.error('Error generating certificate:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate certificate' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate certificate' }, { status: 500 });
   }
 }

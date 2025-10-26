@@ -1,21 +1,21 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { MoreVertical, Share2, Trash2, Edit2, Star, Users, Eye } from "lucide-react";
-import Image from "next/image";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { MoreVertical, Share2, Trash2, Edit2, Star, Users, Eye } from 'lucide-react';
+import Image from 'next/image';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ShareTemplateDialog } from "./share-template-dialog";
-import { DeleteDialog } from "@/components/delete-dialog";
-import { TemplatePreviewModal } from "./template-preview-modal";
-import { Template } from "@/types/templates";
-import { AuthButton, EditTemplateButton } from "@/components/ui/auth-button";
+} from '@/components/ui/dropdown-menu';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { ShareTemplateDialog } from './share-template-dialog';
+import { DeleteDialog } from '@/components/delete-dialog';
+import { TemplatePreviewModal } from './template-preview-modal';
+import { Template } from '@/types/templates';
+import { AuthButton, EditTemplateButton } from '@/components/ui/auth-button';
 
 type TemplateCardProps = {
   id: string;
@@ -119,20 +119,28 @@ export function TemplateCard({
           email: '[your.email@example.com]',
           phone: '[Your Phone]',
           location: '[Your Location]',
-          summary: 'Professional summary showcasing your experience and skills...'
+          summary: 'Professional summary showcasing your experience and skills...',
         },
         sections: [
           { id: 'experience', title: 'Professional Experience', items: [] },
           { id: 'education', title: 'Education', items: [] },
-          { id: 'skills', title: 'Skills', items: [] }
-        ]
+          { id: 'skills', title: 'Skills', items: [] },
+        ],
       }),
       ...(type === 'presentation' && {
         title: title,
         slides: [
-          { id: '1', type: 'title', content: { title: title, subtitle: 'Professional Presentation' } },
-          { id: '2', type: 'content', content: { title: 'Overview', bullets: ['Key point 1', 'Key point 2', 'Key point 3'] } }
-        ]
+          {
+            id: '1',
+            type: 'title',
+            content: { title: title, subtitle: 'Professional Presentation' },
+          },
+          {
+            id: '2',
+            type: 'content',
+            content: { title: 'Overview', bullets: ['Key point 1', 'Key point 2', 'Key point 3'] },
+          },
+        ],
       }),
       ...(type === 'letter' && {
         recipient: { name: '[Recipient Name]', company: '[Company Name]' },
@@ -140,28 +148,28 @@ export function TemplateCard({
           greeting: 'Dear [Name],',
           body: 'Professional letter content...',
           closing: 'Sincerely,',
-          signature: '[Your Name]'
-        }
+          signature: '[Your Name]',
+        },
       }),
       ...(type === 'cv' && {
         personalInfo: {
           name: '[Your Name]',
           email: '[your.email@example.com]',
           phone: '[Your Phone]',
-          summary: 'Academic and professional summary...'
+          summary: 'Academic and professional summary...',
         },
         sections: [
           { id: 'education', title: 'Education', items: [] },
           { id: 'experience', title: 'Professional Experience', items: [] },
-          { id: 'publications', title: 'Publications', items: [] }
-        ]
-      })
+          { id: 'publications', title: 'Publications', items: [] },
+        ],
+      }),
     },
     is_public: isPublic,
     is_default: false,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
-    user_id: 'current-user'
+    user_id: 'current-user',
   };
 
   if (viewMode === 'list') {
@@ -174,8 +182,14 @@ export function TemplateCard({
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
                   <h3 className="text-base sm:text-lg font-semibold truncate">{title}</h3>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <Badge variant="outline" className="text-xs">{typeLabels[type]}</Badge>
-                    {isPublic && <Badge variant="secondary" className="text-xs">Public</Badge>}
+                    <Badge variant="outline" className="text-xs">
+                      {typeLabels[type]}
+                    </Badge>
+                    {isPublic && (
+                      <Badge variant="secondary" className="text-xs">
+                        Public
+                      </Badge>
+                    )}
                     {difficulty_level && (
                       <Badge className={`text-xs ${difficultyColors[difficulty_level]}`}>
                         {difficulty_level}
@@ -294,7 +308,7 @@ export function TemplateCard({
                     disabled={isToggling}
                     className="w-full sm:hidden text-xs"
                   >
-                    {isToggling ? 'Updating...' : (isPublic ? 'Make Private' : 'Make Public')}
+                    {isToggling ? 'Updating...' : isPublic ? 'Make Private' : 'Make Public'}
                   </Button>
                 )}
               </div>
@@ -337,7 +351,11 @@ export function TemplateCard({
             <div className="absolute top-2 right-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="secondary" size="icon" className="h-8 w-8 bg-white/90 hover:bg-white">
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    className="h-8 w-8 bg-white/90 hover:bg-white"
+                  >
                     <MoreVertical className="h-4 w-4" />
                     <span className="sr-only">More options</span>
                   </Button>
@@ -391,7 +409,9 @@ export function TemplateCard({
 
         <CardHeader className="pb-2 p-3 sm:p-6">
           <div className="flex justify-between items-start gap-2">
-            <CardTitle className="text-base sm:text-lg line-clamp-2 flex-1 min-w-0">{title}</CardTitle>
+            <CardTitle className="text-base sm:text-lg line-clamp-2 flex-1 min-w-0">
+              {title}
+            </CardTitle>
             {!preview_image && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -431,8 +451,14 @@ export function TemplateCard({
             )}
           </div>
           <div className="flex items-center gap-1 sm:gap-2 flex-wrap mt-2">
-            <Badge variant="outline" className="text-xs">{typeLabels[type]}</Badge>
-            {isPublic && <Badge variant="secondary" className="text-xs">Public</Badge>}
+            <Badge variant="outline" className="text-xs">
+              {typeLabels[type]}
+            </Badge>
+            {isPublic && (
+              <Badge variant="secondary" className="text-xs">
+                Public
+              </Badge>
+            )}
             {difficulty_level && (
               <Badge className={`text-xs ${difficultyColors[difficulty_level]}`}>
                 {difficulty_level}
@@ -522,7 +548,7 @@ export function TemplateCard({
                 disabled={isToggling}
                 className="w-full text-xs sm:text-sm"
               >
-                {isToggling ? 'Updating...' : (isPublic ? 'Make Private' : 'Make Public')}
+                {isToggling ? 'Updating...' : isPublic ? 'Make Private' : 'Make Public'}
               </Button>
             )}
           </div>

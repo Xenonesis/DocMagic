@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import { createRoute } from '@/lib/supabase/server';
-import { sendWelcomeEmail } from "@/lib/email";
-import { validateAndSanitize, registrationSchema, detectSqlInjection, sanitizeInput } from '@/lib/validation';
+import { sendWelcomeEmail } from '@/lib/email';
+import {
+  validateAndSanitize,
+  registrationSchema,
+  detectSqlInjection,
+  sanitizeInput,
+} from '@/lib/validation';
 
 // This route handles user registration
 export async function POST(request: Request) {
@@ -10,9 +15,9 @@ export async function POST(request: Request) {
     console.log('[Registration] Environment check:', {
       hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
       hasSupabaseKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      supabaseUrlPrefix: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 20) + '...'
+      supabaseUrlPrefix: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 20) + '...',
     });
-    
+
     const rawBody = await request.json();
     console.log('[Registration] Received request body');
 
@@ -23,10 +28,10 @@ export async function POST(request: Request) {
     // Additional security checks
     if (detectSqlInjection(name) || detectSqlInjection(email)) {
       console.warn('[Registration] SQL injection attempt detected');
-      return new Response(
-        JSON.stringify({ error: 'Invalid input detected' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'Invalid input detected' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Sanitize inputs
@@ -39,7 +44,7 @@ export async function POST(request: Request) {
       console.error('[Registration] Missing Supabase environment variables');
       return new Response(
         JSON.stringify({ error: 'Server configuration error. Please contact support.' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        { status: 500, headers: { 'Content-Type': 'application/json' } },
       );
     }
 
@@ -55,9 +60,9 @@ export async function POST(request: Request) {
       options: {
         data: {
           name: sanitizedName,
-          email: sanitizedEmail
-        }
-      }
+          email: sanitizedEmail,
+        },
+      },
     });
 
     if (error) {
@@ -65,28 +70,28 @@ export async function POST(request: Request) {
       console.error('[Registration] Error details:', {
         message: error.message,
         status: error.status,
-        name: error.name
+        name: error.name,
       });
 
       // Handle specific error cases
       if (error.message.includes('already registered')) {
         return new Response(
           JSON.stringify({ error: 'An account with this email already exists' }),
-          { status: 400, headers: { 'Content-Type': 'application/json' } }
+          { status: 400, headers: { 'Content-Type': 'application/json' } },
         );
       }
 
-      return new Response(
-        JSON.stringify({ error: error.message || 'Failed to create user' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: error.message || 'Failed to create user' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     if (!data.user) {
-      return new Response(
-        JSON.stringify({ error: 'User creation failed' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'User creation failed' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Send welcome email (non-blocking)
@@ -103,10 +108,10 @@ export async function POST(request: Request) {
         user: {
           id: data.user.id,
           email: data.user.email,
-          name: sanitizedName
-        }
+          name: sanitizedName,
+        },
       }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
     );
   } catch (error: any) {
     console.error('[Registration] Unexpected error in registration:', error);
@@ -115,15 +120,15 @@ export async function POST(request: Request) {
     console.error('[Registration] Error details:', {
       message: error.message,
       name: error.name,
-      cause: error.cause
+      cause: error.cause,
     });
-    
+
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: error.message || 'An unexpected error occurred',
-        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined,
       }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
     );
   }
 }

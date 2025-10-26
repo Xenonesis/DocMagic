@@ -7,7 +7,9 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 // Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing required Supabase environment variables. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your environment configuration.');
+  throw new Error(
+    'Missing required Supabase environment variables. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your environment configuration.',
+  );
 }
 
 // Singleton instance to prevent multiple GoTrueClient warnings
@@ -29,7 +31,7 @@ export const createClient = () => {
       flowType: 'implicit', // Use implicit flow - simpler and works better with client-side
       storage: typeof window !== 'undefined' ? window.localStorage : undefined,
       storageKey: 'sb-dheiucdatrgrkozkssrp-auth-token',
-    }
+    },
   });
 
   // Store instance for reuse (browser only)

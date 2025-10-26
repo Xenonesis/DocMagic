@@ -9,6 +9,7 @@ This guide shows you exactly what you should see in your Supabase dashboard when
 **Path**: Dashboard → Authentication → Providers
 
 You should see a list of authentication providers including:
+
 - Email
 - Phone
 - Google
@@ -62,6 +63,7 @@ Look for a section titled **"Web3 Wallet"** with two subsections:
 ```
 
 **Actions**:
+
 1. Click the toggle switch to turn it **ON** (it will turn green/blue)
 2. The toggle should show: `[●]` (enabled state)
 3. Default rate limits are fine for most applications
@@ -89,6 +91,7 @@ Look for a section titled **"Web3 Wallet"** with two subsections:
 ```
 
 **Actions**:
+
 1. Click the toggle switch to turn it **ON** (it will turn green/blue)
 2. The toggle should show: `[●]` (enabled state)
 3. Default rate limits are fine for most applications
@@ -108,6 +111,7 @@ Look for a section titled **"Web3 Wallet"** with two subsections:
 ```
 
 **Actions**:
+
 1. Click the **[Save]** button
 2. Wait for confirmation message: "Settings saved successfully" ✅
 3. The page may refresh automatically
@@ -130,11 +134,13 @@ After saving, both toggles should show as **enabled**:
 ### Toggle States
 
 **Disabled (OFF)**:
+
 ```
 [ ] OFF  (gray/inactive)
 ```
 
 **Enabled (ON)**:
+
 ```
 [●] ON  (green/blue/active)
 ```
@@ -142,6 +148,7 @@ After saving, both toggles should show as **enabled**:
 ### Success Messages
 
 After saving, you should see:
+
 ```
 ┌──────────────────────────────────────────┐
 │  ✅ Settings saved successfully          │
@@ -153,6 +160,7 @@ After saving, you should see:
 ## 📊 What Your Dashboard Should Look Like
 
 ### Before Configuration
+
 ```
 Authentication → Providers → Web3 Wallet
 
@@ -167,6 +175,7 @@ Authentication → Providers → Web3 Wallet
 ```
 
 ### After Configuration
+
 ```
 Authentication → Providers → Web3 Wallet
 
@@ -233,10 +242,12 @@ After configuration, users should see:
 ### Issue 1: Web3 Wallet Section Not Visible
 
 **What you might see**:
+
 - No "Web3 Wallet" section in the providers list
 - Only traditional providers (Email, Google, etc.)
 
 **Solution**:
+
 - Ensure you're on the latest Supabase version
 - Check if your project supports Web3 authentication
 - Contact Supabase support
@@ -246,10 +257,12 @@ After configuration, users should see:
 ### Issue 2: Toggles Won't Stay Enabled
 
 **What you might see**:
+
 - Toggle switches back to OFF after clicking
 - Error message appears
 
 **Solution**:
+
 - Check browser console for errors
 - Verify you have admin permissions
 - Try refreshing the page
@@ -260,10 +273,12 @@ After configuration, users should see:
 ### Issue 3: Save Button Disabled
 
 **What you might see**:
+
 - Save button is grayed out
 - Can't click Save
 
 **Solution**:
+
 - Make sure you've made changes
 - Check if there are validation errors
 - Verify all required fields are filled
@@ -276,7 +291,7 @@ Your Supabase dashboard should look similar to the image you provided, with:
 
 1. **Left sidebar**: Authentication section highlighted
 2. **Main panel**: Providers tab selected
-3. **Web3 Wallet section**: 
+3. **Web3 Wallet section**:
    - "Enable Sign in with Ethereum" toggle: **ON** ✅
    - "Enable Sign in with Solana" toggle: **ON** ✅
 4. **Bottom**: Save button visible
@@ -292,6 +307,7 @@ Once you see the correct visual indicators:
 3. ✅ No error messages
 
 Proceed to:
+
 - Set `NEXT_PUBLIC_ENABLE_WEB3_AUTH=true` in `.env.local`
 - Restart your development server
 - Test authentication with MetaMask and Phantom

@@ -13,7 +13,7 @@ if (typeof window !== 'undefined') {
 function applyNavFix() {
   // Create a style element
   const style = document.createElement('style');
-  
+
   // Add the CSS rules
   style.textContent = `
     /* Resume Builder Navigation Styles */
@@ -90,7 +90,7 @@ function applyNavFix() {
       }
     }
   `;
-  
+
   // Append the style element to the head
   document.head.appendChild(style);
 }

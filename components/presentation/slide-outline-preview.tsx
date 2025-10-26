@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { 
-  FileText, 
-  List, 
-  BarChart3, 
-  Image, 
-  Users, 
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import {
+  FileText,
+  List,
+  BarChart3,
+  Image,
+  Users,
   Zap,
   Sparkles,
   ArrowRight,
@@ -20,8 +20,8 @@ import {
   LineChart,
   Activity,
   Camera,
-  Palette
-} from "lucide-react";
+  Palette,
+} from 'lucide-react';
 
 interface SlideOutline {
   title: string;
@@ -106,18 +106,22 @@ export function SlideOutlinePreview({ outlines }: SlideOutlinePreviewProps) {
   };
 
   const getAIInsights = () => {
-    const chartSlides = outlines.filter(o => o.type === 'chart').length;
-    const listSlides = outlines.filter(o => o.type === 'list').length;
-    const splitSlides = outlines.filter(o => o.type === 'split').length;
-    const imageSlides = outlines.filter(o => o.imageUrl || o.imageQuery).length;
-    
+    const chartSlides = outlines.filter((o) => o.type === 'chart').length;
+    const listSlides = outlines.filter((o) => o.type === 'list').length;
+    const splitSlides = outlines.filter((o) => o.type === 'split').length;
+    const imageSlides = outlines.filter((o) => o.imageUrl || o.imageQuery).length;
+
     const insights = [];
-    
+
     if (chartSlides > 0) {
-      insights.push(`${chartSlides} professional chart${chartSlides > 1 ? 's' : ''} for data impact`);
+      insights.push(
+        `${chartSlides} professional chart${chartSlides > 1 ? 's' : ''} for data impact`,
+      );
     }
     if (listSlides > 0) {
-      insights.push(`${listSlides} structured content slide${listSlides > 1 ? 's' : ''} for clarity`);
+      insights.push(
+        `${listSlides} structured content slide${listSlides > 1 ? 's' : ''} for clarity`,
+      );
     }
     if (splitSlides > 0) {
       insights.push(`${splitSlides} visual layout${splitSlides > 1 ? 's' : ''} for engagement`);
@@ -125,7 +129,7 @@ export function SlideOutlinePreview({ outlines }: SlideOutlinePreviewProps) {
     if (imageSlides > 0) {
       insights.push(`${imageSlides} high-quality image${imageSlides > 1 ? 's' : ''} from Pexels`);
     }
-    
+
     return insights;
   };
 
@@ -139,7 +143,7 @@ export function SlideOutlinePreview({ outlines }: SlideOutlinePreviewProps) {
             <Brain className="h-5 w-5 text-yellow-500" />
             <h3 className="font-semibold bolt-gradient-text">AI Analysis Results</h3>
           </div>
-          
+
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             <div className="text-center p-4 glass-effect rounded-xl hover:scale-105 transition-transform">
               <div className="bolt-gradient-text text-3xl font-bold">{outlines.length}</div>
@@ -147,19 +151,19 @@ export function SlideOutlinePreview({ outlines }: SlideOutlinePreviewProps) {
             </div>
             <div className="text-center p-4 glass-effect rounded-xl hover:scale-105 transition-transform">
               <div className="bolt-gradient-text text-3xl font-bold">
-                {new Set(outlines.map(o => o.type)).size}
+                {new Set(outlines.map((o) => o.type)).size}
               </div>
               <div className="text-sm text-muted-foreground">Layout Types</div>
             </div>
             <div className="text-center p-4 glass-effect rounded-xl hover:scale-105 transition-transform">
               <div className="bolt-gradient-text text-3xl font-bold">
-                {outlines.filter(o => o.imageUrl || o.imageQuery).length}
+                {outlines.filter((o) => o.imageUrl || o.imageQuery).length}
               </div>
               <div className="text-sm text-muted-foreground">Pro Images</div>
             </div>
             <div className="text-center p-4 glass-effect rounded-xl hover:scale-105 transition-transform">
               <div className="bolt-gradient-text text-3xl font-bold">
-                {outlines.filter(o => o.chartData).length}
+                {outlines.filter((o) => o.chartData).length}
               </div>
               <div className="text-sm text-muted-foreground">Data Charts</div>
             </div>
@@ -172,7 +176,11 @@ export function SlideOutlinePreview({ outlines }: SlideOutlinePreviewProps) {
             </div>
             <div className="flex flex-wrap gap-2">
               {getAIInsights().map((insight, index) => (
-                <Badge key={index} variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200 hover:scale-105 transition-transform">
+                <Badge
+                  key={index}
+                  variant="outline"
+                  className="text-xs bg-green-50 text-green-700 border-green-200 hover:scale-105 transition-transform"
+                >
                   <TrendingUp className="h-3 w-3 mr-1" />
                   {insight}
                 </Badge>
@@ -185,8 +193,8 @@ export function SlideOutlinePreview({ outlines }: SlideOutlinePreviewProps) {
       {/* Slide Outline Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {outlines.map((outline, index) => (
-          <Card 
-            key={index} 
+          <Card
+            key={index}
             className="glass-effect border-yellow-400/20 hover:shadow-xl transition-all duration-300 group relative overflow-hidden hover:scale-105"
           >
             {/* Slide number indicator */}
@@ -206,8 +214,8 @@ export function SlideOutlinePreview({ outlines }: SlideOutlinePreviewProps) {
               <div className="space-y-4">
                 {/* Slide type badge */}
                 <div className="flex items-center gap-2">
-                  <Badge 
-                    variant="outline" 
+                  <Badge
+                    variant="outline"
                     className={`text-xs ${getSlideTypeColor(outline.type)} flex items-center gap-1 font-medium`}
                   >
                     {getSlideIcon(outline.type)}
@@ -248,7 +256,8 @@ export function SlideOutlinePreview({ outlines }: SlideOutlinePreviewProps) {
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       {getChartIcon(outline.chartData.type)}
                       <span className="font-medium">
-                        {outline.chartData.type} chart ({outline.chartData.data?.length || 0} data points)
+                        {outline.chartData.type} chart ({outline.chartData.data?.length || 0} data
+                        points)
                       </span>
                     </div>
                   )}
@@ -266,8 +275,8 @@ export function SlideOutlinePreview({ outlines }: SlideOutlinePreviewProps) {
                 <div className="mt-4 h-24 rounded-lg bg-gradient-to-br from-muted/50 to-muted/80 border border-border/50 flex items-center justify-center group-hover:from-yellow-50 group-hover:to-blue-50 transition-all relative overflow-hidden">
                   {/* Show actual image preview if available */}
                   {outline.imageUrl && (
-                    <img 
-                      src={outline.imageUrl} 
+                    <img
+                      src={outline.imageUrl}
                       alt={outline.title}
                       className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity rounded-lg"
                     />
@@ -292,7 +301,7 @@ export function SlideOutlinePreview({ outlines }: SlideOutlinePreviewProps) {
             <Zap className="h-5 w-5 text-yellow-500" />
             <h3 className="font-semibold">AI-Optimized Presentation Flow</h3>
           </div>
-          
+
           <div className="flex flex-wrap items-center gap-3 mb-4">
             {outlines.map((outline, index) => (
               <div key={index} className="flex items-center">
@@ -300,12 +309,18 @@ export function SlideOutlinePreview({ outlines }: SlideOutlinePreviewProps) {
                   {getSlideIcon(outline.type)}
                   <span className="max-w-[140px] truncate">{outline.title}</span>
                   {outline.chartData && (
-                    <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 border-purple-200 ml-1">
+                    <Badge
+                      variant="outline"
+                      className="text-xs bg-purple-50 text-purple-700 border-purple-200 ml-1"
+                    >
                       Chart
                     </Badge>
                   )}
                   {(outline.imageUrl || outline.imageQuery) && (
-                    <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200 ml-1">
+                    <Badge
+                      variant="outline"
+                      className="text-xs bg-blue-50 text-blue-700 border-blue-200 ml-1"
+                    >
                       Image
                     </Badge>
                   )}
@@ -316,15 +331,18 @@ export function SlideOutlinePreview({ outlines }: SlideOutlinePreviewProps) {
               </div>
             ))}
           </div>
-          
+
           <div className="glass-effect p-4 rounded-xl bg-green-50/50 border border-green-200">
             <div className="flex items-start gap-3">
               <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="text-sm font-medium text-green-800 mb-1">Professional Quality Guaranteed</p>
+                <p className="text-sm font-medium text-green-800 mb-1">
+                  Professional Quality Guaranteed
+                </p>
                 <p className="text-sm text-green-700">
-                  AI has optimized your presentation with Canva-style design, high-quality Pexels images, 
-                  meaningful data visualizations, and logical content flow for maximum audience engagement.
+                  AI has optimized your presentation with Canva-style design, high-quality Pexels
+                  images, meaningful data visualizations, and logical content flow for maximum
+                  audience engagement.
                 </p>
               </div>
             </div>

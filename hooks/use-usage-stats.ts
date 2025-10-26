@@ -17,7 +17,7 @@ export function useUsageStats() {
     templatesCreated: 0,
     successRate: 0,
     loading: true,
-    error: null
+    error: null,
   });
 
   const supabase = createClient();
@@ -28,11 +28,14 @@ export function useUsageStats() {
 
   const loadUsageStats = async () => {
     try {
-      setStats(prev => ({ ...prev, loading: true, error: null }));
+      setStats((prev) => ({ ...prev, loading: true, error: null }));
 
       // Get current user
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
       if (authError || !user) {
         throw new Error('User not authenticated');
       }
@@ -52,9 +55,9 @@ export function useUsageStats() {
           console.warn('Documents table not accessible:', docsError);
         } else {
           documentsCreated = documents?.length || 0;
-          
+
           // Count unique template types used (rough estimate of templates used)
-          const uniqueTypes = new Set(documents?.map(doc => doc.type) || []);
+          const uniqueTypes = new Set(documents?.map((doc) => doc.type) || []);
           templatesUsed = uniqueTypes.size;
         }
       } catch (error) {
@@ -86,15 +89,14 @@ export function useUsageStats() {
         templatesCreated,
         successRate: Math.round(successRate),
         loading: false,
-        error: null
+        error: null,
       });
-
     } catch (error) {
       console.error('Error loading usage stats:', error);
-      setStats(prev => ({
+      setStats((prev) => ({
         ...prev,
         loading: false,
-        error: error instanceof Error ? error.message : 'Failed to load usage statistics'
+        error: error instanceof Error ? error.message : 'Failed to load usage statistics',
       }));
     }
   };

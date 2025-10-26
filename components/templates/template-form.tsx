@@ -1,10 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Form,
   FormControl,
@@ -13,20 +13,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Loader2, Sparkles, Wand2, FileText, Presentation, Mail, User } from "lucide-react";
-import { TemplateFormValues } from "@/types/template";
+} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Loader2, Sparkles, Wand2, FileText, Presentation, Mail, User } from 'lucide-react';
+import { TemplateFormValues } from '@/types/template';
 import { useState } from 'react';
 
 import { z } from 'zod';
@@ -34,11 +34,11 @@ import { z } from 'zod';
 // Define the form schema
 export const formSchema = z.object({
   title: z.string().min(3, {
-    message: "Title must be at least 3 characters.",
+    message: 'Title must be at least 3 characters.',
   }),
   description: z.string().optional(),
-  type: z.enum(["resume", "presentation", "letter", "cv"], {
-    required_error: "Please select a document type.",
+  type: z.enum(['resume', 'presentation', 'letter', 'cv'], {
+    required_error: 'Please select a document type.',
   }),
   content: z.record(z.any()).optional(),
   isPublic: z.boolean().default(false),
@@ -51,7 +51,7 @@ interface TemplateFormProps {
   onSubmit: (values: TemplateFormValues) => Promise<void>;
   isSubmitting: boolean;
   submitButtonText?: string;
-  submitButtonVariant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  submitButtonVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
   showPublicToggle?: boolean;
 }
 
@@ -59,8 +59,8 @@ export function TemplateForm({
   defaultValues,
   onSubmit,
   isSubmitting,
-  submitButtonText = "Create Template",
-  submitButtonVariant = "default",
+  submitButtonText = 'Create Template',
+  submitButtonVariant = 'default',
   showPublicToggle = true,
 }: TemplateFormProps) {
   const router = useRouter();
@@ -70,28 +70,28 @@ export function TemplateForm({
   const form = useForm<TemplateFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      type: "resume",
+      title: '',
+      description: '',
+      type: 'resume',
       isPublic: false,
       useAI: false,
-      aiPrompt: "",
+      aiPrompt: '',
       ...defaultValues,
     },
   });
 
-  const documentType = form.watch("type");
-  const useAI = form.watch("useAI");
+  const documentType = form.watch('type');
+  const useAI = form.watch('useAI');
 
   const generateAITemplate = async () => {
-    const aiPrompt = form.getValues("aiPrompt");
-    const type = form.getValues("type");
+    const aiPrompt = form.getValues('aiPrompt');
+    const type = form.getValues('type');
 
     if (!aiPrompt.trim()) {
       toast({
-        title: "Error",
-        description: "Please provide a description for AI generation.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Please provide a description for AI generation.',
+        variant: 'destructive',
       });
       return;
     }
@@ -117,25 +117,25 @@ export function TemplateForm({
 
       // Update form with AI-generated content
       if (data.title) {
-        form.setValue("title", data.title);
+        form.setValue('title', data.title);
       }
       if (data.description) {
-        form.setValue("description", data.description);
+        form.setValue('description', data.description);
       }
       if (data.content) {
-        form.setValue("content", data.content);
+        form.setValue('content', data.content);
       }
 
       toast({
-        title: "Success",
-        description: "AI template generated successfully!",
+        title: 'Success',
+        description: 'AI template generated successfully!',
       });
     } catch (error) {
       console.error('Error generating AI template:', error);
       toast({
-        title: "Error",
-        description: "Failed to generate template with AI. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to generate template with AI. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsGeneratingAI(false);
@@ -148,9 +148,9 @@ export function TemplateForm({
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
-        title: "Error",
-        description: "An error occurred while saving the template. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'An error occurred while saving the template. Please try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -190,7 +190,10 @@ export function TemplateForm({
                     </CardDescription>
                   </div>
                 </div>
-                <Badge variant="secondary" className="bg-yellow-200 dark:bg-yellow-800/50 text-yellow-800 dark:text-yellow-200 border-yellow-300 dark:border-yellow-600 self-start sm:self-center flex-shrink-0">
+                <Badge
+                  variant="secondary"
+                  className="bg-yellow-200 dark:bg-yellow-800/50 text-yellow-800 dark:text-yellow-200 border-yellow-300 dark:border-yellow-600 self-start sm:self-center flex-shrink-0"
+                >
                   <Wand2 className="h-3 w-3 mr-1" />
                   <span className="text-xs sm:text-sm">AI Powered</span>
                 </Badge>
@@ -253,7 +256,7 @@ export function TemplateForm({
                   <Button
                     type="button"
                     onClick={generateAITemplate}
-                    disabled={isGeneratingAI || !form.getValues("aiPrompt")?.trim()}
+                    disabled={isGeneratingAI || !form.getValues('aiPrompt')?.trim()}
                     className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 dark:from-yellow-600 dark:to-orange-600 hover:from-yellow-600 hover:to-orange-600 dark:hover:from-yellow-700 dark:hover:to-orange-700 text-white font-semibold py-3 text-sm sm:text-base shadow-lg hover:shadow-xl transition-all duration-200"
                     size="lg"
                   >
@@ -278,12 +281,20 @@ export function TemplateForm({
               {!useAI && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="p-3 bg-white/50 dark:bg-gray-800/30 rounded-lg border border-yellow-200 dark:border-yellow-700">
-                    <div className="text-sm font-medium text-foreground mb-1">💼 Resume Example</div>
-                    <div className="text-xs text-muted-foreground">"Modern tech resume with skills matrix"</div>
+                    <div className="text-sm font-medium text-foreground mb-1">
+                      💼 Resume Example
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      "Modern tech resume with skills matrix"
+                    </div>
                   </div>
                   <div className="p-3 bg-white/50 dark:bg-gray-800/30 rounded-lg border border-yellow-200 dark:border-yellow-700">
-                    <div className="text-sm font-medium text-foreground mb-1">📊 Presentation Example</div>
-                    <div className="text-xs text-muted-foreground">"Business pitch deck with charts"</div>
+                    <div className="text-sm font-medium text-foreground mb-1">
+                      📊 Presentation Example
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      "Business pitch deck with charts"
+                    </div>
                   </div>
                 </div>
               )}
@@ -300,7 +311,9 @@ export function TemplateForm({
                 Template Details
               </CardTitle>
               <CardDescription className="text-sm">
-                {useAI ? "✅ Review and modify the AI-generated details below:" : "📝 Fill in the template details manually:"}
+                {useAI
+                  ? '✅ Review and modify the AI-generated details below:'
+                  : '📝 Fill in the template details manually:'}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
@@ -310,7 +323,9 @@ export function TemplateForm({
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm sm:text-base font-medium">📄 Template Title</FormLabel>
+                      <FormLabel className="text-sm sm:text-base font-medium">
+                        📄 Template Title
+                      </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="e.g., Modern Software Engineer Resume"
@@ -331,7 +346,9 @@ export function TemplateForm({
                   name="type"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm sm:text-base font-medium">📋 Document Type</FormLabel>
+                      <FormLabel className="text-sm sm:text-base font-medium">
+                        📋 Document Type
+                      </FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="h-10 sm:h-11 text-sm sm:text-base">
@@ -344,7 +361,9 @@ export function TemplateForm({
                               <User className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500" />
                               <div>
                                 <div className="font-medium text-sm">Resume</div>
-                                <div className="text-xs text-gray-500">Professional resume template</div>
+                                <div className="text-xs text-gray-500">
+                                  Professional resume template
+                                </div>
                               </div>
                             </div>
                           </SelectItem>
@@ -353,7 +372,9 @@ export function TemplateForm({
                               <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
                               <div>
                                 <div className="font-medium text-sm">CV</div>
-                                <div className="text-xs text-gray-500">Academic curriculum vitae</div>
+                                <div className="text-xs text-gray-500">
+                                  Academic curriculum vitae
+                                </div>
                               </div>
                             </div>
                           </SelectItem>
@@ -362,7 +383,9 @@ export function TemplateForm({
                               <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-purple-500" />
                               <div>
                                 <div className="font-medium text-sm">Cover Letter</div>
-                                <div className="text-xs text-gray-500">Professional cover letter</div>
+                                <div className="text-xs text-gray-500">
+                                  Professional cover letter
+                                </div>
                               </div>
                             </div>
                           </SelectItem>
@@ -391,7 +414,9 @@ export function TemplateForm({
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm sm:text-base font-medium">📝 Description (Optional)</FormLabel>
+                    <FormLabel className="text-sm sm:text-base font-medium">
+                      📝 Description (Optional)
+                    </FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="e.g., A clean, modern resume template perfect for tech professionals with emphasis on skills and achievements..."
@@ -425,7 +450,8 @@ export function TemplateForm({
                           🌐 Make this template public
                         </FormLabel>
                         <FormDescription className="text-xs sm:text-sm">
-                          Public templates can be discovered and used by other users. You'll still own and control the template.
+                          Public templates can be discovered and used by other users. You'll still
+                          own and control the template.
                         </FormDescription>
                       </div>
                     </FormItem>
@@ -443,10 +469,9 @@ export function TemplateForm({
                 🎨 Template Preview
               </CardTitle>
               <CardDescription className="text-sm">
-                {useAI && form.getValues("content")
-                  ? "✨ AI-generated template content will appear here"
-                  : `📋 Your ${documentType} template content will be created based on your selections`
-                }
+                {useAI && form.getValues('content')
+                  ? '✨ AI-generated template content will appear here'
+                  : `📋 Your ${documentType} template content will be created based on your selections`}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 sm:p-6">
@@ -461,8 +486,10 @@ export function TemplateForm({
                   <div className="font-medium text-foreground text-sm sm:text-base">
                     {documentType === 'resume' && 'Resume template editor will be displayed here'}
                     {documentType === 'cv' && 'CV template editor will be displayed here'}
-                    {documentType === 'letter' && 'Cover letter template editor will be displayed here'}
-                    {documentType === 'presentation' && 'Presentation template editor will be displayed here'}
+                    {documentType === 'letter' &&
+                      'Cover letter template editor will be displayed here'}
+                    {documentType === 'presentation' &&
+                      'Presentation template editor will be displayed here'}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     Template structure and styling options will appear after creation

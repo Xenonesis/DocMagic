@@ -1,12 +1,12 @@
-"use client";
-import { SiteHeader } from "@/components/site-header";
-import { ResumeGenerator } from "@/components/resume/resume-generator";
-import { ATSAnalyzer } from "@/components/resume/ats-analyzer";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, FileText, Zap, Star, Wand2, Target } from "lucide-react";
-import { useEffect, useState } from "react";
-import { ResumeGeneratorSkeleton } from "@/components/ui/skeleton";
-import { FloatingHelpButton } from "@/components/floating-help-button";
+'use client';
+import { SiteHeader } from '@/components/site-header';
+import { ResumeGenerator } from '@/components/resume/resume-generator';
+import { ATSAnalyzer } from '@/components/resume/ats-analyzer';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Sparkles, FileText, Zap, Star, Wand2, Target } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ResumeGeneratorSkeleton } from '@/components/ui/skeleton';
+import { FloatingHelpButton } from '@/components/floating-help-button';
 
 export default function ResumePage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +44,7 @@ export default function ResumePage() {
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-              Create & Optimize Your{" "}
+              Create & Optimize Your{' '}
               <span className="bolt-gradient-text relative inline-block">
                 Professional Resume
                 <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
@@ -54,43 +54,25 @@ export default function ResumePage() {
             </h1>
 
             <p className="text-base sm:text-lg lg:text-xl leading-7 sm:leading-8 text-muted-foreground max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-0">
-              Generate{" "}
-              <span className="font-semibold text-yellow-600">
-                AI-powered resumes
-              </span>{" "}
-              and analyze{" "}
-              <span className="font-semibold text-blue-600">
-                ATS compatibility
-              </span>{" "}
-              to land your dream job with{" "}
-              <span className="font-semibold bolt-gradient-text">
-                magical precision
-              </span>
+              Generate <span className="font-semibold text-yellow-600">AI-powered resumes</span> and
+              analyze <span className="font-semibold text-blue-600">ATS compatibility</span> to land
+              your dream job with{' '}
+              <span className="font-semibold bolt-gradient-text">magical precision</span>
             </p>
 
             {/* Stats bar */}
             <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4 sm:gap-6">
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
                 <span className="bolt-gradient-text font-bold text-sm">AI</span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Powered
-                </span>
+                <span className="text-muted-foreground text-xs ml-1">Powered</span>
               </div>
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  ATS
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Optimized
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">ATS</span>
+                <span className="text-muted-foreground text-xs ml-1">Optimized</span>
               </div>
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Pro
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Templates
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">Pro</span>
+                <span className="text-muted-foreground text-xs ml-1">Templates</span>
               </div>
             </div>
           </div>
@@ -122,11 +104,7 @@ export default function ResumePage() {
               <div className="glass-effect p-6 sm:p-8 rounded-2xl border border-yellow-400/20 relative overflow-hidden">
                 <div className="absolute inset-0 shimmer opacity-20"></div>
                 <div className="relative z-10">
-                  {isLoading ? (
-                    <ResumeGeneratorSkeleton />
-                  ) : (
-                    <ResumeGenerator />
-                  )}
+                  {isLoading ? <ResumeGeneratorSkeleton /> : <ResumeGenerator />}
                 </div>
               </div>
             </TabsContent>
@@ -154,21 +132,16 @@ export default function ResumePage() {
                   <Star className="h-5 w-5 text-blue-500 animate-pulse" />
                 </div>
                 <p className="text-muted-foreground text-sm mb-4">
-                  Join thousands who've landed their dream jobs with AI-powered
-                  resumes
+                  Join thousands who've landed their dream jobs with AI-powered resumes
                 </p>
                 <div className="flex flex-wrap justify-center gap-3">
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Star className="inline h-3 w-3 text-yellow-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      95% Success Rate
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">95% Success Rate</span>
                   </div>
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Zap className="inline h-3 w-3 text-blue-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      ATS Optimized
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">ATS Optimized</span>
                   </div>
                 </div>
               </div>
@@ -176,7 +149,7 @@ export default function ResumePage() {
           </div>
         </div>
       </main>
-      
+
       {/* Floating Help Button */}
       <FloatingHelpButton />
     </div>

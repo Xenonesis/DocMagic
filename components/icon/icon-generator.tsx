@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Sparkles, 
-  Download, 
-  Loader2, 
+} from '@/components/ui/select';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Sparkles,
+  Download,
+  Loader2,
   Palette,
   RefreshCw,
   Heart,
@@ -26,65 +26,65 @@ import {
   Copy,
   Trash2,
   DownloadCloud,
-  Layers
-} from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { useSubscription } from "@/hooks/use-subscription";
-import { ExportAuthDialog } from "@/components/ui/export-auth-dialog";
+  Layers,
+} from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useSubscription } from '@/hooks/use-subscription';
+import { ExportAuthDialog } from '@/components/ui/export-auth-dialog';
 
 const iconStyles = [
-  { value: "flat", label: "Flat Design", description: "Modern, minimalist 2D icons" },
-  { value: "3d", label: "3D Rendered", description: "Realistic 3D styled icons" },
-  { value: "gradient", label: "Gradient", description: "Colorful gradient effects" },
-  { value: "line", label: "Line Art", description: "Simple outline icons" },
-  { value: "sketch", label: "Hand-Drawn", description: "Sketchy, artistic style" },
-  { value: "minimalist", label: "Minimalist", description: "Ultra-simple design" },
-  { value: "cartoon", label: "Cartoon", description: "Playful, cartoon style" },
-  { value: "isometric", label: "Isometric", description: "Isometric 3D perspective" },
+  { value: 'flat', label: 'Flat Design', description: 'Modern, minimalist 2D icons' },
+  { value: '3d', label: '3D Rendered', description: 'Realistic 3D styled icons' },
+  { value: 'gradient', label: 'Gradient', description: 'Colorful gradient effects' },
+  { value: 'line', label: 'Line Art', description: 'Simple outline icons' },
+  { value: 'sketch', label: 'Hand-Drawn', description: 'Sketchy, artistic style' },
+  { value: 'minimalist', label: 'Minimalist', description: 'Ultra-simple design' },
+  { value: 'cartoon', label: 'Cartoon', description: 'Playful, cartoon style' },
+  { value: 'isometric', label: 'Isometric', description: 'Isometric 3D perspective' },
 ];
 
 const iconSizes = [
-  { value: "256", label: "256x256", description: "Small icons" },
-  { value: "512", label: "512x512", description: "Standard size" },
-  { value: "1024", label: "1024x1024", description: "High resolution" },
+  { value: '256', label: '256x256', description: 'Small icons' },
+  { value: '512', label: '512x512', description: 'Standard size' },
+  { value: '1024', label: '1024x1024', description: 'High resolution' },
 ];
 
 const colorSchemes = [
-  { value: "vibrant", label: "Vibrant", colors: "🌈" },
-  { value: "pastel", label: "Pastel", colors: "🎨" },
-  { value: "monochrome", label: "Monochrome", colors: "⚫" },
-  { value: "warm", label: "Warm", colors: "🔥" },
-  { value: "cool", label: "Cool", colors: "❄️" },
-  { value: "custom", label: "Custom", colors: "✨" },
+  { value: 'vibrant', label: 'Vibrant', colors: '🌈' },
+  { value: 'pastel', label: 'Pastel', colors: '🎨' },
+  { value: 'monochrome', label: 'Monochrome', colors: '⚫' },
+  { value: 'warm', label: 'Warm', colors: '🔥' },
+  { value: 'cool', label: 'Cool', colors: '❄️' },
+  { value: 'custom', label: 'Custom', colors: '✨' },
 ];
 
 export function IconGenerator() {
-  const [prompt, setPrompt] = useState("");
-  const [style, setStyle] = useState("flat");
-  const [size, setSize] = useState("512");
-  const [colorScheme, setColorScheme] = useState("vibrant");
-  const [customColor, setCustomColor] = useState("#3b82f6");
-  const [provider, setProvider] = useState<"pollinations" | "openrouter">("pollinations");
+  const [prompt, setPrompt] = useState('');
+  const [style, setStyle] = useState('flat');
+  const [size, setSize] = useState('512');
+  const [colorScheme, setColorScheme] = useState('vibrant');
+  const [customColor, setCustomColor] = useState('#3b82f6');
+  const [provider, setProvider] = useState<'pollinations' | 'openrouter'>('pollinations');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedIcons, setGeneratedIcons] = useState<string[]>([]);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [batchCount, setBatchCount] = useState(4);
-  const [editPrompt, setEditPrompt] = useState("");
+  const [editPrompt, setEditPrompt] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [selectedIcons, setSelectedIcons] = useState<Set<string>>(new Set());
   const [isBatchMode, setIsBatchMode] = useState(false);
-  
+
   const { toast } = useToast();
   const { subscription, isLoading: subscriptionLoading } = useSubscription();
 
   const handleEnhancePrompt = async () => {
     if (!prompt.trim()) {
       toast({
-        title: "No prompt to enhance",
-        description: "Please enter a basic description first",
-        variant: "destructive",
+        title: 'No prompt to enhance',
+        description: 'Please enter a basic description first',
+        variant: 'destructive',
       });
       return;
     }
@@ -92,36 +92,36 @@ export function IconGenerator() {
     setIsEnhancing(true);
 
     try {
-      const response = await fetch("/api/enhance-prompt", {
-        method: "POST",
+      const response = await fetch('/api/enhance-prompt', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           prompt,
-          type: "icon",
+          type: 'icon',
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to enhance prompt");
+        throw new Error('Failed to enhance prompt');
       }
 
       const data = await response.json();
-      
+
       if (data.enhancedPrompt) {
         setPrompt(data.enhancedPrompt);
         toast({
-          title: "✨ Prompt Enhanced!",
-          description: "Your description has been improved with AI",
+          title: '✨ Prompt Enhanced!',
+          description: 'Your description has been improved with AI',
         });
       }
     } catch (error) {
-      console.error("Error enhancing prompt:", error);
+      console.error('Error enhancing prompt:', error);
       toast({
-        title: "Enhancement Failed",
-        description: "Failed to enhance prompt. Please try again.",
-        variant: "destructive",
+        title: 'Enhancement Failed',
+        description: 'Failed to enhance prompt. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsEnhancing(false);
@@ -131,9 +131,9 @@ export function IconGenerator() {
   const handleGenerate = async () => {
     if (!prompt.trim()) {
       toast({
-        title: "Description Required",
-        description: "Please describe the icon you want to create",
-        variant: "destructive",
+        title: 'Description Required',
+        description: 'Please describe the icon you want to create',
+        variant: 'destructive',
       });
       return;
     }
@@ -143,16 +143,16 @@ export function IconGenerator() {
     setSelectedIcon(null);
 
     try {
-      const response = await fetch("/api/generate/icon", {
-        method: "POST",
+      const response = await fetch('/api/generate/icon', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           prompt,
           style,
           size: parseInt(size),
-          colorScheme: colorScheme === "custom" ? customColor : colorScheme,
+          colorScheme: colorScheme === 'custom' ? customColor : colorScheme,
           provider,
           count: batchCount,
         }),
@@ -160,27 +160,28 @@ export function IconGenerator() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Failed to generate icon");
+        throw new Error(error.error || 'Failed to generate icon');
       }
 
       const data = await response.json();
-      
+
       if (data.icons && data.icons.length > 0) {
         setGeneratedIcons(data.icons);
         setSelectedIcon(data.icons[0]);
         toast({
-          title: "✨ Icons Generated!",
+          title: '✨ Icons Generated!',
           description: `Created ${data.icons.length} unique icon${data.icons.length > 1 ? 's' : ''} for you`,
         });
       } else {
-        throw new Error("No icons generated");
+        throw new Error('No icons generated');
       }
     } catch (error) {
-      console.error("Error generating icon:", error);
+      console.error('Error generating icon:', error);
       toast({
-        title: "Generation Failed",
-        description: error instanceof Error ? error.message : "Failed to generate icons. Please try again.",
-        variant: "destructive",
+        title: 'Generation Failed',
+        description:
+          error instanceof Error ? error.message : 'Failed to generate icons. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsGenerating(false);
@@ -223,7 +224,7 @@ export function IconGenerator() {
       }
 
       // Create and trigger download
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = downloadUrl;
       link.download = filename;
       document.body.appendChild(link);
@@ -236,15 +237,15 @@ export function IconGenerator() {
       }
 
       toast({
-        title: "✅ Download Started",
-        description: "Your icon is being downloaded",
+        title: '✅ Download Started',
+        description: 'Your icon is being downloaded',
       });
     } catch (error) {
-      console.error("Download error:", error);
+      console.error('Download error:', error);
       toast({
-        title: "Download Failed",
-        description: "Failed to download icon. Please try again.",
-        variant: "destructive",
+        title: 'Download Failed',
+        description: 'Failed to download icon. Please try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -255,28 +256,28 @@ export function IconGenerator() {
     try {
       if (navigator.share) {
         await navigator.share({
-          title: "Check out my AI-generated icon!",
+          title: 'Check out my AI-generated icon!',
           text: `Generated with docverse: ${prompt}`,
           url: selectedIcon,
         });
       } else {
         await navigator.clipboard.writeText(selectedIcon);
         toast({
-          title: "📋 Link Copied",
-          description: "Icon link copied to clipboard",
+          title: '📋 Link Copied',
+          description: 'Icon link copied to clipboard',
         });
       }
     } catch (error) {
-      console.error("Share error:", error);
+      console.error('Share error:', error);
     }
   };
 
   const handleEditIcon = async () => {
     if (!selectedIcon || !editPrompt.trim()) {
       toast({
-        title: "Edit Instructions Required",
-        description: "Please describe how you want to modify the icon",
-        variant: "destructive",
+        title: 'Edit Instructions Required',
+        description: 'Please describe how you want to modify the icon',
+        variant: 'destructive',
       });
       return;
     }
@@ -284,41 +285,41 @@ export function IconGenerator() {
     setIsEditing(true);
 
     try {
-      const response = await fetch("/api/generate/icon", {
-        method: "POST",
+      const response = await fetch('/api/generate/icon', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           prompt: `${prompt}. Modification: ${editPrompt}`,
           style,
           size: parseInt(size),
-          colorScheme: colorScheme === "custom" ? customColor : colorScheme,
+          colorScheme: colorScheme === 'custom' ? customColor : colorScheme,
           provider,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to edit icon");
+        throw new Error('Failed to edit icon');
       }
 
       const data = await response.json();
-      
+
       if (data.icons && data.icons.length > 0) {
         setGeneratedIcons([...generatedIcons, ...data.icons]);
         setSelectedIcon(data.icons[0]);
-        setEditPrompt("");
+        setEditPrompt('');
         toast({
-          title: "✨ Icon Edited!",
-          description: "Your modified icon has been generated",
+          title: '✨ Icon Edited!',
+          description: 'Your modified icon has been generated',
         });
       }
     } catch (error) {
-      console.error("Error editing icon:", error);
+      console.error('Error editing icon:', error);
       toast({
-        title: "Edit Failed",
-        description: "Failed to edit icon. Please try again.",
-        variant: "destructive",
+        title: 'Edit Failed',
+        description: 'Failed to edit icon. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsEditing(false);
@@ -328,15 +329,15 @@ export function IconGenerator() {
   const handleBatchDownload = async () => {
     if (selectedIcons.size === 0) {
       toast({
-        title: "No Icons Selected",
-        description: "Please select icons to download",
-        variant: "destructive",
+        title: 'No Icons Selected',
+        description: 'Please select icons to download',
+        variant: 'destructive',
       });
       return;
     }
 
     toast({
-      title: "📦 Batch Download Started",
+      title: '📦 Batch Download Started',
       description: `Downloading ${selectedIcons.size} icon${selectedIcons.size > 1 ? 's' : ''}...`,
     });
 
@@ -364,7 +365,7 @@ export function IconGenerator() {
           filename = `icon-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.svg`;
         }
 
-        const link = document.createElement("a");
+        const link = document.createElement('a');
         link.href = downloadUrl;
         link.download = filename;
         document.body.appendChild(link);
@@ -375,14 +376,14 @@ export function IconGenerator() {
           setTimeout(() => URL.revokeObjectURL(downloadUrl), 100);
         }
 
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (error) {
-        console.error("Error downloading icon:", error);
+        console.error('Error downloading icon:', error);
       }
     }
 
     toast({
-      title: "✅ Batch Download Complete",
+      title: '✅ Batch Download Complete',
       description: `Downloaded ${selectedIcons.size} icons`,
     });
   };
@@ -406,14 +407,14 @@ export function IconGenerator() {
   };
 
   const deleteSelectedIcons = () => {
-    const remaining = generatedIcons.filter(icon => !selectedIcons.has(icon));
+    const remaining = generatedIcons.filter((icon) => !selectedIcons.has(icon));
     setGeneratedIcons(remaining);
     setSelectedIcons(new Set());
     if (selectedIcon && selectedIcons.has(selectedIcon)) {
       setSelectedIcon(remaining[0] || null);
     }
     toast({
-      title: "🗑️ Icons Deleted",
+      title: '🗑️ Icons Deleted',
       description: `Removed ${selectedIcons.size} icon${selectedIcons.size > 1 ? 's' : ''}`,
     });
   };
@@ -431,7 +432,9 @@ export function IconGenerator() {
             {!subscriptionLoading && subscription && (
               <span className="text-xs px-3 py-1 rounded-full glass-effect border border-yellow-400/30">
                 <span className="font-semibold bolt-gradient-text">
-                  {subscription.tier === 'premium' ? 'Unlimited' : `${subscription.usage?.icons_generated || 0}/10`}
+                  {subscription.tier === 'premium'
+                    ? 'Unlimited'
+                    : `${subscription.usage?.icons_generated || 0}/10`}
                 </span>
                 <span className="text-muted-foreground ml-1">icons</span>
               </span>
@@ -473,7 +476,11 @@ export function IconGenerator() {
             <Label htmlFor="provider" className="text-sm font-semibold">
               ⚡ Generation Engine
             </Label>
-            <Select value={provider} onValueChange={(value: "pollinations" | "openrouter") => setProvider(value)} disabled={isGenerating}>
+            <Select
+              value={provider}
+              onValueChange={(value: 'pollinations' | 'openrouter') => setProvider(value)}
+              disabled={isGenerating}
+            >
               <SelectTrigger id="provider" className="border-gray-300 dark:border-gray-600">
                 <SelectValue placeholder="Select provider" />
               </SelectTrigger>
@@ -481,7 +488,9 @@ export function IconGenerator() {
                 <SelectItem value="pollinations">
                   <div className="flex flex-col">
                     <span className="font-medium">Docverse</span>
-                    <span className="text-xs text-muted-foreground">Image-based icons (Recommended)</span>
+                    <span className="text-xs text-muted-foreground">
+                      Image-based icons (Recommended)
+                    </span>
                   </div>
                 </SelectItem>
                 <SelectItem value="openrouter">
@@ -562,7 +571,7 @@ export function IconGenerator() {
         </div>
 
         {/* Custom Color Picker */}
-        {colorScheme === "custom" && (
+        {colorScheme === 'custom' && (
           <div className="space-y-2">
             <Label htmlFor="customColor" className="text-sm font-semibold">
               🎨 Custom Color
@@ -604,7 +613,9 @@ export function IconGenerator() {
               min="1"
               max="12"
               value={batchCount}
-              onChange={(e) => setBatchCount(Math.min(12, Math.max(1, parseInt(e.target.value) || 4)))}
+              onChange={(e) =>
+                setBatchCount(Math.min(12, Math.max(1, parseInt(e.target.value) || 4)))
+              }
               className="w-20"
               disabled={isGenerating}
             />
@@ -718,10 +729,10 @@ export function IconGenerator() {
                     key={index}
                     className={`cursor-pointer transition-all duration-300 hover:scale-105 relative ${
                       selectedIcon === icon
-                        ? "ring-2 ring-yellow-500 shadow-lg"
+                        ? 'ring-2 ring-yellow-500 shadow-lg'
                         : selectedIcons.has(icon)
-                        ? "ring-2 ring-blue-500 shadow-lg"
-                        : "hover:shadow-md"
+                          ? 'ring-2 ring-blue-500 shadow-lg'
+                          : 'hover:shadow-md'
                     }`}
                     onClick={() => {
                       if (isBatchMode) {
@@ -733,14 +744,26 @@ export function IconGenerator() {
                   >
                     {isBatchMode && (
                       <div className="absolute top-2 right-2 z-10">
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                          selectedIcons.has(icon)
-                            ? 'bg-blue-500 border-blue-500'
-                            : 'bg-white border-gray-300'
-                        }`}>
+                        <div
+                          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                            selectedIcons.has(icon)
+                              ? 'bg-blue-500 border-blue-500'
+                              : 'bg-white border-gray-300'
+                          }`}
+                        >
                           {selectedIcons.has(icon) && (
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            <svg
+                              className="w-4 h-4 text-white"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M5 13l4 4L19 7"
+                              />
                             </svg>
                           )}
                         </div>
@@ -784,8 +807,8 @@ export function IconGenerator() {
                       onClick={() => {
                         // Add to favorites functionality
                         toast({
-                          title: "❤️ Added to Favorites",
-                          description: "Icon saved to your collection",
+                          title: '❤️ Added to Favorites',
+                          description: 'Icon saved to your collection',
                         });
                       }}
                     >
@@ -838,8 +861,8 @@ export function IconGenerator() {
       )}
 
       {/* Export Auth Dialog */}
-      <ExportAuthDialog 
-        open={showExportDialog} 
+      <ExportAuthDialog
+        open={showExportDialog}
         onOpenChange={setShowExportDialog}
         exportType="icon"
         onSignIn={() => {

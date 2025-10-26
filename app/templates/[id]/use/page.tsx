@@ -34,7 +34,7 @@ export default function UseTemplatePage() {
       try {
         setIsLoading(true);
         const response = await fetch(`/api/templates/${params.id}`);
-        
+
         if (!response.ok) {
           if (response.status === 404) {
             setError('Template not found');
@@ -42,7 +42,7 @@ export default function UseTemplatePage() {
           }
           throw new Error('Failed to fetch template');
         }
-        
+
         const data = await response.json();
         setTemplate(data);
       } catch (error) {
@@ -61,7 +61,7 @@ export default function UseTemplatePage() {
 
   const handleUseTemplate = () => {
     if (!template) return;
-    
+
     // Navigate to the appropriate editor based on template type
     switch (template.type) {
       case 'resume':
@@ -90,18 +90,18 @@ export default function UseTemplatePage() {
 
   const handleDownloadTemplate = () => {
     if (!template) return;
-    
+
     // Create a downloadable JSON file of the template
     const dataStr = JSON.stringify(template, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
     const exportFileDefaultName = `${template.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_template.json`;
-    
+
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
     linkElement.click();
-    
+
     toast.success('Template downloaded successfully');
   };
 
@@ -129,11 +129,7 @@ export default function UseTemplatePage() {
   if (error || !template) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <Button
-          variant="ghost"
-          onClick={() => router.back()}
-          className="mb-6"
-        >
+        <Button variant="ghost" onClick={() => router.back()} className="mb-6">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -142,7 +138,8 @@ export default function UseTemplatePage() {
             <FileText className="h-12 w-12 text-muted-foreground mb-4" />
             <h2 className="text-xl font-semibold mb-2">Template Not Found</h2>
             <p className="text-muted-foreground text-center">
-              {error || 'The template you are looking for does not exist or you do not have permission to access it.'}
+              {error ||
+                'The template you are looking for does not exist or you do not have permission to access it.'}
             </p>
           </CardContent>
         </Card>
@@ -154,11 +151,7 @@ export default function UseTemplatePage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <Button
-        variant="ghost"
-        onClick={() => router.back()}
-        className="mb-6"
-      >
+      <Button variant="ghost" onClick={() => router.back()} className="mb-6">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to Templates
       </Button>
@@ -190,8 +183,8 @@ export default function UseTemplatePage() {
         <CardContent>
           <div className="bg-muted/50 p-6 rounded-lg">
             <p className="text-sm text-muted-foreground mb-4">
-              Template content preview is not available in this view. 
-              Click "Use Template" to start creating your document with this template.
+              Template content preview is not available in this view. Click "Use Template" to start
+              creating your document with this template.
             </p>
             {template.content && (
               <div className="text-xs text-muted-foreground">
@@ -213,12 +206,12 @@ export default function UseTemplatePage() {
           <FileText className="mr-2 h-4 w-4" />
           Use This Template
         </Button>
-        
+
         <Button variant="outline" onClick={handleDownloadTemplate} size="lg">
           <Download className="mr-2 h-4 w-4" />
           Download
         </Button>
-        
+
         {isOwner && (
           <Button variant="outline" onClick={handleEditTemplate} size="lg">
             <Edit className="mr-2 h-4 w-4" />

@@ -4,9 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { ReactNode } from 'react';
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''
-);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
 type StripeProviderProps = {
   children: ReactNode;
@@ -14,7 +12,7 @@ type StripeProviderProps = {
 
 export function StripeProvider({ children }: StripeProviderProps) {
   return (
-    <Elements 
+    <Elements
       stripe={stripePromise}
       options={{
         appearance: {

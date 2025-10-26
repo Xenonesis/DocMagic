@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Loader2, ZoomIn, ZoomOut, Maximize2, Minimize2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useEffect, useRef, useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle, Loader2, ZoomIn, ZoomOut, Maximize2, Minimize2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface DiagramPreviewProps {
   code: string;
@@ -24,7 +24,7 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
     const loadMermaid = async () => {
       try {
         const mermaid = (await import('mermaid')).default;
-        
+
         mermaid.initialize({
           startOnLoad: false,
           theme: 'default',
@@ -33,29 +33,29 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
           flowchart: {
             useMaxWidth: true,
             htmlLabels: true,
-            curve: 'basis'
+            curve: 'basis',
           },
           sequence: {
             useMaxWidth: true,
-            wrap: true
+            wrap: true,
           },
           gantt: {
-            useMaxWidth: true
+            useMaxWidth: true,
           },
           journey: {
-            useMaxWidth: true
+            useMaxWidth: true,
           },
           gitGraph: {
-            useMaxWidth: true
+            useMaxWidth: true,
           },
           er: {
-            useMaxWidth: true
+            useMaxWidth: true,
           },
           class: {
-            useMaxWidth: true
-          }
+            useMaxWidth: true,
+          },
         });
-        
+
         setMermaidLoaded(true);
       } catch (err) {
         console.error('Failed to load Mermaid:', err);
@@ -84,35 +84,47 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
 
       try {
         const mermaid = (await import('mermaid')).default;
-        
+
         // Basic validation to check if code looks like Mermaid syntax
         const trimmedCode = code.trim();
         const validDiagramTypes = [
-          'flowchart', 'graph', 'sequenceDiagram', 'classDiagram', 
-          'stateDiagram', 'erDiagram', 'journey', 'gantt', 'pie',
-          'gitGraph', 'mindmap', 'timeline', 'quadrantChart'
+          'flowchart',
+          'graph',
+          'sequenceDiagram',
+          'classDiagram',
+          'stateDiagram',
+          'erDiagram',
+          'journey',
+          'gantt',
+          'pie',
+          'gitGraph',
+          'mindmap',
+          'timeline',
+          'quadrantChart',
         ];
-        
-        const hasValidDiagramType = validDiagramTypes.some(type => 
-          trimmedCode.toLowerCase().startsWith(type.toLowerCase())
+
+        const hasValidDiagramType = validDiagramTypes.some((type) =>
+          trimmedCode.toLowerCase().startsWith(type.toLowerCase()),
         );
-        
+
         if (!hasValidDiagramType) {
-          setError('Please start your diagram with a valid Mermaid diagram type (e.g., flowchart TD, sequenceDiagram, classDiagram, etc.)');
+          setError(
+            'Please start your diagram with a valid Mermaid diagram type (e.g., flowchart TD, sequenceDiagram, classDiagram, etc.)',
+          );
           setIsLoading(false);
           return;
         }
-        
+
         if (containerRef.current) {
           // Clear previous content
           containerRef.current.innerHTML = '';
-          
+
           // Create a unique ID for this diagram
           const diagramId = `mermaid-diagram-${Date.now()}`;
-          
+
           // Validate and render the diagram
           const { svg } = await mermaid.render(diagramId, code);
-          
+
           // Create container div with the expected ID
           const diagramContainer = document.createElement('div');
           diagramContainer.id = 'mermaid-diagram';
@@ -122,23 +134,25 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
           diagramContainer.style.alignItems = 'center';
           diagramContainer.style.minHeight = fullScreen ? '500px' : '300px';
           diagramContainer.style.padding = '20px';
-          
+
           containerRef.current.appendChild(diagramContainer);
         }
       } catch (err) {
         console.error('Mermaid rendering error:', err);
         let errorMessage = 'Invalid diagram syntax. Please check your Mermaid code.';
-        
+
         if (err instanceof Error) {
           if (err.message.includes('No diagram type detected')) {
-            errorMessage = 'No valid diagram type detected. Please start with a diagram type like "flowchart TD", "sequenceDiagram", "classDiagram", etc.';
+            errorMessage =
+              'No valid diagram type detected. Please start with a diagram type like "flowchart TD", "sequenceDiagram", "classDiagram", etc.';
           } else if (err.message.includes('Please start your diagram')) {
             errorMessage = err.message;
           } else if (err.message.includes('Parse error')) {
-            errorMessage = 'Syntax error in your diagram code. Please check for missing brackets, quotes, or invalid characters.';
+            errorMessage =
+              'Syntax error in your diagram code. Please check for missing brackets, quotes, or invalid characters.';
           }
         }
-        
+
         setError(errorMessage);
       } finally {
         setIsLoading(false);
@@ -151,11 +165,11 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
   }, [code, mermaidLoaded, fullScreen]);
 
   const handleZoomIn = () => {
-    setZoom(prev => Math.min(prev + 0.2, 3));
+    setZoom((prev) => Math.min(prev + 0.2, 3));
   };
 
   const handleZoomOut = () => {
-    setZoom(prev => Math.max(prev - 0.2, 0.5));
+    setZoom((prev) => Math.max(prev - 0.2, 0.5));
   };
 
   const handleResetZoom = () => {
@@ -188,7 +202,9 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
   }
 
   return (
-    <div className={`w-full ${fullScreen || isFullScreen ? 'min-h-[600px]' : 'min-h-[300px]'} relative group`}>
+    <div
+      className={`w-full ${fullScreen || isFullScreen ? 'min-h-[600px]' : 'min-h-[300px]'} relative group`}
+    >
       {/* Zoom Controls */}
       <div className="absolute top-4 right-4 z-20 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <div className="glass-effect rounded-lg border border-yellow-400/20 p-1 flex flex-col gap-1">
@@ -242,7 +258,7 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
           </div>
         </div>
       )}
-      
+
       {error && (
         <div className="p-4">
           <Alert variant="destructive" className="border-red-300">
@@ -254,17 +270,17 @@ export function DiagramPreview({ code, fullScreen = false }: DiagramPreviewProps
           </Alert>
         </div>
       )}
-      
-      <div 
-        ref={containerRef} 
+
+      <div
+        ref={containerRef}
         className={`w-full ${fullScreen || isFullScreen ? 'min-h-[600px]' : 'min-h-[300px]'} overflow-auto transition-all duration-300`}
-        style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: '#ffffff',
           transform: `scale(${zoom})`,
-          transformOrigin: 'center center'
+          transformOrigin: 'center center',
         }}
       />
     </div>

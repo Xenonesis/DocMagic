@@ -41,7 +41,7 @@ export const TemplateEditorProvider = ({ children }: TemplateEditorProviderProps
   }, []);
 
   const updateTemplateContent = useCallback((updates: Partial<Template['content']>) => {
-    setCurrentTemplate(prev => {
+    setCurrentTemplate((prev) => {
       if (!prev) return null;
       return {
         ...prev,
@@ -65,9 +65,5 @@ export const TemplateEditorProvider = ({ children }: TemplateEditorProviderProps
     updateTemplateContent,
   };
 
-  return (
-    <TemplateEditorContext.Provider value={value}>
-      {children}
-    </TemplateEditorContext.Provider>
-  );
+  return <TemplateEditorContext.Provider value={value}>{children}</TemplateEditorContext.Provider>;
 };

@@ -1,6 +1,7 @@
 # Database Setup Guide
 
 ## Issue Resolution
+
 The 404 error you're seeing indicates that the `documents` table doesn't exist in your Supabase database yet. Here's how to fix it:
 
 ## Quick Fix - Run This SQL Script
@@ -75,19 +76,19 @@ FOR SELECT USING (bucket_id = 'avatars');
 
 CREATE POLICY "Users can upload their own avatar" ON storage.objects
 FOR INSERT WITH CHECK (
-  bucket_id = 'avatars' 
+  bucket_id = 'avatars'
   AND auth.uid()::text = (storage.foldername(name))[1]
 );
 
 CREATE POLICY "Users can update their own avatar" ON storage.objects
 FOR UPDATE USING (
-  bucket_id = 'avatars' 
+  bucket_id = 'avatars'
   AND auth.uid()::text = (storage.foldername(name))[1]
 );
 
 CREATE POLICY "Users can delete their own avatar" ON storage.objects
 FOR DELETE USING (
-  bucket_id = 'avatars' 
+  bucket_id = 'avatars'
   AND auth.uid()::text = (storage.foldername(name))[1]
 );
 ```
@@ -106,9 +107,9 @@ After running the SQL scripts, verify the tables exist:
 
 ```sql
 -- Check if tables exist
-SELECT table_name 
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
 AND table_name IN ('documents', 'templates', 'users');
 
 -- Check if storage bucket exists
@@ -126,6 +127,7 @@ SELECT * FROM storage.buckets WHERE id = 'avatars';
 ## After Setup
 
 Once you run these scripts, refresh your profile page and you should see:
+
 - Real statistics (0 initially, which is correct)
 - Working profile picture upload
 - No more 404 errors in the console

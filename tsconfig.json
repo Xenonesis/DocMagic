@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -20,36 +16,15 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@/components/*": [
-        "components/*"
-      ],
-      "@/lib/*": [
-        "lib/*"
-      ],
-      "@/types/*": [
-        "types/*"
-      ],
-      "@/styles/*": [
-        "styles/*"
-      ],
-      "@/hooks/*": [
-        "hooks/*"
-      ]
+      "@/*": ["./*"],
+      "@/components/*": ["components/*"],
+      "@/lib/*": ["lib/*"],
+      "@/types/*": ["types/*"],
+      "@/styles/*": ["styles/*"],
+      "@/hooks/*": ["hooks/*"]
     },
-    "typeRoots": [
-      "./node_modules/@types",
-      "./node_modules/@testing-library",
-      "./types"
-    ],
-    "types": [
-      "node",
-      "jest",
-      "jest-dom",
-      "next"
-    ],
+    "typeRoots": ["./node_modules/@types", "./node_modules/@testing-library", "./types"],
+    "types": ["node", "jest", "jest-dom", "next"],
     "plugins": [
       {
         "name": "next"
@@ -65,8 +40,5 @@
     ".next/types/**/*.ts",
     "**/*.test.tsx"
   ],
-  "exclude": [
-    "node_modules",
-    ".next"
-  ]
+  "exclude": ["node_modules", ".next"]
 }

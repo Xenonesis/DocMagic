@@ -11,7 +11,7 @@ Fixes #123 (replace with actual issue number)
 - [ ] UI/UX improvement (design, layout, or styling updates)
 - [ ] Performance optimization (e.g., code splitting, caching)
 - [ ] Documentation update (README, contribution guidelines, etc.)
-- [ ] [ ] Other (please specify): ____________________
+- [ ] [ ] Other (please specify): ********\_\_\_\_********
 
 ## Changes Made
 
@@ -23,6 +23,7 @@ Fixes #123 (replace with actual issue number)
 - Mention any version updates or configurations that need to be considered.
 
 ## Add Screenshots
+
 If your PR consist of any UI changes, please provide screenshots or video (if requried).
 
 ## Checklist

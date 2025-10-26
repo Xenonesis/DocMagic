@@ -10,19 +10,13 @@ export async function POST(request: Request) {
     const { prompt, pageCount = 8 } = body;
 
     if (!prompt) {
-      return NextResponse.json(
-        { error: 'Missing prompt' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing prompt' }, { status: 400 });
     }
 
     const slides = await generatePresentation({ prompt, pageCount });
     return NextResponse.json(slides);
   } catch (error) {
     console.error('Error generating presentation:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate presentation' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate presentation' }, { status: 500 });
   }
 }

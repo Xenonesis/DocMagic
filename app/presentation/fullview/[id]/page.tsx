@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { PresentationPreview } from "@/components/presentation/presentation-preview";
-import { Button } from "@/components/ui/button";
-import { X, Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { PresentationPreview } from '@/components/presentation/presentation-preview';
+import { Button } from '@/components/ui/button';
+import { X, Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function FullViewPage() {
   const router = useRouter();
@@ -18,27 +18,27 @@ export default function FullViewPage() {
     const fetchPresentation = async () => {
       try {
         const response = await fetch(`/api/presentations/${params.id}`);
-        
+
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to load presentation");
+          throw new Error(errorData.error || 'Failed to load presentation');
         }
 
         const data = await response.json();
         setPresentation(data);
-        
+
         // Update page title
         if (data.title) {
           document.title = `${data.title} - Full View`;
         }
       } catch (error) {
-        console.error("Error loading presentation:", error);
+        console.error('Error loading presentation:', error);
         toast({
-          title: "Error",
-          description: error instanceof Error ? error.message : "Failed to load presentation",
-          variant: "destructive",
+          title: 'Error',
+          description: error instanceof Error ? error.message : 'Failed to load presentation',
+          variant: 'destructive',
         });
-        
+
         // Close tab after showing error
         setTimeout(() => {
           if (window.history.length <= 1) {
@@ -68,7 +68,7 @@ export default function FullViewPage() {
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         // If opened in new tab, close it; otherwise go back
         if (window.history.length <= 1) {
           window.close();
@@ -78,8 +78,8 @@ export default function FullViewPage() {
       }
     };
 
-    window.addEventListener("keydown", handleEscape);
-    return () => window.removeEventListener("keydown", handleEscape);
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
   }, [router]);
 
   if (isLoading) {
@@ -111,10 +111,7 @@ export default function FullViewPage() {
 
       {/* Full Screen Presentation */}
       <div className="flex-1 w-full h-full overflow-hidden">
-        <PresentationPreview 
-          slides={presentation.slides} 
-          template={presentation.template} 
-        />
+        <PresentationPreview slides={presentation.slides} template={presentation.template} />
       </div>
     </div>
   );

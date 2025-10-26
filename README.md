@@ -829,6 +829,7 @@ The application is deployed on Netlify. To deploy your own instance:
 - Improve accessibility features
 
 #### 🕒 Dependency Updates & Testing
+
 - Help maintain dependencies by testing pull requests created by [Dependabot](https://docs.github.com/en/code-security/dependabot)
 - Validate automated updates using the [GitHub Actions](https://github.com/docmagic-ai/docmagic/actions/workflows/dependency_check.yml) workflow to ensure build stability.
 - Report any issues with updates or suggest improvements to the automation process.
@@ -1090,19 +1091,16 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000  # Your application URL
 ### 🛠️ Setup Instructions
 
 1. **Create a Stripe Account**
-
    - Sign up at [Stripe](https://dashboard.stripe.com/register)
    - Retrieve your API keys from the Stripe Dashboard under Developers > API keys
 
 2. **Configure Products and Prices**
-
    - Go to Products in the Stripe Dashboard
    - Create a new product (e.g., "Pro Subscription")
    - Add a price for the product (e.g., $9.99/month)
    - Note down the Price ID (e.g., `price_abc123`)
 
 3. **Set Up Webhooks**
-
    - Go to Developers > Webhooks in the Stripe Dashboard
    - Add an endpoint URL: `https://your-domain.com/api/stripe/webhook`
    - Add these events to listen for:
@@ -1191,13 +1189,11 @@ The main subscription flow is handled by the `SubscriptionButton` component:
 ### 🛠️ Troubleshooting
 
 1. **Webhook Failures**
-
    - Verify the webhook signing secret matches your Stripe dashboard
    - Check server logs for detailed error messages
    - Ensure your server's clock is synchronized (NTP)
 
 2. **Checkout Issues**
-
    - Verify the Price ID exists in your Stripe account
    - Check the browser console for JavaScript errors
    - Ensure your Stripe API keys are in the correct mode (test/live)
@@ -1232,18 +1228,21 @@ The main subscription flow is handled by the `SubscriptionButton` component:
 Authentication is handled by Supabase Auth with multiple sign-in options:
 
 ### Traditional Authentication
+
 - User registration with email/password
 - Secure login with JWT tokens
 - Google OAuth integration
 - Password reset functionality
 
 ### Web3 Wallet Authentication 🆕
+
 - **Ethereum**: Sign in with MetaMask and EIP-4361 compatible wallets
 - **Solana**: Sign in with Phantom and SIWS compatible wallets
 - Cryptographic signature verification
 - No password required - wallet ownership proves identity
 
 ### Security Features
+
 - Protected routes with middleware
 - User profile management
 - Session persistence with automatic refresh

@@ -1,26 +1,36 @@
 'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import { Skeleton } from "@/components/ui/skeleton";
-import { TemplateCard } from "./template-card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Search, Filter, Grid, List, RefreshCw, AlertCircle, Wifi, WifiOff } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
-import { TEMPLATE_TYPES } from "@/lib/templates";
-import { Template } from "@/types/templates";
-import { useState, useMemo } from "react";
-import { AuthButton } from "@/components/ui/auth-button";
+import { useQuery } from '@tanstack/react-query';
+import { Skeleton } from '@/components/ui/skeleton';
+import { TemplateCard } from './template-card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import {
+  Plus,
+  Search,
+  Filter,
+  Grid,
+  List,
+  RefreshCw,
+  AlertCircle,
+  Wifi,
+  WifiOff,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
+import { TEMPLATE_TYPES } from '@/lib/templates';
+import { Template } from '@/types/templates';
+import { useState, useMemo } from 'react';
+import { AuthButton } from '@/components/ui/auth-button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface TemplateListProps {
   type?: Template['type'];
@@ -35,13 +45,13 @@ interface TemplateListProps {
 
 export function TemplateList({
   type,
-  title = "Templates",
+  title = 'Templates',
   showCreateButton = true,
   limit,
   initialTemplates = [],
   showFilters = true,
   showSearch = true,
-  showCategoryTabs = true
+  showCategoryTabs = true,
 }: TemplateListProps) {
   const router = useRouter();
   const { toast } = useToast();
@@ -55,8 +65,10 @@ export function TemplateList({
   // State for error handling and retry
   const [retryCount, setRetryCount] = useState(0);
   const [isRetrying, setIsRetrying] = useState(false);
-  const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
-  
+  const [isOnline, setIsOnline] = useState(
+    typeof navigator !== 'undefined' ? navigator.onLine : true,
+  );
+
   // Network status monitoring
   useState(() => {
     if (typeof window !== 'undefined') {
@@ -73,8 +85,14 @@ export function TemplateList({
     }
   });
 
-  const { data: templates = initialTemplates, isLoading, error, refetch, isFetching } = useQuery<Template[]>({
-    queryKey: ["templates", type],
+  const {
+    data: templates = initialTemplates,
+    isLoading,
+    error,
+    refetch,
+    isFetching,
+  } = useQuery<Template[]>({
+    queryKey: ['templates', type],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (type) params.append('type', type);
@@ -134,9 +152,10 @@ export function TemplateList({
   const filteredAndSortedTemplates = useMemo(() => {
     if (!templates) return [];
 
-    let filtered = templates.filter(template => {
+    let filtered = templates.filter((template) => {
       // Search filter
-      const matchesSearch = searchQuery === '' ||
+      const matchesSearch =
+        searchQuery === '' ||
         template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         template.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
@@ -166,10 +185,13 @@ export function TemplateList({
   const templateCategories = useMemo(() => {
     if (!templates) return [];
 
-    const categories = templates.reduce((acc, template) => {
-      acc[template.type] = (acc[template.type] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const categories = templates.reduce(
+      (acc, template) => {
+        acc[template.type] = (acc[template.type] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     return [
       { value: 'all', label: 'All Templates', count: templates.length },
@@ -183,19 +205,19 @@ export function TemplateList({
   // Enhanced retry function
   const handleRetry = async () => {
     setIsRetrying(true);
-    setRetryCount(prev => prev + 1);
+    setRetryCount((prev) => prev + 1);
 
     try {
       await refetch();
       toast({
-        title: "Refreshed",
-        description: "Templates have been refreshed successfully.",
+        title: 'Refreshed',
+        description: 'Templates have been refreshed successfully.',
       });
     } catch (error) {
       toast({
-        title: "Retry failed",
-        description: "Unable to refresh templates. Please check your connection.",
-        variant: "destructive",
+        title: 'Retry failed',
+        description: 'Unable to refresh templates. Please check your connection.',
+        variant: 'destructive',
       });
     } finally {
       setIsRetrying(false);
@@ -219,18 +241,19 @@ export function TemplateList({
       }
 
       toast({
-        title: "Template deleted",
-        description: "The template has been successfully deleted.",
+        title: 'Template deleted',
+        description: 'The template has been successfully deleted.',
       });
 
       await refetch();
     } catch (error) {
       console.error('Error deleting template:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to delete template. Please try again.';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to delete template. Please try again.';
       toast({
-        title: "Error",
+        title: 'Error',
         description: errorMessage,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -246,25 +269,25 @@ export function TemplateList({
           isPublic: !isPublic,
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to update template');
       }
-      
+
       toast({
-        title: isPublic ? "Template made private" : "Template made public",
-        description: isPublic 
-          ? "This template is now private and only you can see it." 
-          : "This template is now public and can be viewed by anyone with the link.",
+        title: isPublic ? 'Template made private' : 'Template made public',
+        description: isPublic
+          ? 'This template is now private and only you can see it.'
+          : 'This template is now public and can be viewed by anyone with the link.',
       });
-      
+
       await refetch();
     } catch (error) {
       console.error('Error updating template:', error);
       toast({
-        title: "Error",
-        description: "Failed to update template. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to update template. Please try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -272,7 +295,8 @@ export function TemplateList({
   // Enhanced error handling
   if (error) {
     const errorMessage = error instanceof Error ? error.message : 'Failed to load templates';
-    const isNetworkError = !isOnline || errorMessage.includes('timeout') || errorMessage.includes('network');
+    const isNetworkError =
+      !isOnline || errorMessage.includes('timeout') || errorMessage.includes('network');
 
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
@@ -286,17 +310,10 @@ export function TemplateList({
             {isNetworkError ? 'Connection Problem' : 'Something went wrong'}
           </h3>
           <p className="mb-4 mt-2 text-sm text-muted-foreground">
-            {isNetworkError
-              ? 'Please check your internet connection and try again.'
-              : errorMessage
-            }
+            {isNetworkError ? 'Please check your internet connection and try again.' : errorMessage}
           </p>
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleRetry}
-              disabled={isRetrying}
-            >
+            <Button variant="outline" onClick={handleRetry} disabled={isRetrying}>
               {isRetrying ? (
                 <>
                   <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
@@ -316,9 +333,7 @@ export function TemplateList({
             )}
           </div>
           {retryCount > 0 && (
-            <p className="mt-2 text-xs text-muted-foreground">
-              Retry attempts: {retryCount}
-            </p>
+            <p className="mt-2 text-xs text-muted-foreground">Retry attempts: {retryCount}</p>
           )}
         </div>
       </div>
@@ -386,7 +401,10 @@ export function TemplateList({
           {showFilters && (
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-2 sm:items-center sm:justify-between">
               <div className="flex gap-2 flex-1">
-                <Select value={sortBy} onValueChange={(value: 'name' | 'date' | 'type') => setSortBy(value)}>
+                <Select
+                  value={sortBy}
+                  onValueChange={(value: 'name' | 'date' | 'type') => setSortBy(value)}
+                >
                   <SelectTrigger className="w-full sm:w-[140px]">
                     <SelectValue placeholder="Sort by" />
                   </SelectTrigger>
@@ -428,9 +446,9 @@ export function TemplateList({
         <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
           <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1">
             {templateCategories.map((category) => (
-              <TabsTrigger 
-                key={category.value} 
-                value={category.value} 
+              <TabsTrigger
+                key={category.value}
+                value={category.value}
                 className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3 py-2"
               >
                 <span className="truncate">{category.label}</span>
@@ -449,19 +467,18 @@ export function TemplateList({
           <span>
             Showing {filteredAndSortedTemplates.length} of {templates?.length || 0} templates
           </span>
-          {searchQuery && (
-            <span>
-              Search results for "{searchQuery}"
-            </span>
-          )}
+          {searchQuery && <span>Search results for "{searchQuery}"</span>}
         </div>
       )}
 
       {isLoading ? (
-        <div className={`grid gap-4 sm:gap-6 ${viewMode === 'grid'
-          ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-          : 'grid-cols-1'
-        }`}>
+        <div
+          className={`grid gap-4 sm:gap-6 ${
+            viewMode === 'grid'
+              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+              : 'grid-cols-1'
+          }`}
+        >
           {Array.from({ length: viewMode === 'grid' ? 8 : 4 }).map((_, i) => (
             <div key={i} className="space-y-3">
               {viewMode === 'grid' ? (
@@ -506,16 +523,19 @@ export function TemplateList({
           ))}
         </div>
       ) : filteredAndSortedTemplates.length > 0 ? (
-        <div className={`grid gap-4 sm:gap-6 ${viewMode === 'grid'
-          ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-          : 'grid-cols-1'
-        }`}>
+        <div
+          className={`grid gap-4 sm:gap-6 ${
+            viewMode === 'grid'
+              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+              : 'grid-cols-1'
+          }`}
+        >
           {filteredAndSortedTemplates.map((template) => {
             // Ensure type is one of the allowed values, default to 'resume' if not valid
             const validTypes = ['resume', 'presentation', 'letter', 'cv'] as const;
-            type ValidTemplateType = typeof validTypes[number];
+            type ValidTemplateType = (typeof validTypes)[number];
             const templateType = validTypes.includes(template.type as ValidTemplateType)
-              ? template.type as ValidTemplateType
+              ? (template.type as ValidTemplateType)
               : 'resume'; // Default to 'resume' if type is not valid
 
             return (

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface StatCounterProps {
   target: number;
@@ -12,8 +12,8 @@ interface StatCounterProps {
 export function StatCounter({
   target,
   duration = 2000,
-  prefix = "",
-  suffix = "",
+  prefix = '',
+  suffix = '',
 }: StatCounterProps) {
   const [count, setCount] = useState(0);
 
@@ -43,7 +43,9 @@ export function StatCounter({
       aria-label={`${prefix}${count}${suffix}`}
       className="text-xl xs:text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 animate-text-glow text-shadow-professional dark:from-teal-400 dark:to-cyan-600"
     >
-      {prefix}{count.toLocaleString()}{suffix}
+      {prefix}
+      {count.toLocaleString()}
+      {suffix}
     </span>
   );
 }

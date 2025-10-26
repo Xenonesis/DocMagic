@@ -58,14 +58,11 @@ export function PaymentForm({
       const { clientSecret } = await response.json();
 
       // Confirm the payment
-      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
-        clientSecret,
-        {
-          payment_method: {
-            card: elements.getElement(CardElement)!,
-          },
-        }
-      );
+      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement)!,
+        },
+      });
 
       if (stripeError) {
         throw new Error(stripeError.message || 'Payment failed');
@@ -83,7 +80,7 @@ export function PaymentForm({
       console.error('Payment error:', error);
       setError(error.message || 'An error occurred while processing your payment');
       onError?.(error);
-      
+
       toast({
         title: 'Payment failed',
         description: error.message || 'An error occurred while processing your payment',
@@ -114,16 +111,10 @@ export function PaymentForm({
           }}
         />
       </div>
-      
-      {error && (
-        <div className="text-sm text-red-500">{error}</div>
-      )}
-      
-      <Button
-        type="submit"
-        disabled={!stripe || isLoading}
-        className="w-full"
-      >
+
+      {error && <div className="text-sm text-red-500">{error}</div>}
+
+      <Button type="submit" disabled={!stripe || isLoading} className="w-full">
         {isLoading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -5,6 +5,7 @@ This directory contains the refactored navigation components for the site header
 ## Structure
 
 ### Components
+
 - **nav-items.ts** - Navigation items configuration (routes, labels, icons, tooltips)
 - **nav-logo.tsx** - Logo component with link to homepage
 - **desktop-nav.tsx** - Desktop navigation menu with tooltips
@@ -14,6 +15,7 @@ This directory contains the refactored navigation components for the site header
 - **index.ts** - Barrel export for clean imports
 
 ### Documentation
+
 - **MOBILE_NAV_DESIGN.md** - Detailed mobile nav redesign documentation
 - **VISUAL_GUIDE.md** - Design system and visual specifications
 - **README.md** - This file
@@ -23,6 +25,7 @@ This directory contains the refactored navigation components for the site header
 The mobile navigation has been completely redesigned with:
 
 ### Key Features
+
 - 📱 **Full-width drawer** with organized sections
 - 🎨 **Gradient accents** and icon badges
 - 🎯 **Categorized navigation** (Create Documents, More, Account)
@@ -32,6 +35,7 @@ The mobile navigation has been completely redesigned with:
 - 📏 **Large touch targets** (48px+) for better mobile UX
 
 ### Visual Highlights
+
 - Active state with left border gradient accent
 - Icon badges with colored backgrounds for main items
 - Smooth hover states with chevron indicators
@@ -45,7 +49,7 @@ See [MOBILE_NAV_DESIGN.md](./MOBILE_NAV_DESIGN.md) for complete details.
 The main `SiteHeader` component imports and composes these smaller components:
 
 ```tsx
-import { NavLogo, DesktopNav, MobileNav, NavActions } from "@/components/nav";
+import { NavLogo, DesktopNav, MobileNav, NavActions } from '@/components/nav';
 
 export function SiteHeader() {
   return (

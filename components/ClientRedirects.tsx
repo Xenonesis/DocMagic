@@ -20,22 +20,22 @@ export default function ClientRedirects() {
         router.replace('/login');
       }
     }
-    
+
     // Fix for about page
     if (pathname === '/about/') {
       router.replace('/about');
     }
-    
+
     // Fix for resume page
     if (pathname === '/resume/') {
       router.replace('/resume');
     }
-    
+
     // Fix for other pages with trailing slash issues
     if (pathname === '/letter/') {
       router.replace('/letter');
     }
-    
+
     if (pathname === '/presentation/') {
       router.replace('/presentation');
     }

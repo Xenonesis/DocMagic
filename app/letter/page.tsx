@@ -1,9 +1,9 @@
-"use client";
-import { SiteHeader } from "@/components/site-header";
-import { LetterGenerator } from "@/components/letter/letter-generator";
-import { Sparkles, Mail, Zap, Star, Wand2, FileText } from "lucide-react";
-import { useEffect, useState } from "react";
-import { LetterGeneratorSkeleton } from "@/components/ui/skeleton";
+'use client';
+import { SiteHeader } from '@/components/site-header';
+import { LetterGenerator } from '@/components/letter/letter-generator';
+import { Sparkles, Mail, Zap, Star, Wand2, FileText } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { LetterGeneratorSkeleton } from '@/components/ui/skeleton';
 
 export default function LetterPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,7 +41,7 @@ export default function LetterPage() {
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-              Draft Professional{" "}
+              Draft Professional{' '}
               <span className="bolt-gradient-text relative inline-block">
                 Letters
                 <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
@@ -51,47 +51,25 @@ export default function LetterPage() {
             </h1>
 
             <p className="text-base sm:text-lg lg:text-xl leading-7 sm:leading-8 text-muted-foreground max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-0">
-              Create{" "}
-              <span className="font-semibold text-yellow-600">
-                cover letters
-              </span>
-              ,{" "}
-              <span className="font-semibold text-blue-600">
-                business correspondence
-              </span>
-              , and{" "}
-              <span className="font-semibold text-purple-600">
-                thank you notes
-              </span>{" "}
-              with{" "}
-              <span className="font-semibold bolt-gradient-text">
-                perfect tone and formatting
-              </span>
+              Create <span className="font-semibold text-yellow-600">cover letters</span>,{' '}
+              <span className="font-semibold text-blue-600">business correspondence</span>, and{' '}
+              <span className="font-semibold text-purple-600">thank you notes</span> with{' '}
+              <span className="font-semibold bolt-gradient-text">perfect tone and formatting</span>
             </p>
 
             {/* Stats bar */}
             <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4 sm:gap-6">
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Perfect
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">Perfect</span>
                 <span className="text-muted-foreground text-xs ml-1">Tone</span>
               </div>
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Pro
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Format
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">Pro</span>
+                <span className="text-muted-foreground text-xs ml-1">Format</span>
               </div>
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Any
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Purpose
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">Any</span>
+                <span className="text-muted-foreground text-xs ml-1">Purpose</span>
               </div>
             </div>
           </div>
@@ -108,7 +86,7 @@ export default function LetterPage() {
             <div className="absolute bottom-4 left-4">
               <Star
                 className="h-4 w-4 text-blue-500 animate-spin"
-                style={{ animationDuration: "3s" }}
+                style={{ animationDuration: '3s' }}
               />
             </div>
 
@@ -135,15 +113,11 @@ export default function LetterPage() {
                 <div className="flex flex-wrap justify-center gap-3">
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Mail className="inline h-3 w-3 text-yellow-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Multiple Types
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Multiple Types</span>
                   </div>
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Zap className="inline h-3 w-3 text-blue-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Instant Results
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Instant Results</span>
                   </div>
                 </div>
               </div>

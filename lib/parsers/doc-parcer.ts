@@ -6,6 +6,8 @@ export async function extractTextFromDoc(file: File): Promise<string> {
     return (officeParser as any).parseOfficeAsync(buffer);
   } catch (error) {
     console.error('DOC parsing error:', error);
-    throw new Error(`Failed to parse DOC: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to parse DOC: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }

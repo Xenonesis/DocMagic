@@ -1,5 +1,5 @@
-import { SiteHeader } from "@/components/site-header";
-import { ATSAnalyzer } from "@/components/resume/ats-analyzer";
+import { SiteHeader } from '@/components/site-header';
+import { ATSAnalyzer } from '@/components/resume/ats-analyzer';
 
 export default function ATSPage() {
   return (

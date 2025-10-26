@@ -1,15 +1,7 @@
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
-function Skeleton({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn("animate-pulse rounded-md bg-muted", className)}
-      {...props}
-    />
-  );
+function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn('animate-pulse rounded-md bg-muted', className)} {...props} />;
 }
 
 // Document Card Skeleton
@@ -427,7 +419,6 @@ export function CertificateGeneratorSkeleton() {
 
 export { Skeleton };
 
-
 // Icon Generator Skeleton
 export function IconGeneratorSkeleton() {
   return (
@@ -467,7 +458,7 @@ export function QRGeneratorSkeleton() {
         <Skeleton className="h-10 w-32 rounded-lg" />
         <Skeleton className="h-10 w-32 rounded-lg" />
       </div>
-      
+
       {/* Type Selection */}
       <div className="space-y-3">
         <Skeleton className="h-5 w-32" />
@@ -541,7 +532,7 @@ export function DiagramGeneratorSkeleton() {
             <Skeleton className="h-6 w-24 mx-auto" />
             <Skeleton className="h-8 w-32 mx-auto" />
           </div>
-          
+
           {/* Diagram Preview */}
           <div className="glass-effect border border-yellow-400/20 rounded-xl p-8">
             <div className="space-y-4">

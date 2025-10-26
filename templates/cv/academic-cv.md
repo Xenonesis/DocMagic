@@ -1,11 +1,13 @@
 # Academic CV Template
 
 ## Template Overview
+
 This comprehensive academic CV template is designed for academic professionals, researchers, and professors seeking academic positions. It follows standard academic formatting conventions and includes all essential sections expected in academic settings.
 
 ## CV Structure
 
 ### Header Section
+
 ```
 [Your Full Name]
 [Your Academic Title, e.g., Ph.D., Professor]
@@ -17,6 +19,7 @@ This comprehensive academic CV template is designed for academic professionals, 
 ```
 
 ### Professional Summary
+
 ```
 Distinguished academic researcher with [X] years of experience in [field of study]. Expertise in [research areas] with a strong publication record and proven track record of securing research funding. Committed to advancing knowledge in [field] through innovative research and excellence in teaching.
 ```
@@ -24,7 +27,9 @@ Distinguished academic researcher with [X] years of experience in [field of stud
 ## Main Sections
 
 ### 1. Education
+
 **Format for each degree:**
+
 ```
 Ph.D. in [Field of Study], [Year]
 [University Name], [City, State/Country]
@@ -42,7 +47,9 @@ B.A./B.S. in [Field of Study], [Year]
 ```
 
 ### 2. Academic Positions
+
 **Format for each position:**
+
 ```
 [Current Position, e.g., Associate Professor], [Start Year] - Present
 [Department Name], [University Name], [City, State/Country]
@@ -57,6 +64,7 @@ B.A./B.S. in [Field of Study], [Year]
 ```
 
 ### 3. Research Interests
+
 ```
 Primary Research Area: [Area Name]
 Detailed description of research focus, methodologies, and current projects
@@ -70,6 +78,7 @@ Secondary Research Areas:
 ### 4. Publications
 
 #### Peer-Reviewed Journal Articles
+
 ```
 [Author names]. ([Year]). "[Article Title]." Journal Name, Volume(Issue), pages. DOI: [DOI]
 
@@ -77,22 +86,27 @@ Secondary Research Areas:
 ```
 
 #### Book Chapters
+
 ```
 [Author names]. ([Year]). "[Chapter Title]." In [Editor names] (Eds.), Book Title (pp. pages). Publisher.
 ```
 
 #### Books (if applicable)
+
 ```
 [Author names]. ([Year]). Book Title. Publisher.
 ```
 
 #### Conference Proceedings
+
 ```
 [Author names]. ([Year]). "[Paper Title]." Proceedings of [Conference Name], pages.
 ```
 
 ### 5. Grants and Funding
+
 **Format for each grant:**
+
 ```
 [Grant Title]
 [Funding Agency], $[Amount], [Start Year] - [End Year]
@@ -103,6 +117,7 @@ Status: [Awarded/Pending]
 ### 6. Teaching Experience
 
 #### Courses Taught
+
 ```
 [Course Number and Title] ([Level: Undergraduate/Graduate])
 [University Name], [Semesters/Years Taught]
@@ -111,6 +126,7 @@ Teaching Evaluations: [Score if strong]
 ```
 
 #### Thesis Supervision
+
 ```
 Ph.D. Students Supervised:
 • [Student Name] ([Year]) - "[Thesis Title]"
@@ -123,21 +139,25 @@ M.A./M.S. Students Supervised:
 ### 7. Conference Presentations
 
 #### Invited Talks
+
 ```
 "[Presentation Title]." [Conference Name], [Location], [Date].
 ```
 
 #### Contributed Papers
+
 ```
 "[Presentation Title]." [Conference Name], [Location], [Date].
 ```
 
 #### Poster Presentations
+
 ```
 "[Poster Title]." [Conference Name], [Location], [Date].
 ```
 
 ### 8. Awards and Honors
+
 ```
 [Award Name], [Awarding Organization], [Year]
 [Brief description if needed]
@@ -146,6 +166,7 @@ M.A./M.S. Students Supervised:
 ### 9. Professional Service
 
 #### Editorial Service
+
 ```
 • Editorial Board Member, [Journal Name] ([Years])
 • Guest Editor, [Journal Name] Special Issue ([Year])
@@ -153,6 +174,7 @@ M.A./M.S. Students Supervised:
 ```
 
 #### Professional Organizations
+
 ```
 • Member, [Organization Name]
 • Committee Member, [Committee Name] ([Years])
@@ -160,12 +182,14 @@ M.A./M.S. Students Supervised:
 ```
 
 #### University Service
+
 ```
 • [Committee Name], [University Name] ([Years])
 • [Administrative Role], [Department] ([Years])
 ```
 
 ### 10. Technical Skills
+
 ```
 Research Methods: [Specific methodologies and techniques]
 Software/Programming: [Statistical software, programming languages, etc.]
@@ -174,12 +198,14 @@ Languages: [Languages and proficiency levels]
 ```
 
 ### 11. Professional Memberships
+
 ```
 • [Professional Society Name] - Member since [Year]
 • [Academic Association] - Member since [Year]
 ```
 
 ### 12. Media Coverage and Outreach (if applicable)
+
 ```
 • [Media Outlet], "[Article Title]," [Date]
 • [Public Speaking Engagement], [Event Name], [Date]
@@ -188,6 +214,7 @@ Languages: [Languages and proficiency levels]
 ## Formatting Guidelines
 
 ### Academic Standards
+
 - **Length**: No page limit (typically 3-15+ pages)
 - **Font**: Times New Roman, 11-12 point
 - **Margins**: 1 inch on all sides
@@ -195,6 +222,7 @@ Languages: [Languages and proficiency levels]
 - **Order**: Reverse chronological within each section
 
 ### Section Organization
+
 1. Contact Information
 2. Education
 3. Academic Positions
@@ -211,18 +239,21 @@ Languages: [Languages and proficiency levels]
 ## Customization by Field
 
 ### STEM Fields
+
 - Emphasize publications and funding
 - Include technical skills and methodologies
 - List laboratory experience and equipment
 - Mention collaborative research projects
 
 ### Humanities
+
 - Focus on publications and presentations
 - Include language skills
 - Mention archival research and fieldwork
 - Highlight teaching philosophy
 
 ### Social Sciences
+
 - Balance quantitative and qualitative methods
 - Include fieldwork and data collection experience
 - Mention policy implications of research
@@ -231,6 +262,7 @@ Languages: [Languages and proficiency levels]
 ## Best Practices
 
 ### Content Guidelines
+
 1. **Be Comprehensive**: Include all relevant academic activities
 2. **Use Consistent Formatting**: Maintain uniform style throughout
 3. **Update Regularly**: Keep CV current with recent activities
@@ -238,6 +270,7 @@ Languages: [Languages and proficiency levels]
 5. **Proofread Carefully**: Academic CVs must be error-free
 
 ### Common Mistakes to Avoid
+
 1. **Including Non-Academic Work**: Focus on academic achievements
 2. **Poor Organization**: Use clear headings and logical order
 3. **Inconsistent Dates**: Double-check all dates and timelines

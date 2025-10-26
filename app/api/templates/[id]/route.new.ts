@@ -9,13 +9,10 @@ type Params = {
   };
 };
 
-export async function GET(
-  request: Request,
-  { params }: Params
-) {
+export async function GET(request: Request, { params }: Params) {
   const { id } = params;
   const cookieStore = await cookies();
-  
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -31,12 +28,14 @@ export async function GET(
           cookieStore.set({ name, value: '', ...options });
         },
       },
-    }
+    },
   );
-  
+
   try {
-    const { data: { user } } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
     // First, try to get the template
     const { data: template, error: templateError } = await supabase
       .from('templates')
@@ -75,20 +74,17 @@ export async function GET(
     return new NextResponse('Not Found', { status: 404 });
   } catch (error) {
     console.error('Error fetching template:', error);
-    return new NextResponse(
-      JSON.stringify({ error: 'Failed to fetch template' }), 
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    return new NextResponse(JSON.stringify({ error: 'Failed to fetch template' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: Params
-) {
+export async function PUT(request: Request, { params }: Params) {
   const { id } = params;
   const cookieStore = await cookies();
-  
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -104,11 +100,14 @@ export async function PUT(
           cookieStore.set({ name, value: '', ...options });
         },
       },
-    }
+    },
   );
-  
+
   try {
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -130,10 +129,10 @@ export async function PUT(
 
     // Prevent updating default templates
     if (existingTemplate.is_default) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Cannot update default templates' }), 
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Cannot update default templates' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Prepare update data
@@ -144,7 +143,7 @@ export async function PUT(
       is_public?: boolean;
       updated_at: string;
     } = {
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     };
 
     if (title !== undefined) updateData.title = title;
@@ -165,20 +164,17 @@ export async function PUT(
     return NextResponse.json(template);
   } catch (error) {
     console.error('Error updating template:', error);
-    return new NextResponse(
-      JSON.stringify({ error: 'Failed to update template' }), 
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    return new NextResponse(JSON.stringify({ error: 'Failed to update template' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: Params
-) {
+export async function DELETE(request: Request, { params }: Params) {
   const { id } = params;
   const cookieStore = await cookies();
-  
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -194,11 +190,14 @@ export async function DELETE(
           cookieStore.set({ name, value: '', ...options });
         },
       },
-    }
+    },
   );
-  
+
   try {
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
@@ -216,32 +215,26 @@ export async function DELETE(
 
     // Prevent deleting default templates
     if (existingTemplate.is_default) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Cannot delete default templates' }), 
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Cannot delete default templates' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Delete the template
-    const { error: deleteError } = await supabase
-      .from('templates')
-      .delete()
-      .eq('id', id);
+    const { error: deleteError } = await supabase.from('templates').delete().eq('id', id);
 
     if (deleteError) throw deleteError;
 
     // Delete any shares associated with this template
-    await supabase
-      .from('template_shares')
-      .delete()
-      .eq('template_id', id);
+    await supabase.from('template_shares').delete().eq('template_id', id);
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error('Error deleting template:', error);
-    return new NextResponse(
-      JSON.stringify({ error: 'Failed to delete template' }), 
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    return new NextResponse(JSON.stringify({ error: 'Failed to delete template' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }

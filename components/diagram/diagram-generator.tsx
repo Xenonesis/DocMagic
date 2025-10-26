@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useState, useEffect, useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import {
   Dialog,
   DialogContent,
@@ -14,27 +14,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { DiagramPreview } from "@/components/diagram/diagram-preview";
-import { DiagramTemplates } from "@/components/diagram/diagram-templates";
-import { useToast } from "@/hooks/use-toast";
-import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
-import { 
-  Loader2, 
-  Sparkles, 
-  Download, 
-  Copy, 
-  Check, 
-  Wand2, 
-  Code, 
-  Eye, 
+} from '@/components/ui/select';
+import { DiagramPreview } from '@/components/diagram/diagram-preview';
+import { DiagramTemplates } from '@/components/diagram/diagram-templates';
+import { useToast } from '@/hooks/use-toast';
+import { useAuthGuard, PROTECTED_ACTIVITIES } from '@/lib/auth-utils';
+import {
+  Loader2,
+  Sparkles,
+  Download,
+  Copy,
+  Check,
+  Wand2,
+  Code,
+  Eye,
   FileImage,
   Share2,
   Workflow,
@@ -46,8 +46,8 @@ import {
   Lightbulb,
   BookOpen,
   Save,
-  History
-} from "lucide-react";
+  History,
+} from 'lucide-react';
 import { toPng, toSvg } from 'html-to-image';
 
 const DIAGRAM_EXAMPLES = {
@@ -57,14 +57,14 @@ const DIAGRAM_EXAMPLES = {
     B -->|No| D[Debug]
     D --> B
     C --> E[End]`,
-  
+
   sequence: `sequenceDiagram
     participant A as Alice
     participant B as Bob
     A->>B: Hello Bob, how are you?
     B-->>A: Great!
     A-)B: See you later!`,
-  
+
   classDiagram: `classDiagram
     class Animal {
         +String name
@@ -76,7 +76,7 @@ const DIAGRAM_EXAMPLES = {
         +bark()
     }
     Animal <|-- Dog`,
-  
+
   gitGraph: `gitGraph
     commit
     commit
@@ -87,12 +87,12 @@ const DIAGRAM_EXAMPLES = {
     checkout main
     merge develop
     commit`,
-  
+
   erDiagram: `erDiagram
     CUSTOMER ||--o{ ORDER : places
     ORDER ||--|{ LINE-ITEM : contains
     CUSTOMER }|..|{ DELIVERY-ADDRESS : uses`,
-  
+
   journey: `journey
     title My working day
     section Go to work
@@ -101,18 +101,18 @@ const DIAGRAM_EXAMPLES = {
       Do work: 1: Me, Cat
     section Go home
       Go downstairs: 5: Me
-      Sit down: 5: Me`
+      Sit down: 5: Me`,
 };
 
 export function DiagramGenerator() {
   const [diagramCode, setDiagramCode] = useState(DIAGRAM_EXAMPLES.flowchart);
-  const [selectedTemplate, setSelectedTemplate] = useState("flowchart");
+  const [selectedTemplate, setSelectedTemplate] = useState('flowchart');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isCopying, setIsCopying] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
-  const [activeTab, setActiveTab] = useState("editor");
-  const [aiPrompt, setAiPrompt] = useState("");
-  const [diagramType, setDiagramType] = useState("flowchart");
+  const [activeTab, setActiveTab] = useState('editor');
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [diagramType, setDiagramType] = useState('flowchart');
   const [showAiDialog, setShowAiDialog] = useState(false);
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [pendingExportFormat, setPendingExportFormat] = useState<'png' | 'svg' | null>(null);
@@ -163,8 +163,10 @@ export function DiagramGenerator() {
         handleUndo();
       }
       // Ctrl/Cmd + Shift + Z or Ctrl/Cmd + Y for redo
-      if (((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') || 
-          ((e.ctrlKey || e.metaKey) && e.key === 'y')) {
+      if (
+        ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') ||
+        ((e.ctrlKey || e.metaKey) && e.key === 'y')
+      ) {
         e.preventDefault();
         handleRedo();
       }
@@ -181,22 +183,24 @@ export function DiagramGenerator() {
 
   const handleTemplateSelect = (template: string) => {
     setSelectedTemplate(template);
-    setDiagramCode(DIAGRAM_EXAMPLES[template as keyof typeof DIAGRAM_EXAMPLES] || DIAGRAM_EXAMPLES.flowchart);
+    setDiagramCode(
+      DIAGRAM_EXAMPLES[template as keyof typeof DIAGRAM_EXAMPLES] || DIAGRAM_EXAMPLES.flowchart,
+    );
   };
 
   const generateDiagramFromPrompt = async () => {
     if (!aiPrompt.trim()) {
       toast({
-        title: "Prompt required",
-        description: "Please enter a description for your diagram",
-        variant: "destructive",
+        title: 'Prompt required',
+        description: 'Please enter a description for your diagram',
+        variant: 'destructive',
       });
       return;
     }
 
     setIsGenerating(true);
     setShowAiDialog(false);
-    
+
     try {
       const response = await fetch('/api/generate/diagram', {
         method: 'POST',
@@ -214,14 +218,14 @@ export function DiagramGenerator() {
       }
 
       const data = await response.json();
-      
+
       if (data.code) {
         setDiagramCode(data.code);
         setSelectedTemplate(diagramType);
-        
+
         toast({
-          title: "🎯 AI Diagram Generated!",
-          description: data.title || "Your diagram has been created successfully",
+          title: '🎯 AI Diagram Generated!',
+          description: data.title || 'Your diagram has been created successfully',
         });
       } else {
         throw new Error('Invalid response format');
@@ -229,9 +233,9 @@ export function DiagramGenerator() {
     } catch (error) {
       console.error('Diagram generation error:', error);
       toast({
-        title: "Generation failed",
-        description: "Failed to generate diagram. Please try again.",
-        variant: "destructive",
+        title: 'Generation failed',
+        description: 'Failed to generate diagram. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsGenerating(false);
@@ -240,19 +244,19 @@ export function DiagramGenerator() {
 
   const copyToClipboard = async () => {
     setIsCopying(true);
-    
+
     try {
       await navigator.clipboard.writeText(diagramCode);
-      
+
       toast({
-        title: "Copied to clipboard!",
-        description: "Mermaid code has been copied to your clipboard",
+        title: 'Copied to clipboard!',
+        description: 'Mermaid code has been copied to your clipboard',
       });
     } catch (error) {
       toast({
-        title: "Copy failed",
-        description: "Failed to copy code to clipboard. Please try again.",
-        variant: "destructive",
+        title: 'Copy failed',
+        description: 'Failed to copy code to clipboard. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setTimeout(() => setIsCopying(false), 2000);
@@ -268,43 +272,43 @@ export function DiagramGenerator() {
     }
 
     if (!diagramRef.current) return;
-    
+
     setIsExporting(true);
-    
+
     try {
       const element = diagramRef.current.querySelector('#mermaid-diagram');
       if (!element) throw new Error('Diagram element not found');
-      
+
       let dataUrl: string;
-      
+
       if (format === 'png') {
         dataUrl = await toPng(element as HTMLElement, {
           backgroundColor: '#ffffff',
           quality: 1.0,
-          pixelRatio: 2
+          pixelRatio: 2,
         });
       } else {
         dataUrl = await toSvg(element as HTMLElement, {
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
         });
       }
-      
+
       // Create download link
       const link = document.createElement('a');
       link.download = `diagram.${format}`;
       link.href = dataUrl;
       link.click();
-      
+
       toast({
         title: `Diagram exported as ${format.toUpperCase()}!`,
-        description: "Your diagram has been downloaded successfully",
+        description: 'Your diagram has been downloaded successfully',
       });
     } catch (error) {
       console.error('Export error:', error);
       toast({
-        title: "Export failed",
+        title: 'Export failed',
         description: `Failed to export diagram as ${format.toUpperCase()}. Please try again.`,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsExporting(false);
@@ -321,23 +325,23 @@ export function DiagramGenerator() {
       const shareData = {
         title: 'docverse Diagram',
         text: 'Check out this diagram I created with docverse!',
-        url: window.location.href
+        url: window.location.href,
       };
-      
+
       if (navigator.share) {
         await navigator.share(shareData);
       } else {
         await navigator.clipboard.writeText(window.location.href);
         toast({
-          title: "Link copied!",
-          description: "Diagram link has been copied to your clipboard",
+          title: 'Link copied!',
+          description: 'Diagram link has been copied to your clipboard',
         });
       }
     } catch (error) {
       toast({
-        title: "Share failed",
-        description: "Failed to share diagram. Please try again.",
-        variant: "destructive",
+        title: 'Share failed',
+        description: 'Failed to share diagram. Please try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -351,12 +355,10 @@ export function DiagramGenerator() {
             <div className="mx-auto w-16 h-16 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full flex items-center justify-center mb-4">
               <Lock className="h-8 w-8 text-white" />
             </div>
-            <DialogTitle className="text-2xl text-center">
-              Sign in to Export Diagrams
-            </DialogTitle>
+            <DialogTitle className="text-2xl text-center">Sign in to Export Diagrams</DialogTitle>
             <DialogDescription className="text-center text-base">
-              Create diagrams freely, but sign in to export them as PNG or SVG files.
-              Join thousands of professionals using docverse!
+              Create diagrams freely, but sign in to export them as PNG or SVG files. Join thousands
+              of professionals using docverse!
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -384,7 +386,7 @@ export function DiagramGenerator() {
                 </li>
               </ul>
             </div>
-            
+
             <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Zap className="h-4 w-4 text-yellow-500" />
@@ -454,9 +456,15 @@ export function DiagramGenerator() {
               <div className="flex-1 text-sm">
                 <p className="font-medium text-blue-900 mb-1">💡 Pro Tips</p>
                 <p className="text-blue-700 text-xs">
-                  Use <kbd className="px-1.5 py-0.5 bg-white/50 rounded border border-blue-300 font-mono text-xs">Ctrl+Z</kbd> to undo, 
-                  <kbd className="px-1.5 py-0.5 bg-white/50 rounded border border-blue-300 font-mono text-xs ml-1">Ctrl+S</kbd> to copy code.
-                  Preview updates automatically as you type!
+                  Use{' '}
+                  <kbd className="px-1.5 py-0.5 bg-white/50 rounded border border-blue-300 font-mono text-xs">
+                    Ctrl+Z
+                  </kbd>{' '}
+                  to undo,
+                  <kbd className="px-1.5 py-0.5 bg-white/50 rounded border border-blue-300 font-mono text-xs ml-1">
+                    Ctrl+S
+                  </kbd>{' '}
+                  to copy code. Preview updates automatically as you type!
                 </p>
               </div>
               <Button
@@ -480,21 +488,47 @@ export function DiagramGenerator() {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div className="space-y-2">
-                  <h4 className="font-medium text-xs uppercase text-muted-foreground">Node Shapes</h4>
+                  <h4 className="font-medium text-xs uppercase text-muted-foreground">
+                    Node Shapes
+                  </h4>
                   <div className="space-y-1 text-xs font-mono">
-                    <div><code className="bg-white/50 px-1 py-0.5 rounded">A[Rectangle]</code> - Standard node</div>
-                    <div><code className="bg-white/50 px-1 py-0.5 rounded">B(Rounded)</code> - Rounded edges</div>
-                    <div><code className="bg-white/50 px-1 py-0.5 rounded">C{"{Diamond}"}</code> - Decision</div>
-                    <div><code className="bg-white/50 px-1 py-0.5 rounded">D[["Subroutine"]]</code> - Process</div>
+                    <div>
+                      <code className="bg-white/50 px-1 py-0.5 rounded">A[Rectangle]</code> -
+                      Standard node
+                    </div>
+                    <div>
+                      <code className="bg-white/50 px-1 py-0.5 rounded">B(Rounded)</code> - Rounded
+                      edges
+                    </div>
+                    <div>
+                      <code className="bg-white/50 px-1 py-0.5 rounded">C{'{Diamond}'}</code> -
+                      Decision
+                    </div>
+                    <div>
+                      <code className="bg-white/50 px-1 py-0.5 rounded">D[["Subroutine"]]</code> -
+                      Process
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-medium text-xs uppercase text-muted-foreground">Connections</h4>
+                  <h4 className="font-medium text-xs uppercase text-muted-foreground">
+                    Connections
+                  </h4>
                   <div className="space-y-1 text-xs font-mono">
-                    <div><code className="bg-white/50 px-1 py-0.5 rounded">A --&gt; B</code> - Arrow</div>
-                    <div><code className="bg-white/50 px-1 py-0.5 rounded">A --- B</code> - Line</div>
-                    <div><code className="bg-white/50 px-1 py-0.5 rounded">A -.&gt; B</code> - Dotted arrow</div>
-                    <div><code className="bg-white/50 px-1 py-0.5 rounded">A --&gt;|text| B</code> - Labeled arrow</div>
+                    <div>
+                      <code className="bg-white/50 px-1 py-0.5 rounded">A --&gt; B</code> - Arrow
+                    </div>
+                    <div>
+                      <code className="bg-white/50 px-1 py-0.5 rounded">A --- B</code> - Line
+                    </div>
+                    <div>
+                      <code className="bg-white/50 px-1 py-0.5 rounded">A -.&gt; B</code> - Dotted
+                      arrow
+                    </div>
+                    <div>
+                      <code className="bg-white/50 px-1 py-0.5 rounded">A --&gt;|text| B</code> -
+                      Labeled arrow
+                    </div>
                   </div>
                 </div>
               </div>
@@ -533,19 +567,22 @@ export function DiagramGenerator() {
                     {Object.keys(DIAGRAM_EXAMPLES).map((template) => (
                       <Button
                         key={template}
-                        variant={selectedTemplate === template ? "default" : "outline"}
+                        variant={selectedTemplate === template ? 'default' : 'outline'}
                         size="sm"
                         onClick={() => handleTemplateSelect(template)}
                         className={`text-xs capitalize transition-all ${
-                          selectedTemplate === template 
-                            ? "bolt-gradient text-white shadow-lg" 
-                            : "glass-effect hover:border-yellow-400/50"
+                          selectedTemplate === template
+                            ? 'bolt-gradient text-white shadow-lg'
+                            : 'glass-effect hover:border-yellow-400/50'
                         }`}
                       >
-                        {template === 'classDiagram' ? 'Class' : 
-                         template === 'erDiagram' ? 'ER Diagram' :
-                         template === 'gitGraph' ? 'Git Graph' :
-                         template}
+                        {template === 'classDiagram'
+                          ? 'Class'
+                          : template === 'erDiagram'
+                            ? 'ER Diagram'
+                            : template === 'gitGraph'
+                              ? 'Git Graph'
+                              : template}
                       </Button>
                     ))}
                   </div>
@@ -554,7 +591,10 @@ export function DiagramGenerator() {
                 {/* Code Editor */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="diagramCode" className="text-sm font-medium flex items-center gap-2">
+                    <Label
+                      htmlFor="diagramCode"
+                      className="text-sm font-medium flex items-center gap-2"
+                    >
                       <Sparkles className="h-4 w-4 text-yellow-500" />
                       Mermaid Code
                     </Label>
@@ -630,12 +670,18 @@ export function DiagramGenerator() {
                       </DialogHeader>
                       <div className="space-y-4 py-4">
                         <div className="space-y-2">
-                          <Label htmlFor="diagram-type" className="text-sm font-medium flex items-center gap-2">
+                          <Label
+                            htmlFor="diagram-type"
+                            className="text-sm font-medium flex items-center gap-2"
+                          >
                             <Workflow className="h-4 w-4 text-muted-foreground" />
                             Diagram Type
                           </Label>
                           <Select value={diagramType} onValueChange={setDiagramType}>
-                            <SelectTrigger id="diagram-type" className="glass-effect border-yellow-400/30">
+                            <SelectTrigger
+                              id="diagram-type"
+                              className="glass-effect border-yellow-400/30"
+                            >
                               <SelectValue placeholder="Select diagram type" />
                             </SelectTrigger>
                             <SelectContent>
@@ -679,7 +725,10 @@ export function DiagramGenerator() {
                           </Select>
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="ai-prompt" className="text-sm font-medium flex items-center gap-2">
+                          <Label
+                            htmlFor="ai-prompt"
+                            className="text-sm font-medium flex items-center gap-2"
+                          >
                             <Sparkles className="h-4 w-4 text-yellow-500" />
                             Describe Your Diagram
                           </Label>
@@ -723,7 +772,7 @@ export function DiagramGenerator() {
                       </div>
                     </DialogContent>
                   </Dialog>
-                  
+
                   <Button
                     variant="outline"
                     onClick={copyToClipboard}
@@ -751,7 +800,10 @@ export function DiagramGenerator() {
                 <h2 className="text-xl sm:text-2xl font-bold bolt-gradient-text">Preview</h2>
               </div>
 
-              <div ref={diagramRef} className="glass-effect border border-yellow-400/20 rounded-xl bg-white relative min-h-[320px] sm:min-h-[380px] md:min-h-[420px] max-h-[75vh] overflow-auto">
+              <div
+                ref={diagramRef}
+                className="glass-effect border border-yellow-400/20 rounded-xl bg-white relative min-h-[320px] sm:min-h-[380px] md:min-h-[420px] max-h-[75vh] overflow-auto"
+              >
                 <div className="absolute inset-0 shimmer opacity-10"></div>
                 <div className="relative z-10">
                   <DiagramPreview code={diagramCode} />
@@ -825,7 +877,7 @@ export function DiagramGenerator() {
                 onSelectTemplate={(template, code) => {
                   setSelectedTemplate(template);
                   setDiagramCode(code);
-                  setActiveTab("editor");
+                  setActiveTab('editor');
                 }}
               />
             </div>
@@ -843,7 +895,10 @@ export function DiagramGenerator() {
               </p>
             </div>
 
-            <div ref={diagramRef} className="glass-effect border border-yellow-400/20 rounded-xl overflow-hidden bg-white relative min-h-[600px]">
+            <div
+              ref={diagramRef}
+              className="glass-effect border border-yellow-400/20 rounded-xl overflow-hidden bg-white relative min-h-[600px]"
+            >
               <div className="absolute inset-0 shimmer opacity-10"></div>
               <div className="relative z-10">
                 <DiagramPreview code={diagramCode} fullScreen />
@@ -867,7 +922,8 @@ export function DiagramGenerator() {
                   <p className="text-sm text-muted-foreground flex items-start gap-2">
                     <Lock className="h-4 w-4 mt-0.5 text-yellow-500 flex-shrink-0" />
                     <span>
-                      <strong className="text-foreground">Sign in to export diagrams.</strong> You can create and edit diagrams freely, but exporting requires an account.
+                      <strong className="text-foreground">Sign in to export diagrams.</strong> You
+                      can create and edit diagrams freely, but exporting requires an account.
                     </span>
                   </p>
                 </div>

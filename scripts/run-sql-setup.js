@@ -16,8 +16,8 @@ if (!supabaseUrl || !supabaseServiceKey) {
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
-    persistSession: false
-  }
+    persistSession: false,
+  },
 });
 
 async function runSetup() {
@@ -27,27 +27,24 @@ async function runSetup() {
   try {
     // Test connection first
     console.log('Testing connection...');
-    const { data, error: testError } = await supabase
-      .from('_test')
-      .select('*')
-      .limit(1);
-    
+    const { data, error: testError } = await supabase.from('_test').select('*').limit(1);
+
     if (testError && !testError.message.includes('does not exist')) {
       console.error('Connection test failed:', testError);
       return;
     }
-    
+
     console.log('Connection successful!');
 
     // Read and execute the SQL setup
     const sqlPath = path.join(__dirname, 'supabase-setup.sql');
     const sql = fs.readFileSync(sqlPath, 'utf8');
-    
+
     // Split SQL into individual statements
     const statements = sql
       .split(';')
-      .map(s => s.trim())
-      .filter(s => s.length > 0 && !s.startsWith('--'));
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0 && !s.startsWith('--'));
 
     console.log(`Executing ${statements.length} SQL statements...`);
 
@@ -55,12 +52,12 @@ async function runSetup() {
       const statement = statements[i];
       if (statement.trim()) {
         console.log(`Executing statement ${i + 1}/${statements.length}...`);
-        
+
         try {
-          const { error } = await supabase.rpc('exec_sql', { 
-            sql: statement + ';'
+          const { error } = await supabase.rpc('exec_sql', {
+            sql: statement + ';',
           });
-          
+
           if (error) {
             console.log(`Statement ${i + 1} note:`, error.message);
           }
@@ -83,12 +80,11 @@ async function runSetup() {
       console.log(`Templates table ready! Found ${templates?.length || 0} templates.`);
       if (templates && templates.length > 0) {
         console.log('Sample templates:');
-        templates.forEach(t => console.log(`  - ${t.title} (${t.id})`));
+        templates.forEach((t) => console.log(`  - ${t.title} (${t.id})`));
       }
     }
 
     console.log('Database setup complete!');
-
   } catch (error) {
     console.error('Setup failed:', error);
   }

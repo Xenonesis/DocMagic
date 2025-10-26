@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
-import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
-import { ExportAuthDialog } from "@/components/ui/export-auth-dialog";
-import { useRouter } from "next/navigation";
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Briefcase, 
-  GraduationCap, 
-  Code, 
-  Award, 
-  Link as LinkIcon, 
-  Github, 
-  Linkedin, 
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { useAuthGuard, PROTECTED_ACTIVITIES } from '@/lib/auth-utils';
+import { ExportAuthDialog } from '@/components/ui/export-auth-dialog';
+import { useRouter } from 'next/navigation';
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Briefcase,
+  GraduationCap,
+  Code,
+  Award,
+  Link as LinkIcon,
+  Github,
+  Linkedin,
   Globe,
   ArrowRight,
   ArrowLeft,
@@ -37,11 +37,20 @@ import {
   Loader2,
   FileText,
   Star,
-  Shield
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+  Shield,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-type ResumeStep = 'personal' | 'summary' | 'experience' | 'education' | 'skills' | 'projects' | 'certifications' | 'links' | 'review';
+type ResumeStep =
+  | 'personal'
+  | 'summary'
+  | 'experience'
+  | 'education'
+  | 'skills'
+  | 'projects'
+  | 'certifications'
+  | 'links'
+  | 'review';
 
 interface GuidedResumeGeneratorProps {
   onResumeGenerated?: (resume: any) => void;
@@ -51,8 +60,8 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
   const [currentStep, setCurrentStep] = useState<ResumeStep>('personal');
   const [isGenerating, setIsGenerating] = useState(false);
   const [stepGuidance, setStepGuidance] = useState<any>(null);
-  const [targetRole, setTargetRole] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
+  const [targetRole, setTargetRole] = useState('');
+  const [jobDescription, setJobDescription] = useState('');
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const { toast } = useToast();
   const { isAuthenticated } = useAuthGuard();
@@ -60,77 +69,110 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
 
   // Form data state
   const [personalInfo, setPersonalInfo] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    location: ""
+    name: '',
+    email: '',
+    phone: '',
+    location: '',
   });
 
-  const [professionalSummary, setProfessionalSummary] = useState("");
-  
-  const [workExperience, setWorkExperience] = useState([{
-    title: "",
-    company: "",
-    location: "",
-    startDate: "",
-    endDate: "",
-    current: false,
-    description: ""
-  }]);
+  const [professionalSummary, setProfessionalSummary] = useState('');
 
-  const [education, setEducation] = useState([{
-    degree: "",
-    institution: "",
-    location: "",
-    graduationDate: "",
-    gpa: "",
-    honors: ""
-  }]);
+  const [workExperience, setWorkExperience] = useState([
+    {
+      title: '',
+      company: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      current: false,
+      description: '',
+    },
+  ]);
+
+  const [education, setEducation] = useState([
+    {
+      degree: '',
+      institution: '',
+      location: '',
+      graduationDate: '',
+      gpa: '',
+      honors: '',
+    },
+  ]);
 
   const [skills, setSkills] = useState({
     technical: [] as string[],
     programming: [] as string[],
     tools: [] as string[],
-    soft: [] as string[]
+    soft: [] as string[],
   });
 
-  const [projects, setProjects] = useState([{
-    name: "",
-    description: "",
-    technologies: [] as string[],
-    link: ""
-  }]);
+  const [projects, setProjects] = useState([
+    {
+      name: '',
+      description: '',
+      technologies: [] as string[],
+      link: '',
+    },
+  ]);
 
-  const [certifications, setCertifications] = useState([{
-    name: "",
-    issuer: "",
-    date: "",
-    credential: ""
-  }]);
+  const [certifications, setCertifications] = useState([
+    {
+      name: '',
+      issuer: '',
+      date: '',
+      credential: '',
+    },
+  ]);
 
   const [links, setLinks] = useState({
-    linkedin: "",
-    github: "",
-    website: "",
-    portfolio: ""
+    linkedin: '',
+    github: '',
+    website: '',
+    portfolio: '',
   });
 
   // State for skills input
-  const [newSkill, setNewSkill] = useState({ technical: "", programming: "", tools: "", soft: "" });
+  const [newSkill, setNewSkill] = useState({ technical: '', programming: '', tools: '', soft: '' });
 
   const steps: { id: ResumeStep; title: string; icon: any; description: string }[] = [
-    { id: 'personal', title: 'Personal Info', icon: User, description: 'Basic contact information' },
-    { id: 'summary', title: 'Professional Summary', icon: FileText, description: 'Your professional overview' },
-    { id: 'experience', title: 'Work Experience', icon: Briefcase, description: 'Your work history' },
-    { id: 'education', title: 'Education', icon: GraduationCap, description: 'Academic background' },
+    {
+      id: 'personal',
+      title: 'Personal Info',
+      icon: User,
+      description: 'Basic contact information',
+    },
+    {
+      id: 'summary',
+      title: 'Professional Summary',
+      icon: FileText,
+      description: 'Your professional overview',
+    },
+    {
+      id: 'experience',
+      title: 'Work Experience',
+      icon: Briefcase,
+      description: 'Your work history',
+    },
+    {
+      id: 'education',
+      title: 'Education',
+      icon: GraduationCap,
+      description: 'Academic background',
+    },
     { id: 'skills', title: 'Skills', icon: Code, description: 'Technical and soft skills' },
     { id: 'projects', title: 'Projects', icon: Zap, description: 'Notable projects' },
-    { id: 'certifications', title: 'Certifications', icon: Award, description: 'Professional certifications' },
+    {
+      id: 'certifications',
+      title: 'Certifications',
+      icon: Award,
+      description: 'Professional certifications',
+    },
     { id: 'links', title: 'Professional Links', icon: LinkIcon, description: 'Online presence' },
-    { id: 'review', title: 'Review & Generate', icon: CheckCircle, description: 'Final review' }
+    { id: 'review', title: 'Review & Generate', icon: CheckCircle, description: 'Final review' },
   ];
 
-  const currentStepIndex = steps.findIndex(step => step.id === currentStep);
+  const currentStepIndex = steps.findIndex((step) => step.id === currentStep);
 
   // Load step guidance when step changes
   useEffect(() => {
@@ -149,8 +191,8 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
         body: JSON.stringify({
           step: currentStep,
           targetRole,
-          existingData: getCurrentStepData()
-        })
+          existingData: getCurrentStepData(),
+        }),
       });
 
       if (response.ok) {
@@ -164,15 +206,24 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
 
   const getCurrentStepData = () => {
     switch (currentStep) {
-      case 'personal': return personalInfo;
-      case 'summary': return professionalSummary;
-      case 'experience': return workExperience;
-      case 'education': return education;
-      case 'skills': return skills;
-      case 'projects': return projects;
-      case 'certifications': return certifications;
-      case 'links': return links;
-      default: return null;
+      case 'personal':
+        return personalInfo;
+      case 'summary':
+        return professionalSummary;
+      case 'experience':
+        return workExperience;
+      case 'education':
+        return education;
+      case 'skills':
+        return skills;
+      case 'projects':
+        return projects;
+      case 'certifications':
+        return certifications;
+      case 'links':
+        return links;
+      default:
+        return null;
     }
   };
 
@@ -211,8 +262,8 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           certifications,
           links,
           targetRole,
-          jobDescription
-        })
+          jobDescription,
+        }),
       });
 
       if (!response.ok) {
@@ -220,20 +271,20 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
       }
 
       const resume = await response.json();
-      
+
       if (onResumeGenerated) {
         onResumeGenerated(resume);
       }
 
       toast({
-        title: "🎯 ATS-Optimized Resume Generated!",
+        title: '🎯 ATS-Optimized Resume Generated!',
         description: `Your resume is optimized for ${targetRole} with ${resume.atsScore}% ATS compatibility. ${!isAuthenticated ? 'Sign in to download.' : ''}`,
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to generate resume. Please try again.",
-        variant: "destructive"
+        title: 'Error',
+        description: 'Failed to generate resume. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsGenerating(false);
@@ -249,24 +300,24 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
   };
 
   const updateArrayItem = (setter: any, index: number, field: string, value: any) => {
-    setter((prev: any[]) => prev.map((item, i) => 
-      i === index ? { ...item, [field]: value } : item
-    ));
+    setter((prev: any[]) =>
+      prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)),
+    );
   };
 
   const addSkill = (category: keyof typeof skills, skill: string) => {
     if (skill.trim()) {
-      setSkills(prev => ({
+      setSkills((prev) => ({
         ...prev,
-        [category]: [...prev[category], skill.trim()]
+        [category]: [...prev[category], skill.trim()],
       }));
     }
   };
 
   const removeSkill = (category: keyof typeof skills, index: number) => {
-    setSkills(prev => ({
+    setSkills((prev) => ({
       ...prev,
-      [category]: prev[category].filter((_, i) => i !== index)
+      [category]: prev[category].filter((_, i) => i !== index),
     }));
   };
 
@@ -277,12 +328,12 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           <div key={step.id} className="flex items-center flex-shrink-0">
             <button
               className={cn(
-                "flex items-center gap-2 px-4 py-2.5 rounded-full transition-all whitespace-nowrap",
+                'flex items-center gap-2 px-4 py-2.5 rounded-full transition-all whitespace-nowrap',
                 currentStep === step.id
-                  ? "bolt-gradient text-white shadow-lg scale-105"
+                  ? 'bolt-gradient text-white shadow-lg scale-105'
                   : index < currentStepIndex
-                  ? "bg-black dark:bg-black text-white dark:text-white border border-black dark:border-black hover:scale-105"
-                  : "glass-effect hover:scale-105 hover:border-primary/30"
+                    ? 'bg-black dark:bg-black text-white dark:text-white border border-black dark:border-black hover:scale-105'
+                    : 'glass-effect hover:scale-105 hover:border-primary/30',
               )}
               onClick={() => setCurrentStep(step.id)}
             >
@@ -299,7 +350,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           </div>
         ))}
       </div>
-      
+
       {/* Progress bar */}
       <div className="mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
         <div
@@ -307,7 +358,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           style={{ width: `${((currentStepIndex + 1) / steps.length) * 100}%` }}
         />
       </div>
-      
+
       {/* Step description */}
       <div className="mt-3 text-center">
         <p className="text-sm text-muted-foreground">
@@ -330,7 +381,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-blue-800 dark:text-blue-300">{stepGuidance.description}</p>
-          
+
           {stepGuidance.tips && (
             <div>
               <h4 className="font-medium text-sm mb-2 flex items-center gap-1 text-green-900 dark:text-green-200">
@@ -339,7 +390,10 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
               </h4>
               <ul className="space-y-1">
                 {stepGuidance.tips.map((tip: string, index: number) => (
-                  <li key={index} className="text-sm text-green-800 dark:text-green-300 flex items-start gap-2">
+                  <li
+                    key={index}
+                    className="text-sm text-green-800 dark:text-green-300 flex items-start gap-2"
+                  >
                     <span className="text-green-500 mt-1">•</span>
                     {tip}
                   </li>
@@ -356,7 +410,11 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
               </h4>
               <div className="flex flex-wrap gap-1">
                 {stepGuidance.keywords.map((keyword: string, index: number) => (
-                  <Badge key={index} variant="outline" className="text-xs bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/50 dark:text-yellow-200 dark:border-yellow-700">
+                  <Badge
+                    key={index}
+                    variant="outline"
+                    className="text-xs bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/50 dark:text-yellow-200 dark:border-yellow-700"
+                  >
                     {keyword}
                   </Badge>
                 ))}
@@ -374,16 +432,16 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
         <div className="flex items-start gap-3">
           <Target className="h-5 w-5 text-yellow-500 mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="font-semibold text-sm mb-2">
-              Welcome to the Guided Resume Builder!
-            </h3>
+            <h3 className="font-semibold text-sm mb-2">Welcome to the Guided Resume Builder!</h3>
             <p className="text-xs text-muted-foreground">
-              All fields are optional. Fill in what you have, and our AI will help create a professional, ATS-optimized resume. You can always come back and add more information later.
+              All fields are optional. Fill in what you have, and our AI will help create a
+              professional, ATS-optimized resume. You can always come back and add more information
+              later.
             </p>
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="name" className="flex items-center gap-2">
@@ -393,12 +451,12 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           <Input
             id="name"
             value={personalInfo.name}
-            onChange={(e) => setPersonalInfo(prev => ({ ...prev, name: e.target.value }))}
+            onChange={(e) => setPersonalInfo((prev) => ({ ...prev, name: e.target.value }))}
             placeholder="John Doe"
             className="glass-effect"
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="email" className="flex items-center gap-2">
             <Mail className="h-4 w-4" />
@@ -408,12 +466,12 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
             id="email"
             type="email"
             value={personalInfo.email}
-            onChange={(e) => setPersonalInfo(prev => ({ ...prev, email: e.target.value }))}
+            onChange={(e) => setPersonalInfo((prev) => ({ ...prev, email: e.target.value }))}
             placeholder="john@example.com"
             className="glass-effect"
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="phone" className="flex items-center gap-2">
             <Phone className="h-4 w-4" />
@@ -422,12 +480,12 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           <Input
             id="phone"
             value={personalInfo.phone}
-            onChange={(e) => setPersonalInfo(prev => ({ ...prev, phone: e.target.value }))}
+            onChange={(e) => setPersonalInfo((prev) => ({ ...prev, phone: e.target.value }))}
             placeholder="(555) 123-4567"
             className="glass-effect"
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="location" className="flex items-center gap-2">
             <MapPin className="h-4 w-4" />
@@ -436,7 +494,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           <Input
             id="location"
             value={personalInfo.location}
-            onChange={(e) => setPersonalInfo(prev => ({ ...prev, location: e.target.value }))}
+            onChange={(e) => setPersonalInfo((prev) => ({ ...prev, location: e.target.value }))}
             placeholder="San Francisco, CA"
             className="glass-effect"
           />
@@ -456,7 +514,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
             placeholder="e.g., Senior Software Engineer, Product Manager, Data Scientist"
             className="glass-effect border-yellow-400/30 focus:border-yellow-400/60"
           />
-          <p className="text-xs text-muted-foreground">Optional - This helps AI optimize your resume for ATS systems</p>
+          <p className="text-xs text-muted-foreground">
+            Optional - This helps AI optimize your resume for ATS systems
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -471,7 +531,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
             placeholder="Paste the job description here for better keyword optimization..."
             className="glass-effect min-h-[100px] resize-none"
           />
-          <p className="text-xs text-muted-foreground">Optional - Paste the job description to get better keyword matching</p>
+          <p className="text-xs text-muted-foreground">
+            Optional - Paste the job description to get better keyword matching
+          </p>
         </div>
       </div>
     </div>
@@ -495,7 +557,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           </div>
         </div>
       </div>
-      
+
       <div className="space-y-3">
         <div className="flex items-start gap-2">
           <FileText className="h-5 w-5 text-blue-500 mt-1 flex-shrink-0" />
@@ -529,7 +591,10 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
               Make Your Experience Stand Out
             </h3>
             <ul className="text-xs text-black dark:text-white space-y-1">
-              <li>• Start each bullet point with a strong action verb (Led, Developed, Increased, etc.)</li>
+              <li>
+                • Start each bullet point with a strong action verb (Led, Developed, Increased,
+                etc.)
+              </li>
               <li>• Include quantifiable results and metrics whenever possible</li>
               <li>• Focus on achievements, not just responsibilities</li>
               <li>• List most recent experience first</li>
@@ -537,7 +602,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           </div>
         </div>
       </div>
-      
+
       {workExperience.map((exp, index) => (
         <Card key={index} className="glass-effect border-yellow-400/20">
           <CardHeader className="pb-3">
@@ -561,7 +626,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <Label>Job Title</Label>
                 <Input
                   value={exp.title}
-                  onChange={(e) => updateArrayItem(setWorkExperience, index, 'title', e.target.value)}
+                  onChange={(e) =>
+                    updateArrayItem(setWorkExperience, index, 'title', e.target.value)
+                  }
                   placeholder="Senior Software Engineer"
                   className="glass-effect"
                 />
@@ -570,7 +637,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <Label>Company</Label>
                 <Input
                   value={exp.company}
-                  onChange={(e) => updateArrayItem(setWorkExperience, index, 'company', e.target.value)}
+                  onChange={(e) =>
+                    updateArrayItem(setWorkExperience, index, 'company', e.target.value)
+                  }
                   placeholder="Tech Company Inc."
                   className="glass-effect"
                 />
@@ -579,7 +648,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <Label>Location</Label>
                 <Input
                   value={exp.location}
-                  onChange={(e) => updateArrayItem(setWorkExperience, index, 'location', e.target.value)}
+                  onChange={(e) =>
+                    updateArrayItem(setWorkExperience, index, 'location', e.target.value)
+                  }
                   placeholder="San Francisco, CA"
                   className="glass-effect"
                 />
@@ -589,7 +660,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <Input
                   type="month"
                   value={exp.startDate}
-                  onChange={(e) => updateArrayItem(setWorkExperience, index, 'startDate', e.target.value)}
+                  onChange={(e) =>
+                    updateArrayItem(setWorkExperience, index, 'startDate', e.target.value)
+                  }
                   className="glass-effect"
                 />
               </div>
@@ -598,7 +671,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <Input
                   type="month"
                   value={exp.endDate}
-                  onChange={(e) => updateArrayItem(setWorkExperience, index, 'endDate', e.target.value)}
+                  onChange={(e) =>
+                    updateArrayItem(setWorkExperience, index, 'endDate', e.target.value)
+                  }
                   disabled={exp.current}
                   className="glass-effect"
                 />
@@ -608,17 +683,23 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                   type="checkbox"
                   id={`current-${index}`}
                   checked={exp.current}
-                  onChange={(e) => updateArrayItem(setWorkExperience, index, 'current', e.target.checked)}
+                  onChange={(e) =>
+                    updateArrayItem(setWorkExperience, index, 'current', e.target.checked)
+                  }
                   className="rounded"
                 />
-                <Label htmlFor={`current-${index}`} className="text-sm">Currently working here</Label>
+                <Label htmlFor={`current-${index}`} className="text-sm">
+                  Currently working here
+                </Label>
               </div>
             </div>
             <div className="space-y-2">
               <Label>Job Description</Label>
               <Textarea
                 value={exp.description}
-                onChange={(e) => updateArrayItem(setWorkExperience, index, 'description', e.target.value)}
+                onChange={(e) =>
+                  updateArrayItem(setWorkExperience, index, 'description', e.target.value)
+                }
                 placeholder="• Led a team of 5 developers to build a scalable web application that increased user engagement by 40%&#10;• Implemented microservices architecture using Node.js and Docker, reducing system downtime by 60%&#10;• Collaborated with product managers to define technical requirements and deliver features on time"
                 className="glass-effect min-h-[100px] resize-none"
               />
@@ -629,11 +710,19 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           </CardContent>
         </Card>
       ))}
-      
+
       <Button
-        onClick={() => addArrayItem(setWorkExperience, {
-          title: "", company: "", location: "", startDate: "", endDate: "", current: false, description: ""
-        })}
+        onClick={() =>
+          addArrayItem(setWorkExperience, {
+            title: '',
+            company: '',
+            location: '',
+            startDate: '',
+            endDate: '',
+            current: false,
+            description: '',
+          })
+        }
         variant="outline"
         className="w-full glass-effect border-yellow-400/30 hover:border-yellow-400/60"
       >
@@ -661,7 +750,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           </div>
         </div>
       </div>
-      
+
       {education.map((edu, index) => (
         <Card key={index} className="glass-effect border-yellow-400/20">
           <CardHeader className="pb-3">
@@ -694,7 +783,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <Label>Institution</Label>
                 <Input
                   value={edu.institution}
-                  onChange={(e) => updateArrayItem(setEducation, index, 'institution', e.target.value)}
+                  onChange={(e) =>
+                    updateArrayItem(setEducation, index, 'institution', e.target.value)
+                  }
                   placeholder="Stanford University"
                   className="glass-effect"
                 />
@@ -713,7 +804,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <Input
                   type="month"
                   value={edu.graduationDate}
-                  onChange={(e) => updateArrayItem(setEducation, index, 'graduationDate', e.target.value)}
+                  onChange={(e) =>
+                    updateArrayItem(setEducation, index, 'graduationDate', e.target.value)
+                  }
                   className="glass-effect"
                 />
               </div>
@@ -739,11 +832,18 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           </CardContent>
         </Card>
       ))}
-      
+
       <Button
-        onClick={() => addArrayItem(setEducation, {
-          degree: "", institution: "", location: "", graduationDate: "", gpa: "", honors: ""
-        })}
+        onClick={() =>
+          addArrayItem(setEducation, {
+            degree: '',
+            institution: '',
+            location: '',
+            graduationDate: '',
+            gpa: '',
+            honors: '',
+          })
+        }
         variant="outline"
         className="w-full glass-effect border-yellow-400/30 hover:border-yellow-400/60"
       >
@@ -764,18 +864,29 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 Skills That Get You Noticed
               </h3>
               <p className="text-xs text-black dark:text-white mb-2">
-                Add skills in each category. Press Enter or click + to add. Click on a skill to remove it.
+                Add skills in each category. Press Enter or click + to add. Click on a skill to
+                remove it.
               </p>
               <ul className="text-xs text-black dark:text-white space-y-1">
-                <li>• <strong>Technical:</strong> Domain-specific skills (e.g., Machine Learning, Cloud Architecture)</li>
-                <li>• <strong>Programming:</strong> Languages and frameworks (e.g., Python, React, Node.js)</li>
-                <li>• <strong>Tools:</strong> Software and platforms (e.g., Docker, AWS, Git)</li>
-                <li>• <strong>Soft:</strong> Interpersonal skills (e.g., Leadership, Communication)</li>
+                <li>
+                  • <strong>Technical:</strong> Domain-specific skills (e.g., Machine Learning,
+                  Cloud Architecture)
+                </li>
+                <li>
+                  • <strong>Programming:</strong> Languages and frameworks (e.g., Python, React,
+                  Node.js)
+                </li>
+                <li>
+                  • <strong>Tools:</strong> Software and platforms (e.g., Docker, AWS, Git)
+                </li>
+                <li>
+                  • <strong>Soft:</strong> Interpersonal skills (e.g., Leadership, Communication)
+                </li>
               </ul>
             </div>
           </div>
         </div>
-        
+
         {Object.entries(skills).map(([category, skillList]) => (
           <Card key={category} className="glass-effect border-yellow-400/20">
             <CardHeader className="pb-3">
@@ -785,20 +896,26 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
               <div className="flex gap-2">
                 <Input
                   value={newSkill[category as keyof typeof newSkill]}
-                  onChange={(e) => setNewSkill(prev => ({ ...prev, [category]: e.target.value }))}
+                  onChange={(e) => setNewSkill((prev) => ({ ...prev, [category]: e.target.value }))}
                   placeholder={`Add ${category} skill...`}
                   className="glass-effect"
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
-                      addSkill(category as keyof typeof skills, newSkill[category as keyof typeof newSkill]);
-                      setNewSkill(prev => ({ ...prev, [category]: "" }));
+                      addSkill(
+                        category as keyof typeof skills,
+                        newSkill[category as keyof typeof newSkill],
+                      );
+                      setNewSkill((prev) => ({ ...prev, [category]: '' }));
                     }
                   }}
                 />
                 <Button
                   onClick={() => {
-                    addSkill(category as keyof typeof skills, newSkill[category as keyof typeof newSkill]);
-                    setNewSkill(prev => ({ ...prev, [category]: "" }));
+                    addSkill(
+                      category as keyof typeof skills,
+                      newSkill[category as keyof typeof newSkill],
+                    );
+                    setNewSkill((prev) => ({ ...prev, [category]: '' }));
                   }}
                   disabled={!newSkill[category as keyof typeof newSkill].trim()}
                   className="bolt-gradient text-white"
@@ -806,7 +923,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
-              
+
               <div className="flex flex-wrap gap-2">
                 {skillList.map((skill, index) => (
                   <Badge
@@ -845,7 +962,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           </div>
         </div>
       </div>
-      
+
       {projects.map((project, index) => (
         <Card key={index} className="glass-effect border-yellow-400/20">
           <CardHeader className="pb-3">
@@ -897,7 +1014,14 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
               <Label>Technologies Used</Label>
               <Input
                 value={project.technologies.join(', ')}
-                onChange={(e) => updateArrayItem(setProjects, index, 'technologies', e.target.value.split(',').map(t => t.trim()))}
+                onChange={(e) =>
+                  updateArrayItem(
+                    setProjects,
+                    index,
+                    'technologies',
+                    e.target.value.split(',').map((t) => t.trim()),
+                  )
+                }
                 placeholder="React, Node.js, MongoDB, AWS"
                 className="glass-effect"
               />
@@ -906,11 +1030,16 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           </CardContent>
         </Card>
       ))}
-      
+
       <Button
-        onClick={() => addArrayItem(setProjects, {
-          name: "", description: "", technologies: [], link: ""
-        })}
+        onClick={() =>
+          addArrayItem(setProjects, {
+            name: '',
+            description: '',
+            technologies: [],
+            link: '',
+          })
+        }
         variant="outline"
         className="w-full glass-effect border-yellow-400/30 hover:border-yellow-400/60"
       >
@@ -938,7 +1067,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           </div>
         </div>
       </div>
-      
+
       {certifications.map((cert, index) => (
         <Card key={index} className="glass-effect border-yellow-400/20">
           <CardHeader className="pb-3">
@@ -962,7 +1091,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <Label>Certification Name</Label>
                 <Input
                   value={cert.name}
-                  onChange={(e) => updateArrayItem(setCertifications, index, 'name', e.target.value)}
+                  onChange={(e) =>
+                    updateArrayItem(setCertifications, index, 'name', e.target.value)
+                  }
                   placeholder="AWS Certified Solutions Architect"
                   className="glass-effect"
                 />
@@ -971,7 +1102,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <Label>Issuing Organization</Label>
                 <Input
                   value={cert.issuer}
-                  onChange={(e) => updateArrayItem(setCertifications, index, 'issuer', e.target.value)}
+                  onChange={(e) =>
+                    updateArrayItem(setCertifications, index, 'issuer', e.target.value)
+                  }
                   placeholder="Amazon Web Services"
                   className="glass-effect"
                 />
@@ -981,7 +1114,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <Input
                   type="month"
                   value={cert.date}
-                  onChange={(e) => updateArrayItem(setCertifications, index, 'date', e.target.value)}
+                  onChange={(e) =>
+                    updateArrayItem(setCertifications, index, 'date', e.target.value)
+                  }
                   className="glass-effect"
                 />
               </div>
@@ -989,7 +1124,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <Label>Credential ID</Label>
                 <Input
                   value={cert.credential}
-                  onChange={(e) => updateArrayItem(setCertifications, index, 'credential', e.target.value)}
+                  onChange={(e) =>
+                    updateArrayItem(setCertifications, index, 'credential', e.target.value)
+                  }
                   placeholder="ABC123XYZ"
                   className="glass-effect"
                 />
@@ -998,11 +1135,16 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           </CardContent>
         </Card>
       ))}
-      
+
       <Button
-        onClick={() => addArrayItem(setCertifications, {
-          name: "", issuer: "", date: "", credential: ""
-        })}
+        onClick={() =>
+          addArrayItem(setCertifications, {
+            name: '',
+            issuer: '',
+            date: '',
+            credential: '',
+          })
+        }
         variant="outline"
         className="w-full glass-effect border-yellow-400/30 hover:border-yellow-400/60"
       >
@@ -1022,74 +1164,83 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
               Build Your Online Presence
             </h3>
             <p className="text-xs text-cyan-700 dark:text-cyan-300 mb-2">
-              Add links to your professional profiles. Make sure your profiles are up-to-date and professional.
+              Add links to your professional profiles. Make sure your profiles are up-to-date and
+              professional.
             </p>
             <ul className="text-xs text-cyan-700 dark:text-cyan-300 space-y-1">
-              <li>• <strong>LinkedIn:</strong> Most important for professional networking</li>
-              <li>• <strong>GitHub:</strong> Essential for developers to showcase code</li>
-              <li>• <strong>Portfolio:</strong> Great for designers, writers, and creatives</li>
-              <li>• <strong>Website:</strong> Personal brand and additional projects</li>
+              <li>
+                • <strong>LinkedIn:</strong> Most important for professional networking
+              </li>
+              <li>
+                • <strong>GitHub:</strong> Essential for developers to showcase code
+              </li>
+              <li>
+                • <strong>Portfolio:</strong> Great for designers, writers, and creatives
+              </li>
+              <li>
+                • <strong>Website:</strong> Personal brand and additional projects
+              </li>
             </ul>
           </div>
         </div>
       </div>
-      
+
       <div className="space-y-4">
         <div className="space-y-2">
-        <Label htmlFor="linkedin" className="flex items-center gap-2">
-          <Linkedin className="h-4 w-4 text-blue-600" />
-          LinkedIn Profile
-        </Label>
-        <Input
-          id="linkedin"
-          value={links.linkedin}
-          onChange={(e) => setLinks(prev => ({ ...prev, linkedin: e.target.value }))}
-          placeholder="https://linkedin.com/in/username"
-          className="glass-effect"
-        />
-      </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="github" className="flex items-center gap-2">
-          <Github className="h-4 w-4 text-gray-800" />
-          GitHub Profile
-        </Label>
-        <Input
-          id="github"
-          value={links.github}
-          onChange={(e) => setLinks(prev => ({ ...prev, github: e.target.value }))}
-          placeholder="https://github.com/username"
-          className="glass-effect"
-        />
-      </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="website" className="flex items-center gap-2">
-          <Globe className="h-4 w-4 text-green-600" />
-          Personal Website
-        </Label>
-        <Input
-          id="website"
-          value={links.website}
-          onChange={(e) => setLinks(prev => ({ ...prev, website: e.target.value }))}
-          placeholder="https://yourwebsite.com"
-          className="glass-effect"
-        />
-      </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="portfolio" className="flex items-center gap-2">
-          <Briefcase className="h-4 w-4 text-purple-600" />
-          Portfolio URL
-        </Label>
-        <Input
-          id="portfolio"
-          value={links.portfolio}
-          onChange={(e) => setLinks(prev => ({ ...prev, portfolio: e.target.value }))}
-          placeholder="https://portfolio.com/username"
-          className="glass-effect"
-        />
-      </div>
+          <Label htmlFor="linkedin" className="flex items-center gap-2">
+            <Linkedin className="h-4 w-4 text-blue-600" />
+            LinkedIn Profile
+          </Label>
+          <Input
+            id="linkedin"
+            value={links.linkedin}
+            onChange={(e) => setLinks((prev) => ({ ...prev, linkedin: e.target.value }))}
+            placeholder="https://linkedin.com/in/username"
+            className="glass-effect"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="github" className="flex items-center gap-2">
+            <Github className="h-4 w-4 text-gray-800" />
+            GitHub Profile
+          </Label>
+          <Input
+            id="github"
+            value={links.github}
+            onChange={(e) => setLinks((prev) => ({ ...prev, github: e.target.value }))}
+            placeholder="https://github.com/username"
+            className="glass-effect"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="website" className="flex items-center gap-2">
+            <Globe className="h-4 w-4 text-green-600" />
+            Personal Website
+          </Label>
+          <Input
+            id="website"
+            value={links.website}
+            onChange={(e) => setLinks((prev) => ({ ...prev, website: e.target.value }))}
+            placeholder="https://yourwebsite.com"
+            className="glass-effect"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="portfolio" className="flex items-center gap-2">
+            <Briefcase className="h-4 w-4 text-purple-600" />
+            Portfolio URL
+          </Label>
+          <Input
+            id="portfolio"
+            value={links.portfolio}
+            onChange={(e) => setLinks((prev) => ({ ...prev, portfolio: e.target.value }))}
+            placeholder="https://portfolio.com/username"
+            className="glass-effect"
+          />
+        </div>
       </div>
     </div>
   );
@@ -1108,18 +1259,22 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
             <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
               <TrendingUp className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
               <div>
-                <p className="font-medium text-gray-900 dark:text-white">Target Role: {targetRole}</p>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  Target Role: {targetRole}
+                </p>
                 <p className="text-sm text-gray-700 dark:text-gray-300">
                   Your resume will be optimized for this specific role
                 </p>
               </div>
             </div>
-            
+
             {jobDescription && (
               <div className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
                 <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">Job Description Provided</p>
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    Job Description Provided
+                  </p>
                   <p className="text-sm text-gray-700 dark:text-gray-300">
                     Keywords will be extracted for maximum ATS compatibility
                   </p>
@@ -1146,17 +1301,19 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <p className="text-xs text-muted-foreground">{personalInfo.name}</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2 p-3 glass-effect rounded-lg">
               <FileText className="h-4 w-4 text-blue-500" />
               <div>
                 <p className="font-medium">Professional Summary</p>
                 <p className="text-xs text-muted-foreground">
-                  {professionalSummary ? `${professionalSummary.substring(0, 30)}...` : "Not provided"}
+                  {professionalSummary
+                    ? `${professionalSummary.substring(0, 30)}...`
+                    : 'Not provided'}
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2 p-3 glass-effect rounded-lg">
               <Briefcase className="h-4 w-4 text-blue-500" />
               <div>
@@ -1164,7 +1321,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <p className="text-xs text-muted-foreground">{workExperience.length} entries</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2 p-3 glass-effect rounded-lg">
               <GraduationCap className="h-4 w-4 text-blue-500" />
               <div>
@@ -1172,7 +1329,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <p className="text-xs text-muted-foreground">{education.length} entries</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2 p-3 glass-effect rounded-lg">
               <Code className="h-4 w-4 text-blue-500" />
               <div>
@@ -1182,7 +1339,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2 p-3 glass-effect rounded-lg">
               <Zap className="h-4 w-4 text-blue-500" />
               <div>
@@ -1190,7 +1347,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <p className="text-xs text-muted-foreground">{projects.length} entries</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2 p-3 glass-effect rounded-lg">
               <Award className="h-4 w-4 text-blue-500" />
               <div>
@@ -1198,7 +1355,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 <p className="text-xs text-muted-foreground">{certifications.length} entries</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2 p-3 glass-effect rounded-lg">
               <LinkIcon className="h-4 w-4 text-blue-500" />
               <div>
@@ -1224,25 +1381,29 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
             <div className="flex items-start gap-2">
               <Star className="h-4 w-4 text-yellow-500 mt-1" />
               <p className="text-sm text-black dark:text-white">
-                <span className="font-medium">Keyword Optimization:</span> Your resume will be optimized with exact keywords from your target role
+                <span className="font-medium">Keyword Optimization:</span> Your resume will be
+                optimized with exact keywords from your target role
               </p>
             </div>
             <div className="flex items-start gap-2">
               <Star className="h-4 w-4 text-yellow-500 mt-1" />
               <p className="text-sm text-black dark:text-white">
-                <span className="font-medium">ATS-Friendly Format:</span> Structured for maximum compatibility with Applicant Tracking Systems
+                <span className="font-medium">ATS-Friendly Format:</span> Structured for maximum
+                compatibility with Applicant Tracking Systems
               </p>
             </div>
             <div className="flex items-start gap-2">
               <Star className="h-4 w-4 text-yellow-500 mt-1" />
               <p className="text-sm text-black dark:text-white">
-                <span className="font-medium">Quantified Achievements:</span> Your experience will be enhanced with metrics and results
+                <span className="font-medium">Quantified Achievements:</span> Your experience will
+                be enhanced with metrics and results
               </p>
             </div>
             <div className="flex items-start gap-2">
               <Star className="h-4 w-4 text-yellow-500 mt-1" />
               <p className="text-sm text-black dark:text-white">
-                <span className="font-medium">Professional Links:</span> Your online presence will be properly formatted and integrated
+                <span className="font-medium">Professional Links:</span> Your online presence will
+                be properly formatted and integrated
               </p>
             </div>
           </div>
@@ -1253,16 +1414,26 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
 
   const renderCurrentStep = () => {
     switch (currentStep) {
-      case 'personal': return renderPersonalInfoStep();
-      case 'summary': return renderSummaryStep();
-      case 'experience': return renderExperienceStep();
-      case 'education': return renderEducationStep();
-      case 'skills': return renderSkillsStep();
-      case 'projects': return renderProjectsStep();
-      case 'certifications': return renderCertificationsStep();
-      case 'links': return renderLinksStep();
-      case 'review': return renderReviewStep();
-      default: return null;
+      case 'personal':
+        return renderPersonalInfoStep();
+      case 'summary':
+        return renderSummaryStep();
+      case 'experience':
+        return renderExperienceStep();
+      case 'education':
+        return renderEducationStep();
+      case 'skills':
+        return renderSkillsStep();
+      case 'projects':
+        return renderProjectsStep();
+      case 'certifications':
+        return renderCertificationsStep();
+      case 'links':
+        return renderLinksStep();
+      case 'review':
+        return renderReviewStep();
+      default:
+        return null;
     }
   };
 
@@ -1274,11 +1445,11 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
   return (
     <div className="space-y-6">
       {renderStepIndicator()}
-      
+
       {renderGuidancePanel()}
-      
+
       {renderCurrentStep()}
-      
+
       <div className="flex justify-between mt-8">
         <Button
           onClick={prevStep}
@@ -1289,7 +1460,7 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
           <ArrowLeft className="h-4 w-4 mr-2" />
           Previous
         </Button>
-        
+
         {currentStep === 'review' ? (
           <Button
             onClick={generateResume}
@@ -1309,10 +1480,8 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
                 </>
               )}
             </div>
-            
-            {!isGenerating && (
-              <div className="absolute inset-0 shimmer opacity-30"></div>
-            )}
+
+            {!isGenerating && <div className="absolute inset-0 shimmer opacity-30"></div>}
           </Button>
         ) : (
           <Button

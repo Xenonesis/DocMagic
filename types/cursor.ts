@@ -35,7 +35,7 @@ export interface ColorPreset {
   gradient?: string;
 }
 
-export type CursorColorVariant = "blue" | "amber" | "emerald" | "purple" | "rose" | "cyan";
+export type CursorColorVariant = 'blue' | 'amber' | 'emerald' | 'purple' | 'rose' | 'cyan';
 
 export interface InteractiveElementProps {
   cursorScale?: number;

@@ -33,7 +33,7 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
   const router = useRouter();
   const { user } = useUser();
   const { id: templateId } = useParams<{ id: string }>();
-  
+
   const {
     shares,
     isLoading,
@@ -44,7 +44,7 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
     isUpdating,
     isRemoving,
   } = useTemplateSharing(templateId);
-  
+
   const form = useForm<ShareFormValues>({
     resolver: zodResolver(shareFormSchema),
     defaultValues: {
@@ -52,7 +52,7 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
       canEdit: false,
     },
   });
-  
+
   const onSubmit = async (data: ShareFormValues) => {
     try {
       await shareTemplate(data.email, data.canEdit);
@@ -62,7 +62,7 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
       toast.error(error instanceof Error ? error.message : 'Failed to share template');
     }
   };
-  
+
   const handleUpdateShare = async (shareId: string, canEdit: boolean) => {
     try {
       await updateShare({ shareId, canEdit });
@@ -71,7 +71,7 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
       toast.error('Failed to update share permissions');
     }
   };
-  
+
   const handleRemoveShare = async (shareId: string) => {
     try {
       await removeShare(shareId);
@@ -80,16 +80,16 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
       toast.error('Failed to remove share');
     }
   };
-  
+
   const handleCopyLink = () => {
     const url = `${window.location.origin}/templates/${templateId}`;
     navigator.clipboard.writeText(url);
     toast.success('Link copied to clipboard');
   };
-  
+
   const isOwner = user?.id === template.user_id;
-  const canEdit = isOwner || shares.some(s => s.user_id === user?.id && s.can_edit);
-  
+  const canEdit = isOwner || shares.some((s) => s.user_id === user?.id && s.can_edit);
+
   if (!isOwner && !canEdit) {
     return (
       <div className="p-4 text-center text-muted-foreground">
@@ -97,7 +97,7 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
       </div>
     );
   }
-  
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -106,7 +106,7 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
           Invite others to view or edit this template by email
         </p>
       </div>
-      
+
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="flex gap-2">
           <div className="flex-1 space-y-2">
@@ -121,9 +121,7 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
               {...form.register('email')}
             />
             {form.formState.errors.email && (
-              <p className="text-sm text-destructive">
-                {form.formState.errors.email.message}
-              </p>
+              <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>
             )}
           </div>
           <div className="flex items-center space-x-2">
@@ -142,7 +140,7 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
           </Button>
         </div>
       </form>
-      
+
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <h4 className="text-sm font-medium">People with access</h4>
@@ -156,33 +154,25 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
             Copy sharing link
           </Button>
         </div>
-        
+
         <div className="border rounded-md divide-y">
           {/* Template owner */}
           <div className="flex items-center justify-between p-3">
             <div className="flex items-center space-x-3">
               <Avatar className="h-8 w-8">
                 <AvatarImage src={template.user?.avatar_url} alt={template.user?.full_name} />
-                <AvatarFallback>
-                  {template.user?.full_name?.charAt(0) || 'U'}
-                </AvatarFallback>
+                <AvatarFallback>{template.user?.full_name?.charAt(0) || 'U'}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-sm font-medium">
-                  {template.user?.full_name || 'You'}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {template.user?.email || 'Owner'}
-                </p>
+                <p className="text-sm font-medium">{template.user?.full_name || 'You'}</p>
+                <p className="text-xs text-muted-foreground">{template.user?.email || 'Owner'}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-xs bg-muted px-2 py-1 rounded-full">
-                Owner
-              </span>
+              <span className="text-xs bg-muted px-2 py-1 rounded-full">Owner</span>
             </div>
           </div>
-          
+
           {/* Shared users */}
           {shares.length === 0 ? (
             <div className="p-4 text-center text-muted-foreground text-sm">
@@ -230,7 +220,7 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-                  
+
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -253,7 +243,7 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
           )}
         </div>
       </div>
-      
+
       <div className="border rounded-md p-4 space-y-2">
         <h4 className="text-sm font-medium">Public access</h4>
         <p className="text-sm text-muted-foreground">
@@ -280,14 +270,10 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ is_public: checked }),
                 });
-                
+
                 if (!response.ok) throw new Error('Failed to update template');
-                
-                toast.success(
-                  checked
-                    ? 'Template is now public'
-                    : 'Template is now private'
-                );
+
+                toast.success(checked ? 'Template is now public' : 'Template is now private');
                 router.refresh();
               } catch (error) {
                 toast.error('Failed to update template');
@@ -297,7 +283,7 @@ export function TemplateSharingSettings({ template, onClose }: TemplateSharingSe
           />
         </div>
       </div>
-      
+
       <div className="flex justify-end">
         <Button variant="outline" onClick={onClose}>
           Done

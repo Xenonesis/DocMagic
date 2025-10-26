@@ -111,6 +111,7 @@ Background: Gradient from yellow-50/50 to orange-50/50
 ### Animation Specifications
 
 #### Menu Button
+
 ```css
 Hover:
 - Background: gradient overlay (0% → 10% opacity)
@@ -120,6 +121,7 @@ Hover:
 ```
 
 #### Navigation Items
+
 ```css
 Hover:
 - Background: transparent → accent/50
@@ -136,6 +138,7 @@ Active:
 ```
 
 #### Drawer
+
 ```css
 Open/Close:
 - Transform: translateX(-100% → 0)

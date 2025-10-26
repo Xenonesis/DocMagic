@@ -1,53 +1,53 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { 
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { CertificatePreview } from "@/components/certificate/certificate-preview";
-import { CertificateTemplates } from "@/components/certificate/certificate-templates";
-import { useToast } from "@/hooks/use-toast";
-import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
-import { ExportAuthDialog } from "@/components/ui/export-auth-dialog";
-import { 
-  Loader2, 
-  Sparkles, 
-  Award, 
-  Download, 
-  Copy, 
-  Check, 
-  Wand2, 
+} from '@/components/ui/select';
+import { CertificatePreview } from '@/components/certificate/certificate-preview';
+import { CertificateTemplates } from '@/components/certificate/certificate-templates';
+import { useToast } from '@/hooks/use-toast';
+import { useAuthGuard, PROTECTED_ACTIVITIES } from '@/lib/auth-utils';
+import { ExportAuthDialog } from '@/components/ui/export-auth-dialog';
+import {
+  Loader2,
+  Sparkles,
+  Award,
+  Download,
+  Copy,
+  Check,
+  Wand2,
   FileImage,
   Calendar,
   User,
   Trophy,
   Star,
-  Palette
-} from "lucide-react";
+  Palette,
+} from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 export function CertificateGenerator() {
-  const [recipientName, setRecipientName] = useState("");
-  const [achievement, setAchievement] = useState("");
-  const [awardedBy, setAwardedBy] = useState("");
+  const [recipientName, setRecipientName] = useState('');
+  const [achievement, setAchievement] = useState('');
+  const [awardedBy, setAwardedBy] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [organizationName, setOrganizationName] = useState("");
-  const [signature, setSignature] = useState("");
-  const [template, setTemplate] = useState("classic-gold");
-  const [organizationLogo, setOrganizationLogo] = useState<string>("");
-  const [signatureImage, setSignatureImage] = useState<string>("");
+  const [organizationName, setOrganizationName] = useState('');
+  const [signature, setSignature] = useState('');
+  const [template, setTemplate] = useState('classic-gold');
+  const [organizationLogo, setOrganizationLogo] = useState<string>('');
+  const [signatureImage, setSignatureImage] = useState<string>('');
   const [fontScale, setFontScale] = useState<number>(100);
-  const [fontFamily, setFontFamily] = useState<string>("serif");
+  const [fontFamily, setFontFamily] = useState<string>('serif');
   const [showSeal, setShowSeal] = useState<boolean>(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [certificateData, setCertificateData] = useState<any>(null);
@@ -56,19 +56,19 @@ export function CertificateGenerator() {
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const { toast } = useToast();
   const { isAuthenticated, requireAuth } = useAuthGuard();
-  
+
   const generateCertificate = async () => {
     if (!recipientName.trim() || !achievement.trim()) {
       toast({
-        title: "Missing information",
-        description: "Please enter recipient name and achievement",
-        variant: "destructive",
+        title: 'Missing information',
+        description: 'Please enter recipient name and achievement',
+        variant: 'destructive',
       });
       return;
     }
 
     setIsGenerating(true);
-    
+
     try {
       const response = await fetch('/api/generate/certificate', {
         method: 'POST',
@@ -83,8 +83,8 @@ export function CertificateGenerator() {
           organizationName,
           signature,
           template,
-         organizationLogo,
-         signatureImage,
+          organizationLogo,
+          signatureImage,
         }),
       });
 
@@ -93,19 +93,19 @@ export function CertificateGenerator() {
       }
 
       const data = await response.json();
-      
+
       setCertificateData(data);
-      
+
       toast({
-        title: "Certificate created!",
-        description: "Your certificate has been generated successfully.",
+        title: 'Certificate created!',
+        description: 'Your certificate has been generated successfully.',
       });
     } catch (error) {
       console.error('Error generating certificate:', error);
       toast({
-        title: "Generation failed",
-        description: "Failed to generate certificate. Please try again.",
-        variant: "destructive",
+        title: 'Generation failed',
+        description: 'Failed to generate certificate. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsGenerating(false);
@@ -140,20 +140,20 @@ export function CertificateGenerator() {
 
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      
+
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`certificate-${recipientName.replace(/\s+/g, '-').toLowerCase()}.pdf`);
 
       toast({
-        title: "Certificate exported!",
-        description: "Your certificate has been downloaded as PDF.",
+        title: 'Certificate exported!',
+        description: 'Your certificate has been downloaded as PDF.',
       });
     } catch (error) {
       console.error('Error exporting certificate:', error);
       toast({
-        title: "Export failed",
-        description: "Failed to export certificate. Please try again.",
-        variant: "destructive",
+        title: 'Export failed',
+        description: 'Failed to export certificate. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsExporting(false);
@@ -191,15 +191,15 @@ export function CertificateGenerator() {
       });
 
       toast({
-        title: "Certificate exported!",
-        description: "Your certificate has been downloaded as PNG image.",
+        title: 'Certificate exported!',
+        description: 'Your certificate has been downloaded as PNG image.',
       });
     } catch (error) {
       console.error('Error exporting certificate:', error);
       toast({
-        title: "Export failed",
-        description: "Failed to export certificate. Please try again.",
-        variant: "destructive",
+        title: 'Export failed',
+        description: 'Failed to export certificate. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsExporting(false);
@@ -219,19 +219,19 @@ ${awardedBy ? `Signed by: ${awardedBy}` : ''}
 Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`;
 
       await navigator.clipboard.writeText(text);
-      
+
       toast({
-        title: "Copied to clipboard!",
-        description: "Certificate text has been copied.",
+        title: 'Copied to clipboard!',
+        description: 'Certificate text has been copied.',
       });
 
       setTimeout(() => setIsCopying(false), 2000);
     } catch (error) {
       console.error('Error copying certificate:', error);
       toast({
-        title: "Copy failed",
-        description: "Failed to copy certificate text.",
-        variant: "destructive",
+        title: 'Copy failed',
+        description: 'Failed to copy certificate text.',
+        variant: 'destructive',
       });
       setIsCopying(false);
     }
@@ -240,8 +240,8 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
   const handleTemplateSelect = (templateId: string) => {
     setTemplate(templateId);
     toast({
-      title: "Template selected",
-      description: "Certificate template has been updated.",
+      title: 'Template selected',
+      description: 'Certificate template has been updated.',
     });
   };
 
@@ -253,12 +253,11 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
           <Palette className="h-5 w-5 text-yellow-600" />
           <h2 className="text-xl font-semibold">Choose a Template</h2>
         </div>
-        <CertificateTemplates 
-          onSelect={handleTemplateSelect} 
-          selectedTemplate={template}
-        />
+        <CertificateTemplates onSelect={handleTemplateSelect} selectedTemplate={template} />
         <div className="flex items-center gap-3 flex-wrap">
-          <Label htmlFor="fontScale" className="text-sm">Font size</Label>
+          <Label htmlFor="fontScale" className="text-sm">
+            Font size
+          </Label>
           <input
             id="fontScale"
             type="range"
@@ -270,7 +269,9 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
             className="w-40"
           />
           <span className="text-sm text-muted-foreground">{fontScale}%</span>
-          <Label htmlFor="fontFamily" className="text-sm ml-4">Font</Label>
+          <Label htmlFor="fontFamily" className="text-sm ml-4">
+            Font
+          </Label>
           <select
             id="fontFamily"
             value={fontFamily}
@@ -285,7 +286,11 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
             <option value="'Garamond', serif">Garamond</option>
           </select>
           <label className="text-sm ml-4 inline-flex items-center gap-2">
-            <input type="checkbox" checked={showSeal} onChange={(e) => setShowSeal(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={showSeal}
+              onChange={(e) => setShowSeal(e.target.checked)}
+            />
             Show seal
           </label>
         </div>
@@ -350,12 +355,16 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
                         const file = e.target.files?.[0];
                         if (!file) return;
                         const reader = new FileReader();
-                        reader.onload = () => setOrganizationLogo(String(reader.result || ""));
+                        reader.onload = () => setOrganizationLogo(String(reader.result || ''));
                         reader.readAsDataURL(file);
                       }}
                     />
                     {organizationLogo && (
-                      <img src={organizationLogo} alt="Logo preview" className="h-8 w-auto rounded border" />
+                      <img
+                        src={organizationLogo}
+                        alt="Logo preview"
+                        className="h-8 w-auto rounded border"
+                      />
                     )}
                   </div>
                 </div>
@@ -387,7 +396,8 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
                     className="border-yellow-400/30 focus:border-yellow-400"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Enter name for signature (will be styled as signature). Or upload an image below.
+                    Enter name for signature (will be styled as signature). Or upload an image
+                    below.
                   </p>
                   <div className="flex items-center gap-3">
                     <Input
@@ -397,12 +407,16 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
                         const file = e.target.files?.[0];
                         if (!file) return;
                         const reader = new FileReader();
-                        reader.onload = () => setSignatureImage(String(reader.result || ""));
+                        reader.onload = () => setSignatureImage(String(reader.result || ''));
                         reader.readAsDataURL(file);
                       }}
                     />
                     {signatureImage && (
-                      <img src={signatureImage} alt="Signature preview" className="h-8 w-auto rounded border" />
+                      <img
+                        src={signatureImage}
+                        alt="Signature preview"
+                        className="h-8 w-auto rounded border"
+                      />
                     )}
                   </div>
                 </div>
@@ -423,8 +437,8 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
               </div>
             </div>
 
-            <Button 
-              onClick={generateCertificate} 
+            <Button
+              onClick={generateCertificate}
               disabled={isGenerating || !recipientName.trim() || !achievement.trim()}
               className="w-full bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
@@ -459,11 +473,7 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
                   disabled={isCopying}
                   className="border-yellow-400/30"
                 >
-                  {isCopying ? (
-                    <Check className="h-4 w-4" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
+                  {isCopying ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                 </Button>
                 <Button
                   variant="outline"
@@ -495,13 +505,13 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
 
           <Card className="border-yellow-400/20">
             <CardContent className="p-6">
-              <CertificatePreview 
+              <CertificatePreview
                 certificate={{
-                  recipientName: recipientName || "Recipient Name",
-                  achievement: achievement || "Achievement Title",
-                  organizationName: organizationName || "",
-                  awardedBy: awardedBy || "",
-                  signature: signature || "",
+                  recipientName: recipientName || 'Recipient Name',
+                  achievement: achievement || 'Achievement Title',
+                  organizationName: organizationName || '',
+                  awardedBy: awardedBy || '',
+                  signature: signature || '',
                   date,
                   template,
                   organizationLogo,
@@ -517,8 +527,8 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
         </div>
       </div>
 
-      <ExportAuthDialog 
-        open={showAuthDialog} 
+      <ExportAuthDialog
+        open={showAuthDialog}
         onOpenChange={setShowAuthDialog}
         onSignIn={() => {
           setShowAuthDialog(false);

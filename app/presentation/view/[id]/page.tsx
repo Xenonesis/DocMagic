@@ -25,7 +25,9 @@ export default async function PresentationViewPage({ params }: PresentationViewP
   }
 
   // Check if presentation is public or if user owns it
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const isOwner = user && user.id === data.user_id;
   const isPublic = data.content?.isPublic;
 
@@ -34,7 +36,9 @@ export default async function PresentationViewPage({ params }: PresentationViewP
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Private Presentation</h1>
-          <p className="text-muted-foreground">This presentation is private and cannot be viewed.</p>
+          <p className="text-muted-foreground">
+            This presentation is private and cannot be viewed.
+          </p>
         </div>
       </div>
     );
@@ -48,7 +52,7 @@ export default async function PresentationViewPage({ params }: PresentationViewP
     prompt: data.prompt,
     isPublic: data.content.isPublic,
     createdAt: data.created_at,
-    isOwner
+    isOwner,
   };
 
   return <PresentationViewer presentation={presentation} />;

@@ -13,21 +13,21 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { SiteHeader } from '@/components/site-header';
-import { 
-  User, 
-  Mail, 
-  Calendar, 
-  MapPin, 
-  Phone, 
-  Globe, 
-  Edit3, 
-  Save, 
+import {
+  User,
+  Mail,
+  Calendar,
+  MapPin,
+  Phone,
+  Globe,
+  Edit3,
+  Save,
   X,
   Shield,
   FileText,
   Activity,
   Camera,
-  Upload
+  Upload,
 } from 'lucide-react';
 
 interface UserProfile {
@@ -61,7 +61,7 @@ export default function ProfilePage() {
     bio: '',
     location: '',
     phone: '',
-    website: ''
+    website: '',
   });
 
   const { toast } = useToast();
@@ -76,10 +76,13 @@ export default function ProfilePage() {
   const loadUserProfile = async () => {
     try {
       setLoading(true);
-      
+
       // Get current user
-      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
-      
+      const {
+        data: { user: authUser },
+        error: authError,
+      } = await supabase.auth.getUser();
+
       if (authError || !authUser) {
         router.push('/auth/signin');
         return;
@@ -96,7 +99,7 @@ export default function ProfilePage() {
         phone: authUser.user_metadata?.phone || '',
         website: authUser.user_metadata?.website || '',
         created_at: authUser.created_at,
-        last_sign_in_at: authUser.last_sign_in_at || undefined
+        last_sign_in_at: authUser.last_sign_in_at || undefined,
       };
 
       setUser(userProfile);
@@ -105,7 +108,7 @@ export default function ProfilePage() {
         bio: userProfile.bio || '',
         location: userProfile.location || '',
         phone: userProfile.phone || '',
-        website: userProfile.website || ''
+        website: userProfile.website || '',
       });
 
       // Load real user statistics from database with error handling
@@ -143,15 +146,14 @@ export default function ProfilePage() {
       setStats({
         templates_created: templatesCount,
         documents_generated: documentsCount,
-        last_activity: lastActivity
+        last_activity: lastActivity,
       });
-
     } catch (error) {
       console.error('Error loading profile:', error);
       toast({
         title: 'Error',
         description: 'Failed to load profile data',
-        variant: 'destructive'
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -168,16 +170,17 @@ export default function ProfilePage() {
       toast({
         title: 'Invalid file type',
         description: 'Please upload a JPEG, PNG, GIF, or WebP image',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+    if (file.size > 5 * 1024 * 1024) {
+      // 5MB limit
       toast({
         title: 'File too large',
         description: 'Please upload an image smaller than 5MB',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return;
     }
@@ -190,55 +193,56 @@ export default function ProfilePage() {
       const fileName = `${user.id}-${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`; // Remove avatars/ prefix since we're already in the avatars bucket
 
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file);
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file);
 
       if (uploadError) {
         // Handle specific bucket not found error
         if (uploadError.message?.includes('Bucket not found')) {
-          throw new Error('Storage bucket not configured. Please contact support or check the setup guide.');
+          throw new Error(
+            'Storage bucket not configured. Please contact support or check the setup guide.',
+          );
         }
         throw uploadError;
       }
 
       // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('avatars').getPublicUrl(filePath);
 
       // Update user metadata with new avatar URL
       const { error: updateError } = await supabase.auth.updateUser({
         data: {
-          avatar_url: publicUrl
-        }
+          avatar_url: publicUrl,
+        },
       });
 
       if (updateError) throw updateError;
 
       // Update local state
-      setUser(prev => prev ? { ...prev, avatar_url: publicUrl } : null);
+      setUser((prev) => (prev ? { ...prev, avatar_url: publicUrl } : null));
 
       toast({
         title: 'Success',
-        description: 'Profile picture updated successfully'
+        description: 'Profile picture updated successfully',
       });
-
     } catch (error: any) {
       console.error('Error uploading avatar:', error);
 
       let errorMessage = 'Failed to upload profile picture';
 
       if (error.message?.includes('Storage bucket not configured')) {
-        errorMessage = 'Profile picture upload is not configured yet. Please check the setup guide.';
+        errorMessage =
+          'Profile picture upload is not configured yet. Please check the setup guide.';
       } else if (error.message?.includes('Bucket not found')) {
-        errorMessage = 'Storage bucket not found. Please create the "avatars" bucket in Supabase Storage.';
+        errorMessage =
+          'Storage bucket not found. Please create the "avatars" bucket in Supabase Storage.';
       }
 
       toast({
         title: 'Error',
         description: errorMessage,
-        variant: 'destructive'
+        variant: 'destructive',
       });
     } finally {
       setUploadingAvatar(false);
@@ -258,34 +262,37 @@ export default function ProfilePage() {
           bio: formData.bio,
           location: formData.location,
           phone: formData.phone,
-          website: formData.website
-        }
+          website: formData.website,
+        },
       });
 
       if (error) throw error;
 
       // Update local state
-      setUser(prev => prev ? {
-        ...prev,
-        name: formData.name,
-        bio: formData.bio,
-        location: formData.location,
-        phone: formData.phone,
-        website: formData.website
-      } : null);
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              name: formData.name,
+              bio: formData.bio,
+              location: formData.location,
+              phone: formData.phone,
+              website: formData.website,
+            }
+          : null,
+      );
 
       setEditing(false);
       toast({
         title: 'Success',
-        description: 'Profile updated successfully'
+        description: 'Profile updated successfully',
       });
-
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
         title: 'Error',
         description: 'Failed to update profile',
-        variant: 'destructive'
+        variant: 'destructive',
       });
     } finally {
       setSaving(false);
@@ -294,13 +301,13 @@ export default function ProfilePage() {
 
   const handleCancel = () => {
     if (!user) return;
-    
+
     setFormData({
       name: user.name || '',
       bio: user.bio || '',
       location: user.location || '',
       phone: user.phone || '',
-      website: user.website || ''
+      website: user.website || '',
     });
     setEditing(false);
   };
@@ -308,7 +315,7 @@ export default function ProfilePage() {
   const getInitials = (name: string) => {
     return name
       .split(' ')
-      .map(word => word[0])
+      .map((word) => word[0])
       .join('')
       .toUpperCase()
       .slice(0, 2);
@@ -318,7 +325,7 @@ export default function ProfilePage() {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
@@ -365,9 +372,7 @@ export default function ProfilePage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
-              <p className="text-muted-foreground">
-                Manage your account settings and preferences
-              </p>
+              <p className="text-muted-foreground">Manage your account settings and preferences</p>
             </div>
             {!editing ? (
               <Button onClick={() => setEditing(true)}>
@@ -444,7 +449,9 @@ export default function ProfilePage() {
                           <Input
                             id="name"
                             value={formData.name}
-                            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                            onChange={(e) =>
+                              setFormData((prev) => ({ ...prev, name: e.target.value }))
+                            }
                             placeholder="Enter your full name"
                           />
                         ) : (
@@ -472,7 +479,9 @@ export default function ProfilePage() {
                           <Input
                             id="phone"
                             value={formData.phone}
-                            onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                            onChange={(e) =>
+                              setFormData((prev) => ({ ...prev, phone: e.target.value }))
+                            }
                             placeholder="Enter your phone number"
                           />
                         ) : (
@@ -494,7 +503,9 @@ export default function ProfilePage() {
                           <Input
                             id="location"
                             value={formData.location}
-                            onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                            onChange={(e) =>
+                              setFormData((prev) => ({ ...prev, location: e.target.value }))
+                            }
                             placeholder="Enter your location"
                           />
                         ) : (
@@ -517,7 +528,9 @@ export default function ProfilePage() {
                         <Input
                           id="website"
                           value={formData.website}
-                          onChange={(e) => setFormData(prev => ({ ...prev, website: e.target.value }))}
+                          onChange={(e) =>
+                            setFormData((prev) => ({ ...prev, website: e.target.value }))
+                          }
                           placeholder="Enter your website URL"
                         />
                       ) : (
@@ -525,7 +538,12 @@ export default function ProfilePage() {
                           {user.website ? (
                             <>
                               <Globe className="mr-2 h-4 w-4" />
-                              <a href={user.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                              <a
+                                href={user.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline"
+                              >
                                 {user.website}
                               </a>
                             </>
@@ -546,7 +564,7 @@ export default function ProfilePage() {
                       <Textarea
                         id="bio"
                         value={formData.bio}
-                        onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, bio: e.target.value }))}
                         placeholder="Tell us about yourself..."
                         rows={4}
                       />
@@ -619,15 +637,27 @@ export default function ProfilePage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start" onClick={() => router.push('/templates')}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start"
+                    onClick={() => router.push('/templates')}
+                  >
                     <FileText className="mr-2 h-4 w-4" />
                     Browse Templates
                   </Button>
-                  <Button variant="outline" className="w-full justify-start" onClick={() => router.push('/resume')}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start"
+                    onClick={() => router.push('/resume')}
+                  >
                     <FileText className="mr-2 h-4 w-4" />
                     Create Resume
                   </Button>
-                  <Button variant="outline" className="w-full justify-start" onClick={() => router.push('/settings')}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start"
+                    onClick={() => router.push('/settings')}
+                  >
                     <Shield className="mr-2 h-4 w-4" />
                     Account Settings
                   </Button>

@@ -5,10 +5,6 @@ export const metadata: Metadata = {
   description: 'Edit your document template',
 };
 
-export default function EditTemplateLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function EditTemplateLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

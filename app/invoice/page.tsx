@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { SiteHeader } from "@/components/site-header";
-import { FloatingHelpButton } from "@/components/floating-help-button";
-import { useEffect, useState } from "react";
-import { InvoiceGenerator } from "@/components/invoice/invoice-generator";
-import { Sparkles, Award, Zap, Star, Wand2, Receipt } from "lucide-react";
-import { CertificateGeneratorSkeleton } from "@/components/ui/skeleton";
+import { SiteHeader } from '@/components/site-header';
+import { FloatingHelpButton } from '@/components/floating-help-button';
+import { useEffect, useState } from 'react';
+import { InvoiceGenerator } from '@/components/invoice/invoice-generator';
+import { Sparkles, Award, Zap, Star, Wand2, Receipt } from 'lucide-react';
+import { CertificateGeneratorSkeleton } from '@/components/ui/skeleton';
 
 export default function InvoicePage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -43,7 +43,7 @@ export default function InvoicePage() {
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-              Create Professional{" "}
+              Create Professional{' '}
               <span className="bolt-gradient-text relative inline-block">
                 Invoices
                 <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
@@ -53,7 +53,8 @@ export default function InvoicePage() {
             </h1>
 
             <p className="text-base sm:text-lg lg:text-xl leading-7 sm:leading-8 text-muted-foreground max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-0">
-              Design clean and accurate invoices with tax calculations, discounts, and shipping. Export to PDF or PNG instantly.
+              Design clean and accurate invoices with tax calculations, discounts, and shipping.
+              Export to PDF or PNG instantly.
             </p>
 
             {/* Stats bar */}
@@ -83,15 +84,14 @@ export default function InvoicePage() {
               <Sparkles className="h-5 w-5 text-yellow-500 animate-pulse" />
             </div>
             <div className="absolute bottom-4 left-4">
-              <Star className="h-4 w-4 text-blue-500 animate-spin" style={{ animationDuration: "3s" }} />
+              <Star
+                className="h-4 w-4 text-blue-500 animate-spin"
+                style={{ animationDuration: '3s' }}
+              />
             </div>
 
             <div className="relative z-10">
-              {isLoading ? (
-                <CertificateGeneratorSkeleton />
-              ) : (
-                <InvoiceGenerator />
-              )}
+              {isLoading ? <CertificateGeneratorSkeleton /> : <InvoiceGenerator />}
             </div>
           </div>
 
@@ -102,9 +102,13 @@ export default function InvoicePage() {
               <div className="relative z-10">
                 <div className="flex items-center justify-center gap-2 mb-4">
                   <Zap className="h-5 w-5 text-yellow-500 animate-pulse" />
-                  <span className="font-semibold bolt-gradient-text text-lg">Ready to bill with confidence?</span>
+                  <span className="font-semibold bolt-gradient-text text-lg">
+                    Ready to bill with confidence?
+                  </span>
                 </div>
-                <p className="text-muted-foreground text-sm mb-4">Create accurate invoices with transparent tax breakdowns and professional design.</p>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Create accurate invoices with transparent tax breakdowns and professional design.
+                </p>
                 <div className="flex flex-wrap justify-center gap-3">
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Award className="inline h-3 w-3 text-yellow-500 mr-1" />

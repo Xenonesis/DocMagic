@@ -26,40 +26,40 @@ export function TemplateSelector({
 }: TemplateSelectorProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<string | null>(null);
-  
+
   const { templates, isLoading, error } = useTemplates();
-  
-  const filteredTemplates = templates.filter(template => {
-    const matchesSearch = 
+
+  const filteredTemplates = templates.filter((template) => {
+    const matchesSearch =
       template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       template.description?.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
     const matchesType = selectedType ? template.type === selectedType : true;
-    
+
     return matchesSearch && matchesType;
   });
-  
-  const templateTypes = Array.from(new Set(templates.map(t => t.type)));
-  
+
+  const templateTypes = Array.from(new Set(templates.map((t) => t.type)));
+
   const handleTemplateSelect = (template: Template) => {
     onSelectTemplate(template);
     onOpenChange(false);
   };
-  
+
   const handleCreateNew = () => {
     onOpenChange(false);
     if (onCreateNew) {
       onCreateNew();
     }
   };
-  
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[80vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>Choose a Template</DialogTitle>
         </DialogHeader>
-        
+
         <div className="flex flex-col space-y-4 flex-1 overflow-hidden">
           <div className="flex items-center space-x-2">
             <div className="relative flex-1">
@@ -86,7 +86,7 @@ export function TemplateSelector({
               New Template
             </Button>
           </div>
-          
+
           <div className="flex space-x-2 overflow-x-auto pb-2">
             <Button
               variant={!selectedType ? 'default' : 'outline'}
@@ -95,7 +95,7 @@ export function TemplateSelector({
             >
               All Templates
             </Button>
-            {templateTypes.map(type => (
+            {templateTypes.map((type) => (
               <Button
                 key={type}
                 variant={selectedType === type ? 'default' : 'outline'}
@@ -106,7 +106,7 @@ export function TemplateSelector({
               </Button>
             ))}
           </div>
-          
+
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto">
               {[...Array(6)].map((_, i) => (
@@ -124,7 +124,7 @@ export function TemplateSelector({
               </div>
               <h3 className="text-lg font-medium mb-1">No templates found</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                {searchQuery || selectedType 
+                {searchQuery || selectedType
                   ? 'Try adjusting your search or filter'
                   : 'Create a new template to get started'}
               </p>
@@ -135,16 +135,14 @@ export function TemplateSelector({
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto pr-2">
-              {filteredTemplates.map(template => (
-                <div 
-                  key={template.id} 
+              {filteredTemplates.map((template) => (
+                <div
+                  key={template.id}
                   className="border rounded-lg p-4 hover:border-primary cursor-pointer transition-colors flex flex-col h-full"
                   onClick={() => handleTemplateSelect(template)}
                 >
                   <div className="flex items-center space-x-2 mb-2">
-                    <span className="text-lg">
-                      {getTemplateTypeIcon(template.type)}
-                    </span>
+                    <span className="text-lg">{getTemplateTypeIcon(template.type)}</span>
                     <h4 className="font-medium">{template.title}</h4>
                   </div>
                   {template.description && (

@@ -29,12 +29,12 @@ export function CreateTemplateForm() {
       }
 
       const data = await response.json();
-      
+
       toast({
         title: 'Success',
         description: 'Template created successfully!',
       });
-      
+
       router.push('/templates');
     } catch (error) {
       console.error('Error creating template:', error);
@@ -56,8 +56,8 @@ export function CreateTemplateForm() {
           Fill in the details below to create a new template
         </p>
       </div>
-      
-      <TemplateForm 
+
+      <TemplateForm
         onSubmit={handleSubmit}
         isSubmitting={isSubmitting}
         submitButtonText={isSubmitting ? 'Creating...' : 'Create Template'}

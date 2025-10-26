@@ -1,10 +1,10 @@
-"use client";
-import { SiteHeader } from "@/components/site-header";
-import { CertificateGenerator } from "@/components/certificate/certificate-generator";
-import { Sparkles, Award, Zap, Star, Wand2, Trophy, Shield } from "lucide-react";
-import { useEffect, useState } from "react";
-import { CertificateGeneratorSkeleton } from "@/components/ui/skeleton";
-import { FloatingHelpButton } from "@/components/floating-help-button";
+'use client';
+import { SiteHeader } from '@/components/site-header';
+import { CertificateGenerator } from '@/components/certificate/certificate-generator';
+import { Sparkles, Award, Zap, Star, Wand2, Trophy, Shield } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { CertificateGeneratorSkeleton } from '@/components/ui/skeleton';
+import { FloatingHelpButton } from '@/components/floating-help-button';
 
 export default function CertificatePage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -43,7 +43,7 @@ export default function CertificatePage() {
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-              Create Professional{" "}
+              Create Professional{' '}
               <span className="bolt-gradient-text relative inline-block">
                 Certificates
                 <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
@@ -53,19 +53,9 @@ export default function CertificatePage() {
             </h1>
 
             <p className="text-base sm:text-lg lg:text-xl leading-7 sm:leading-8 text-muted-foreground max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-0">
-              Design{" "}
-              <span className="font-semibold text-yellow-600">
-                award certificates
-              </span>
-              ,{" "}
-              <span className="font-semibold text-blue-600">
-                achievement awards
-              </span>
-              , and{" "}
-              <span className="font-semibold text-purple-600">
-                recognition documents
-              </span>{" "}
-              with{" "}
+              Design <span className="font-semibold text-yellow-600">award certificates</span>,{' '}
+              <span className="font-semibold text-blue-600">achievement awards</span>, and{' '}
+              <span className="font-semibold text-purple-600">recognition documents</span> with{' '}
               <span className="font-semibold bolt-gradient-text">
                 stunning professional templates
               </span>
@@ -74,28 +64,16 @@ export default function CertificatePage() {
             {/* Stats bar */}
             <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4 sm:gap-6">
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Premium
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Templates
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">Premium</span>
+                <span className="text-muted-foreground text-xs ml-1">Templates</span>
               </div>
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Custom
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Design
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">Custom</span>
+                <span className="text-muted-foreground text-xs ml-1">Design</span>
               </div>
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Instant
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Download
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">Instant</span>
+                <span className="text-muted-foreground text-xs ml-1">Download</span>
               </div>
             </div>
           </div>
@@ -112,16 +90,12 @@ export default function CertificatePage() {
             <div className="absolute bottom-4 left-4">
               <Star
                 className="h-4 w-4 text-blue-500 animate-spin"
-                style={{ animationDuration: "3s" }}
+                style={{ animationDuration: '3s' }}
               />
             </div>
 
             <div className="relative z-10">
-              {isLoading ? (
-                <CertificateGeneratorSkeleton />
-              ) : (
-                <CertificateGenerator />
-              )}
+              {isLoading ? <CertificateGeneratorSkeleton /> : <CertificateGenerator />}
             </div>
           </div>
 
@@ -143,15 +117,11 @@ export default function CertificatePage() {
                 <div className="flex flex-wrap justify-center gap-3">
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Award className="inline h-3 w-3 text-yellow-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Professional Quality
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Professional Quality</span>
                   </div>
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Shield className="inline h-3 w-3 text-blue-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Print Ready
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Print Ready</span>
                   </div>
                 </div>
               </div>
@@ -159,7 +129,7 @@ export default function CertificatePage() {
           </div>
         </div>
       </main>
-      
+
       {/* Floating Help Button */}
       <FloatingHelpButton />
     </div>

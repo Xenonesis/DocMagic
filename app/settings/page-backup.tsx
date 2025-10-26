@@ -35,14 +35,12 @@ export default function SettingsPage() {
                 <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-yellow-400 to-blue-600 rounded-2xl flex items-center justify-center">
                   <Settings className="h-8 w-8 text-white" />
                 </div>
-                <h1 className="text-2xl font-bold mb-2">
-                  Access Your Settings
-                </h1>
+                <h1 className="text-2xl font-bold mb-2">Access Your Settings</h1>
                 <p className="text-muted-foreground">
                   Sign in to manage your profile, preferences, and account settings
                 </p>
               </div>
-              <Button 
+              <Button
                 onClick={() => router.push('/auth/signin')}
                 className="w-full bg-gradient-to-r from-yellow-400 to-blue-600 text-white font-semibold"
                 size="lg"
@@ -65,10 +63,8 @@ export default function SettingsPage() {
             <span className="text-sm font-medium">Account Settings</span>
             <Sparkles className="h-4 w-4 text-blue-500" />
           </div>
-          
-          <h1 className="text-3xl font-bold mb-2">
-            Your docverse Account
-          </h1>
+
+          <h1 className="text-3xl font-bold mb-2">Your docverse Account</h1>
           <p className="text-muted-foreground">
             Manage your profile, subscription, and preferences
           </p>

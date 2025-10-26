@@ -47,7 +47,10 @@ declare module 'next/server' {
   }
 
   export interface NextMiddleware {
-    (request: NextRequest, event: NextFetchEvent): NextResponse | Promise<NextResponse | void> | void;
+    (
+      request: NextRequest,
+      event: NextFetchEvent,
+    ): NextResponse | Promise<NextResponse | void> | void;
   }
 
   export interface MiddlewareResponse extends Response {
@@ -94,7 +97,9 @@ declare module 'next/server' {
 
   export function detectBotUserAgent(userAgent: string): boolean;
 
-  export function detectDeviceType(userAgent: string): 'mobile' | 'tablet' | 'smarttv' | 'console' | 'embedded' | 'wearable' | 'desktop';
+  export function detectDeviceType(
+    userAgent: string,
+  ): 'mobile' | 'tablet' | 'smarttv' | 'console' | 'embedded' | 'wearable' | 'desktop';
 
   export function detectOS(userAgent: string): string;
 

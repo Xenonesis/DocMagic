@@ -1,11 +1,11 @@
-"use client";
-import { SiteHeader } from "@/components/site-header";
-import { TextFormatter } from "@/components/formatter/text-formatter";
-import { JsonFormatter } from "@/components/formatter/json-formatter";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, FileText, Zap, Star, Wand2, Code, Type } from "lucide-react";
-import { useEffect, useState } from "react";
-import { FormatterSkeleton } from "@/components/ui/skeleton";
+'use client';
+import { SiteHeader } from '@/components/site-header';
+import { TextFormatter } from '@/components/formatter/text-formatter';
+import { JsonFormatter } from '@/components/formatter/json-formatter';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Sparkles, FileText, Zap, Star, Wand2, Code, Type } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { FormatterSkeleton } from '@/components/ui/skeleton';
 
 export default function FormatterPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +44,7 @@ export default function FormatterPage() {
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-              Format & Transform Your{" "}
+              Format & Transform Your{' '}
               <span className="bolt-gradient-text relative inline-block">
                 Text & JSON Data
                 <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
@@ -54,18 +54,9 @@ export default function FormatterPage() {
             </h1>
 
             <p className="text-base sm:text-lg lg:text-xl leading-7 sm:leading-8 text-muted-foreground max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-0">
-              Transform{" "}
-              <span className="font-semibold text-yellow-600">
-                text formatting
-              </span>{" "}
-              and validate{" "}
-              <span className="font-semibold text-blue-600">
-                JSON structures
-              </span>{" "}
-              with{" "}
-              <span className="font-semibold bolt-gradient-text">
-                powerful tools
-              </span>
+              Transform <span className="font-semibold text-yellow-600">text formatting</span> and
+              validate <span className="font-semibold text-blue-600">JSON structures</span> with{' '}
+              <span className="font-semibold bolt-gradient-text">powerful tools</span>
             </p>
 
             {/* Stats bar */}
@@ -73,27 +64,17 @@ export default function FormatterPage() {
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
                 <Type className="inline h-4 w-4 text-yellow-500 mr-1" />
                 <span className="bolt-gradient-text font-bold text-sm">Text</span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Formatting
-                </span>
+                <span className="text-muted-foreground text-xs ml-1">Formatting</span>
               </div>
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
                 <Code className="inline h-4 w-4 text-blue-500 mr-1" />
-                <span className="bolt-gradient-text font-bold text-sm">
-                  JSON
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Validation
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">JSON</span>
+                <span className="text-muted-foreground text-xs ml-1">Validation</span>
               </div>
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
                 <Sparkles className="inline h-4 w-4 text-purple-500 mr-1" />
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Instant
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Results
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">Instant</span>
+                <span className="text-muted-foreground text-xs ml-1">Results</span>
               </div>
             </div>
           </div>
@@ -123,11 +104,7 @@ export default function FormatterPage() {
               <div className="glass-effect p-6 sm:p-8 rounded-2xl border border-yellow-400/20 relative overflow-hidden max-w-5xl mx-auto">
                 <div className="absolute inset-0 shimmer opacity-20"></div>
                 <div className="relative z-10">
-                  {isLoading ? (
-                    <FormatterSkeleton />
-                  ) : (
-                    <TextFormatter />
-                  )}
+                  {isLoading ? <FormatterSkeleton /> : <TextFormatter />}
                 </div>
               </div>
             </TabsContent>
@@ -136,11 +113,7 @@ export default function FormatterPage() {
               <div className="glass-effect p-6 sm:p-8 rounded-2xl border border-yellow-400/20 relative overflow-hidden max-w-5xl mx-auto">
                 <div className="absolute inset-0 shimmer opacity-20"></div>
                 <div className="relative z-10">
-                  {isLoading ? (
-                    <FormatterSkeleton />
-                  ) : (
-                    <JsonFormatter />
-                  )}
+                  {isLoading ? <FormatterSkeleton /> : <JsonFormatter />}
                 </div>
               </div>
             </TabsContent>
@@ -164,15 +137,11 @@ export default function FormatterPage() {
                 <div className="flex flex-wrap justify-center gap-3">
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <FileText className="inline h-3 w-3 text-yellow-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Multiple Formats
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Multiple Formats</span>
                   </div>
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Zap className="inline h-3 w-3 text-blue-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Instant Validation
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Instant Validation</span>
                   </div>
                 </div>
               </div>

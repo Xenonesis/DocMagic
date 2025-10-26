@@ -1,13 +1,13 @@
 'use client';
 
-import { notFound } from "next/navigation";
-import { TemplateForm } from "@/components/templates/template-form";
-import { SiteHeader } from "@/components/site-header";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
-import { useState, useEffect } from "react";
-import { Template, TemplateFormValues } from "@/types/template";
-import { Sparkles, FileText, Zap, Star, Wand2, Edit } from "lucide-react";
+import { notFound } from 'next/navigation';
+import { TemplateForm } from '@/components/templates/template-form';
+import { SiteHeader } from '@/components/site-header';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { useState, useEffect } from 'react';
+import { Template, TemplateFormValues } from '@/types/template';
+import { Sparkles, FileText, Zap, Star, Wand2, Edit } from 'lucide-react';
 
 interface EditTemplatePageProps {
   params: {
@@ -137,7 +137,7 @@ export default function EditTemplatePage({ params }: EditTemplatePageProps) {
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-              Edit Your{" "}
+              Edit Your{' '}
               <span className="bolt-gradient-text relative inline-block">
                 Template
                 <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
@@ -147,43 +147,24 @@ export default function EditTemplatePage({ params }: EditTemplatePageProps) {
             </h1>
 
             <p className="text-base sm:text-lg lg:text-xl leading-7 sm:leading-8 text-muted-foreground max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-0">
-              Update your{" "}
-              <span className="font-semibold text-yellow-600">
-                template settings
-              </span>{" "}
-              and{" "}
-              <span className="font-semibold text-blue-600">
-                content structure
-              </span>{" "}
-              with{" "}
-              <span className="font-semibold bolt-gradient-text">
-                AI-powered assistance
-              </span>
+              Update your <span className="font-semibold text-yellow-600">template settings</span>{' '}
+              and <span className="font-semibold text-blue-600">content structure</span> with{' '}
+              <span className="font-semibold bolt-gradient-text">AI-powered assistance</span>
             </p>
 
             {/* Stats bar */}
             <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4 sm:gap-6">
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
                 <span className="bolt-gradient-text font-bold text-sm">AI</span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Enhanced
-                </span>
+                <span className="text-muted-foreground text-xs ml-1">Enhanced</span>
               </div>
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Live
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Preview
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">Live</span>
+                <span className="text-muted-foreground text-xs ml-1">Preview</span>
               </div>
               <div className="glass-effect px-4 py-2 rounded-full hover:scale-105 transition-transform duration-300">
-                <span className="bolt-gradient-text font-bold text-sm">
-                  Easy
-                </span>
-                <span className="text-muted-foreground text-xs ml-1">
-                  Updates
-                </span>
+                <span className="bolt-gradient-text font-bold text-sm">Easy</span>
+                <span className="text-muted-foreground text-xs ml-1">Updates</span>
               </div>
             </div>
           </div>
@@ -200,12 +181,12 @@ export default function EditTemplatePage({ params }: EditTemplatePageProps) {
             <div className="absolute bottom-4 left-4">
               <Star
                 className="h-4 w-4 text-blue-500 animate-spin"
-                style={{ animationDuration: "3s" }}
+                style={{ animationDuration: '3s' }}
               />
             </div>
 
             <div className="relative z-10">
-              <TemplateForm 
+              <TemplateForm
                 defaultValues={{
                   title: template.title,
                   description: template.description,
@@ -238,15 +219,11 @@ export default function EditTemplatePage({ params }: EditTemplatePageProps) {
                 <div className="flex flex-wrap justify-center gap-3">
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <FileText className="inline h-3 w-3 text-yellow-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Professional Quality
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Professional Quality</span>
                   </div>
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Zap className="inline h-3 w-3 text-blue-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      AI-Powered
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">AI-Powered</span>
                   </div>
                 </div>
               </div>
@@ -257,4 +234,3 @@ export default function EditTemplatePage({ params }: EditTemplatePageProps) {
     </div>
   );
 }
-

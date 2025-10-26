@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { PresentationPreview } from "./presentation-preview";
-import { Button } from "@/components/ui/button";
-import { Download, ArrowLeft, Share2, Eye, Lock, Globe } from "lucide-react";
-import Link from "next/link";
-import { useToast } from "@/hooks/use-toast";
+import { useState } from 'react';
+import { PresentationPreview } from './presentation-preview';
+import { Button } from '@/components/ui/button';
+import { Download, ArrowLeft, Share2, Eye, Lock, Globe } from 'lucide-react';
+import Link from 'next/link';
+import { useToast } from '@/hooks/use-toast';
 
 interface PresentationViewerProps {
   presentation: {
@@ -31,14 +31,14 @@ export function PresentationViewer({ presentation }: PresentationViewerProps) {
     try {
       await navigator.clipboard.writeText(shareUrl);
       toast({
-        title: "Link copied!",
-        description: "Share link has been copied to your clipboard",
+        title: 'Link copied!',
+        description: 'Share link has been copied to your clipboard',
       });
     } catch (error) {
       toast({
-        title: "Failed to copy",
-        description: "Please copy the URL manually",
-        variant: "destructive",
+        title: 'Failed to copy',
+        description: 'Please copy the URL manually',
+        variant: 'destructive',
       });
     }
   };
@@ -62,14 +62,14 @@ export function PresentationViewer({ presentation }: PresentationViewerProps) {
 
       setIsPublic(!isPublic);
       toast({
-        title: "Privacy updated",
+        title: 'Privacy updated',
         description: `Presentation is now ${!isPublic ? 'public' : 'private'}`,
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to update privacy setting",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to update privacy setting',
+        variant: 'destructive',
       });
     } finally {
       setIsUpdatingPrivacy(false);
@@ -98,9 +98,13 @@ export function PresentationViewer({ presentation }: PresentationViewerProps) {
                 <h1 className="text-xl font-bold">{presentation.title}</h1>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   {isPublic ? (
-                    <><Globe className="h-3 w-3" /> Public</>
+                    <>
+                      <Globe className="h-3 w-3" /> Public
+                    </>
                   ) : (
-                    <><Lock className="h-3 w-3" /> Private</>
+                    <>
+                      <Lock className="h-3 w-3" /> Private
+                    </>
                   )}
                   <span>•</span>
                   <span>{new Date(presentation.createdAt).toLocaleDateString()}</span>
@@ -118,20 +122,19 @@ export function PresentationViewer({ presentation }: PresentationViewerProps) {
                   className="glass-effect"
                 >
                   {isPublic ? (
-                    <><Globe className="h-4 w-4 mr-2" /> Make Private</>
+                    <>
+                      <Globe className="h-4 w-4 mr-2" /> Make Private
+                    </>
                   ) : (
-                    <><Eye className="h-4 w-4 mr-2" /> Make Public</>
+                    <>
+                      <Eye className="h-4 w-4 mr-2" /> Make Public
+                    </>
                   )}
                 </Button>
               )}
-              
+
               {isPublic && (
-                <Button
-                  onClick={handleShare}
-                  variant="outline"
-                  size="sm"
-                  className="glass-effect"
-                >
+                <Button onClick={handleShare} variant="outline" size="sm" className="glass-effect">
                   <Share2 className="h-4 w-4 mr-2" />
                   Share
                 </Button>
@@ -147,10 +150,7 @@ export function PresentationViewer({ presentation }: PresentationViewerProps) {
           <div className="glass-effect border border-yellow-400/20 rounded-xl overflow-hidden relative">
             <div className="absolute inset-0 shimmer opacity-10"></div>
             <div className="relative z-10">
-              <PresentationPreview 
-                slides={presentation.slides} 
-                template={presentation.template} 
-              />
+              <PresentationPreview slides={presentation.slides} template={presentation.template} />
             </div>
           </div>
 

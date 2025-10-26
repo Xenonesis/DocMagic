@@ -1,24 +1,25 @@
-"use client";
-import Link from "next/link";
-import { useState } from "react";
+'use client';
+import Link from 'next/link';
+import { useState } from 'react';
 
 export default function NotFound() {
-  const [query, setQuery] = useState("");
-  const [submittedQuery, setSubmittedQuery] = useState("");
+  const [query, setQuery] = useState('');
+  const [submittedQuery, setSubmittedQuery] = useState('');
 
   // Your searchable content with associated keywords
   const searchData = [
     {
-      keywords: ["login", "sign in", "access"],
-      answer: "To log in, Go to Homepage  click 'Signin' at the top right and enter your credentials.",
+      keywords: ['login', 'sign in', 'access'],
+      answer:
+        "To log in, Go to Homepage  click 'Signin' at the top right and enter your credentials.",
     },
     {
-      keywords: ["register", "signup", "create account"],
+      keywords: ['register', 'signup', 'create account'],
       answer: "To register, Go to Homepage click 'Signin' and complete the sign-up form.",
     },
     {
-      keywords: ["contact", "support", "help"],
-      answer: "You can contact support through our contact form available below",
+      keywords: ['contact', 'support', 'help'],
+      answer: 'You can contact support through our contact form available below',
     },
     //can add more queried
   ];
@@ -31,24 +32,19 @@ export default function NotFound() {
   };
 
   const matchedResult = searchData.find((item) =>
-    item.keywords.some((keyword) =>
-      submittedQuery.includes(keyword.toLowerCase())
-    )
+    item.keywords.some((keyword) => submittedQuery.includes(keyword.toLowerCase())),
   );
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-center px-6 py-10 bg-gradient-to-b from-white to-gray-50 text-gray-800 font-sans">
       <div>
-        <img
-          src="/magic-hat.svg"
-          alt="Magic Hat Illustration"
-          className="w-full h-auto mx-auto"
-        />
+        <img src="/magic-hat.svg" alt="Magic Hat Illustration" className="w-full h-auto mx-auto" />
       </div>
 
       <h1 className="text-4xl font-bold mb-4">Uh-oh! This page has disappeared into thin air.</h1>
       <p className="text-lg mb-6">
-        Like a magician’s trick gone slightly sideways... but don’t worry—we’ve still got plenty of magic to help you out.
+        Like a magician’s trick gone slightly sideways... but don’t worry—we’ve still got plenty of
+        magic to help you out.
       </p>
 
       <form onSubmit={handleSearch} className="flex w-full max-w-md mb-6">
@@ -81,7 +77,10 @@ export default function NotFound() {
       )}
 
       <div className="space-x-4 mb-6">
-        <Link href="/" className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+        <Link
+          href="/"
+          className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+        >
           Back to Homepage
         </Link>
       </div>

@@ -1,6 +1,6 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { generateAIResponse, validateAIConnection, getAIProviderInfo } from "./ai-service";
-import { extractJsonFromMarkdown } from "./openrouter";
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { generateAIResponse, validateAIConnection, getAIProviderInfo } from './ai-service';
+import { extractJsonFromMarkdown } from './openrouter';
 
 // Get API key with fallback for build time
 const GOOGLE_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
@@ -11,13 +11,13 @@ let genAI: GoogleGenerativeAI | null = null;
 function getGenAI(): GoogleGenerativeAI {
   if (!genAI) {
     if (!GOOGLE_API_KEY) {
-      throw new Error("GEMINI_API_KEY environment variable is not set.");
+      throw new Error('GEMINI_API_KEY environment variable is not set.');
     }
     try {
       genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
     } catch (error) {
-      console.error("Failed to initialize Google Generative AI:", error);
-      throw new Error("Failed to initialize Google Generative AI.");
+      console.error('Failed to initialize Google Generative AI:', error);
+      throw new Error('Failed to initialize Google Generative AI.');
     }
   }
   return genAI;
@@ -28,18 +28,18 @@ async function validateApiConnection() {
 }
 
 // Basic resume generator function
-export async function generateResume({ 
-  prompt, 
-  name, 
-  email 
-}: { 
-  prompt: string; 
-  name: string; 
+export async function generateResume({
+  prompt,
+  name,
+  email,
+}: {
+  prompt: string;
+  name: string;
   email: string;
 }) {
   try {
     await validateApiConnection();
-    
+
     const systemPrompt = `You are an expert resume creator. Create a professional resume based on the provided information.
 
 Return ONLY valid JSON with this exact structure (no markdown, no extra text):
@@ -107,32 +107,37 @@ Generate realistic and relevant content based on the prompt. Include quantifiabl
       maxTokens: 4000,
     });
   } catch (error) {
-    console.error("Error generating resume:", error);
-    throw new Error(`Failed to generate resume: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('Error generating resume:', error);
+    throw new Error(
+      `Failed to generate resume: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
 // Enhanced presentation outline generator with GUARANTEED images and charts
-export async function generatePresentationOutline({ 
-  prompt, 
-  pageCount = 8 
-}: { 
-  prompt: string; 
+export async function generatePresentationOutline({
+  prompt,
+  pageCount = 8,
+}: {
+  prompt: string;
   pageCount?: number;
 }) {
   try {
     await validateApiConnection();
-    
+
     // Check if using a free model with limited output tokens
     const providerInfo = getAIProviderInfo();
-    const isFreeModel = providerInfo.model?.includes('free') || providerInfo.model?.includes('gemma-3n');
-    
+    const isFreeModel =
+      providerInfo.model?.includes('free') || providerInfo.model?.includes('gemma-3n');
+
     // Limit slides for free models to avoid truncation
     if (isFreeModel && pageCount > 5) {
-      console.warn(`Free model detected. Limiting slides from ${pageCount} to 5 to avoid truncation.`);
+      console.warn(
+        `Free model detected. Limiting slides from ${pageCount} to 5 to avoid truncation.`,
+      );
       pageCount = 5;
     }
-    
+
     const systemPrompt = `You are an expert presentation designer. Create a PROFESSIONAL presentation outline with ${pageCount} slides.
 
     CRITICAL REQUIREMENTS - EVERY SLIDE MUST HAVE:
@@ -223,9 +228,9 @@ export async function generatePresentationOutline({
         3184311, 3184312, 3184313, 3184314, 3184315, 3184316, 3184317, 3184318, 3184319, 3184320,
         3184321, 3184322, 3184323, 3184324, 3184325, 3184326, 3184327, 3184328, 3184329, 3184330,
         3184331, 3184332, 3184333, 3184334, 3184335, 3184336, 3184337, 3184338, 3184339, 3184340,
-        3184341, 3184342, 3184343, 3184344, 3184345, 3184346, 3184347, 3184348, 3184349, 3184350
+        3184341, 3184342, 3184343, 3184344, 3184345, 3184346, 3184347, 3184348, 3184349, 3184350,
       ];
-      
+
       // FORCE image URL if missing
       if (!outline.imageUrl || !outline.imageUrl.includes('pexels.com')) {
         const randomId = professionalImageIds[index % professionalImageIds.length];
@@ -236,7 +241,13 @@ export async function generatePresentationOutline({
       if (outline.type === 'chart' || (index % 3 === 1 && !outline.chartData)) {
         outline.type = 'chart';
         outline.chartData = outline.chartData || generateProfessionalChartData('bar', prompt);
-        outline.chartData.colors = outline.chartData.colors || ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"];
+        outline.chartData.colors = outline.chartData.colors || [
+          '#3B82F6',
+          '#10B981',
+          '#F59E0B',
+          '#EF4444',
+          '#8B5CF6',
+        ];
         outline.chartData.showLegend = true;
         outline.chartData.showGrid = true;
         outline.chartData.title = outline.chartData.title || outline.title;
@@ -252,24 +263,26 @@ export async function generatePresentationOutline({
 
     return enhancedOutlines.slice(0, pageCount);
   } catch (error) {
-    console.error("Error generating presentation outline:", error);
-    throw new Error(`Failed to generate presentation outline: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('Error generating presentation outline:', error);
+    throw new Error(
+      `Failed to generate presentation outline: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
 // Enhanced full presentation generator with GUARANTEED visuals
-export async function generatePresentation({ 
+export async function generatePresentation({
   outlines,
-  template = "modern-business",
-  prompt
-}: { 
+  template = 'modern-business',
+  prompt,
+}: {
   outlines: any[];
   template?: string;
   prompt: string;
 }) {
   try {
     await validateApiConnection();
-    
+
     const systemPrompt = `You are an expert presentation designer. Generate a PROFESSIONAL presentation with GUARANTEED IMAGES AND CHARTS for every slide.
 
     Template: ${template}
@@ -347,7 +360,7 @@ Outlines: ${JSON.stringify(outlines)}`;
     // GUARANTEE every slide has professional visuals
     const enhancedSlides = slides.map((slide: any, index: number) => {
       const templateStyles = getProfessionalTemplateStyles(template);
-      
+
       // FORCE professional image for every slide
       const professionalImageIds = [
         3184291, 3184292, 3184293, 3184294, 3184295, 3184296, 3184297, 3184298, 3184299, 3184300,
@@ -355,9 +368,9 @@ Outlines: ${JSON.stringify(outlines)}`;
         3184321, 3184322, 3184323, 3184324, 3184325, 3184326, 3184327, 3184328, 3184329, 3184330,
         3184331, 3184332, 3184333, 3184334, 3184335, 3184336, 3184337, 3184338, 3184339, 3184340,
         3184341, 3184342, 3184343, 3184344, 3184345, 3184346, 3184347, 3184348, 3184349, 3184350,
-        3184351, 3184352, 3184353, 3184354, 3184355, 3184356, 3184357, 3184358, 3184359, 3184360
+        3184351, 3184352, 3184353, 3184354, 3184355, 3184356, 3184357, 3184358, 3184359, 3184360,
       ];
-      
+
       if (!slide.image || !slide.image.includes('pexels.com')) {
         const randomId = professionalImageIds[index % professionalImageIds.length];
         slide.image = `https://images.pexels.com/photos/${randomId}/pexels-photo-${randomId}.jpeg?auto=compress&cs=tinysrgb&w=1200&h=800`;
@@ -370,13 +383,13 @@ Outlines: ${JSON.stringify(outlines)}`;
         slide.charts.colors = slide.charts.colors || templateStyles.chartColors;
         slide.charts.showLegend = true;
         slide.charts.showGrid = true;
-        
+
         // GUARANTEE meaningful chart data
         if (!slide.charts.data || slide.charts.data.length === 0) {
           slide.charts.data = generateProfessionalChartData(slide.charts.type || 'bar', prompt);
           slide.charts.type = slide.charts.type || 'bar';
         }
-        
+
         slide.charts.title = slide.charts.title || slide.title;
       }
 
@@ -387,19 +400,21 @@ Outlines: ${JSON.stringify(outlines)}`;
         template,
         ...templateStyles,
         imageAlt: slide.imageAlt || `Professional image for ${slide.title}`,
-        imagePosition: slide.imagePosition || "center",
+        imagePosition: slide.imagePosition || 'center',
         animations: slide.animations || {
-          entrance: "fadeIn",
-          emphasis: "pulse",
-          exit: "fadeOut"
-        }
+          entrance: 'fadeIn',
+          emphasis: 'pulse',
+          exit: 'fadeOut',
+        },
       };
     });
 
     return enhancedSlides;
   } catch (error) {
-    console.error("Error generating presentation:", error);
-    throw new Error(`Failed to generate presentation: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('Error generating presentation:', error);
+    throw new Error(
+      `Failed to generate presentation: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
@@ -411,166 +426,180 @@ function getProfessionalTemplateStyles(template: string) {
       textColor: '#1e3a8a',
       accentColor: '#3b82f6',
       borderColor: '#dbeafe',
-      chartColors: ['#3b82f6', '#1e40af', '#1d4ed8', '#2563eb', '#3b82f6']
+      chartColors: ['#3b82f6', '#1e40af', '#1d4ed8', '#2563eb', '#3b82f6'],
     },
     'creative-gradient': {
       backgroundColor: '#ffffff',
       textColor: '#7c2d92',
       accentColor: '#a855f7',
       borderColor: '#e9d5ff',
-      chartColors: ['#a855f7', '#9333ea', '#7c3aed', '#8b5cf6', '#a855f7']
+      chartColors: ['#a855f7', '#9333ea', '#7c3aed', '#8b5cf6', '#a855f7'],
     },
     'minimalist-pro': {
       backgroundColor: '#ffffff',
       textColor: '#374151',
       accentColor: '#6b7280',
       borderColor: '#e5e7eb',
-      chartColors: ['#6b7280', '#4b5563', '#374151', '#9ca3af', '#6b7280']
+      chartColors: ['#6b7280', '#4b5563', '#374151', '#9ca3af', '#6b7280'],
     },
     'tech-modern': {
       backgroundColor: '#0f172a',
       textColor: '#ffffff',
       accentColor: '#06b6d4',
       borderColor: '#164e63',
-      chartColors: ['#06b6d4', '#0891b2', '#0e7490', '#155e75', '#06b6d4']
+      chartColors: ['#06b6d4', '#0891b2', '#0e7490', '#155e75', '#06b6d4'],
     },
     'elegant-dark': {
       backgroundColor: '#111827',
       textColor: '#ffffff',
       accentColor: '#fbbf24',
       borderColor: '#374151',
-      chartColors: ['#fbbf24', '#f59e0b', '#d97706', '#b45309', '#fbbf24']
+      chartColors: ['#fbbf24', '#f59e0b', '#d97706', '#b45309', '#fbbf24'],
     },
     'startup-pitch': {
       backgroundColor: '#ffffff',
       textColor: '#065f46',
       accentColor: '#10b981',
       borderColor: '#d1fae5',
-      chartColors: ['#10b981', '#059669', '#047857', '#065f46', '#10b981']
-    }
+      chartColors: ['#10b981', '#059669', '#047857', '#065f46', '#10b981'],
+    },
   };
-  
+
   return styles[template as keyof typeof styles] || styles['modern-business'];
 }
 
 // Generate professional chart data with guaranteed meaningful content
 function generateProfessionalChartData(chartType: string, topic: string) {
-  const isBusinessTopic = topic.toLowerCase().includes('business') || topic.toLowerCase().includes('startup') || topic.toLowerCase().includes('revenue') || topic.toLowerCase().includes('growth');
-  const isTechTopic = topic.toLowerCase().includes('tech') || topic.toLowerCase().includes('software') || topic.toLowerCase().includes('ai') || topic.toLowerCase().includes('digital');
-  const isMarketingTopic = topic.toLowerCase().includes('marketing') || topic.toLowerCase().includes('brand') || topic.toLowerCase().includes('customer');
-  
+  const isBusinessTopic =
+    topic.toLowerCase().includes('business') ||
+    topic.toLowerCase().includes('startup') ||
+    topic.toLowerCase().includes('revenue') ||
+    topic.toLowerCase().includes('growth');
+  const isTechTopic =
+    topic.toLowerCase().includes('tech') ||
+    topic.toLowerCase().includes('software') ||
+    topic.toLowerCase().includes('ai') ||
+    topic.toLowerCase().includes('digital');
+  const isMarketingTopic =
+    topic.toLowerCase().includes('marketing') ||
+    topic.toLowerCase().includes('brand') ||
+    topic.toLowerCase().includes('customer');
+
   if (chartType === 'bar') {
     if (isBusinessTopic) {
       return [
-        { name: "Q1 2024", value: 125, category: "Revenue ($M)" },
-        { name: "Q2 2024", value: 158, category: "Revenue ($M)" },
-        { name: "Q3 2024", value: 192, category: "Revenue ($M)" },
-        { name: "Q4 2024", value: 234, category: "Revenue ($M)" },
-        { name: "Q1 2025", value: 278, category: "Revenue ($M)" }
+        { name: 'Q1 2024', value: 125, category: 'Revenue ($M)' },
+        { name: 'Q2 2024', value: 158, category: 'Revenue ($M)' },
+        { name: 'Q3 2024', value: 192, category: 'Revenue ($M)' },
+        { name: 'Q4 2024', value: 234, category: 'Revenue ($M)' },
+        { name: 'Q1 2025', value: 278, category: 'Revenue ($M)' },
       ];
     } else if (isTechTopic) {
       return [
-        { name: "Frontend", value: 45, category: "Development %" },
-        { name: "Backend", value: 38, category: "Development %" },
-        { name: "Database", value: 28, category: "Development %" },
-        { name: "DevOps", value: 22, category: "Development %" },
-        { name: "Testing", value: 18, category: "Development %" }
+        { name: 'Frontend', value: 45, category: 'Development %' },
+        { name: 'Backend', value: 38, category: 'Development %' },
+        { name: 'Database', value: 28, category: 'Development %' },
+        { name: 'DevOps', value: 22, category: 'Development %' },
+        { name: 'Testing', value: 18, category: 'Development %' },
       ];
     } else if (isMarketingTopic) {
       return [
-        { name: "Social Media", value: 35, category: "Engagement %" },
-        { name: "Email", value: 28, category: "Engagement %" },
-        { name: "Content", value: 42, category: "Engagement %" },
-        { name: "Paid Ads", value: 31, category: "Engagement %" },
-        { name: "SEO", value: 38, category: "Engagement %" }
+        { name: 'Social Media', value: 35, category: 'Engagement %' },
+        { name: 'Email', value: 28, category: 'Engagement %' },
+        { name: 'Content', value: 42, category: 'Engagement %' },
+        { name: 'Paid Ads', value: 31, category: 'Engagement %' },
+        { name: 'SEO', value: 38, category: 'Engagement %' },
       ];
     }
   } else if (chartType === 'pie') {
     if (isBusinessTopic) {
       return [
-        { name: "Product Sales", value: 45 },
-        { name: "Services", value: 30 },
-        { name: "Licensing", value: 15 },
-        { name: "Partnerships", value: 10 }
+        { name: 'Product Sales', value: 45 },
+        { name: 'Services', value: 30 },
+        { name: 'Licensing', value: 15 },
+        { name: 'Partnerships', value: 10 },
       ];
     } else if (isTechTopic) {
       return [
-        { name: "Web Development", value: 40 },
-        { name: "Mobile Apps", value: 35 },
-        { name: "APIs", value: 15 },
-        { name: "Infrastructure", value: 10 }
+        { name: 'Web Development', value: 40 },
+        { name: 'Mobile Apps', value: 35 },
+        { name: 'APIs', value: 15 },
+        { name: 'Infrastructure', value: 10 },
       ];
     } else if (isMarketingTopic) {
       return [
-        { name: "Digital Marketing", value: 50 },
-        { name: "Traditional Media", value: 25 },
-        { name: "Events", value: 15 },
-        { name: "PR", value: 10 }
+        { name: 'Digital Marketing', value: 50 },
+        { name: 'Traditional Media', value: 25 },
+        { name: 'Events', value: 15 },
+        { name: 'PR', value: 10 },
       ];
     }
   } else if (chartType === 'line') {
     if (isBusinessTopic) {
       return [
-        { name: "Jan", value: 65 },
-        { name: "Feb", value: 78 },
-        { name: "Mar", value: 82 },
-        { name: "Apr", value: 95 },
-        { name: "May", value: 108 },
-        { name: "Jun", value: 125 },
-        { name: "Jul", value: 142 }
+        { name: 'Jan', value: 65 },
+        { name: 'Feb', value: 78 },
+        { name: 'Mar', value: 82 },
+        { name: 'Apr', value: 95 },
+        { name: 'May', value: 108 },
+        { name: 'Jun', value: 125 },
+        { name: 'Jul', value: 142 },
       ];
     } else if (isTechTopic) {
       return [
-        { name: "Week 1", value: 85 },
-        { name: "Week 2", value: 92 },
-        { name: "Week 3", value: 88 },
-        { name: "Week 4", value: 96 },
-        { name: "Week 5", value: 103 },
-        { name: "Week 6", value: 110 }
+        { name: 'Week 1', value: 85 },
+        { name: 'Week 2', value: 92 },
+        { name: 'Week 3', value: 88 },
+        { name: 'Week 4', value: 96 },
+        { name: 'Week 5', value: 103 },
+        { name: 'Week 6', value: 110 },
       ];
     }
   }
 
   // Enhanced default professional data
   return [
-    { name: "Category A", value: 65 },
-    { name: "Category B", value: 78 },
-    { name: "Category C", value: 92 },
-    { name: "Category D", value: 45 },
-    { name: "Category E", value: 58 }
+    { name: 'Category A', value: 65 },
+    { name: 'Category B', value: 78 },
+    { name: 'Category C', value: 92 },
+    { name: 'Category D', value: 45 },
+    { name: 'Category E', value: 58 },
   ];
 }
 
 // Generate professional image queries with guaranteed relevance
 function generateProfessionalImageQuery(slideType: string, title: string, topic: string) {
-  const isBusinessTopic = topic.toLowerCase().includes('business') || topic.toLowerCase().includes('startup');
-  const isTechTopic = topic.toLowerCase().includes('tech') || topic.toLowerCase().includes('software');
-  const isMarketingTopic = topic.toLowerCase().includes('marketing') || topic.toLowerCase().includes('brand');
-  
+  const isBusinessTopic =
+    topic.toLowerCase().includes('business') || topic.toLowerCase().includes('startup');
+  const isTechTopic =
+    topic.toLowerCase().includes('tech') || topic.toLowerCase().includes('software');
+  const isMarketingTopic =
+    topic.toLowerCase().includes('marketing') || topic.toLowerCase().includes('brand');
+
   if (slideType === 'cover') {
-    if (isBusinessTopic) return "professional business team meeting modern office boardroom";
-    if (isTechTopic) return "modern technology workspace coding development team";
-    if (isMarketingTopic) return "creative marketing team brainstorming session";
-    return "professional presentation business meeting conference";
+    if (isBusinessTopic) return 'professional business team meeting modern office boardroom';
+    if (isTechTopic) return 'modern technology workspace coding development team';
+    if (isMarketingTopic) return 'creative marketing team brainstorming session';
+    return 'professional presentation business meeting conference';
   } else if (slideType === 'chart') {
-    return "business analytics data visualization charts dashboard professional";
+    return 'business analytics data visualization charts dashboard professional';
   } else if (slideType === 'split') {
-    if (isBusinessTopic) return "professional business handshake partnership collaboration";
-    if (isTechTopic) return "modern technology innovation digital transformation";
-    if (isMarketingTopic) return "creative marketing campaign strategy planning";
-    return "professional business collaboration teamwork";
+    if (isBusinessTopic) return 'professional business handshake partnership collaboration';
+    if (isTechTopic) return 'modern technology innovation digital transformation';
+    if (isMarketingTopic) return 'creative marketing campaign strategy planning';
+    return 'professional business collaboration teamwork';
   } else if (slideType === 'list') {
-    if (isBusinessTopic) return "business strategy planning professional meeting";
-    if (isTechTopic) return "technology innovation development process";
-    if (isMarketingTopic) return "marketing strategy creative planning";
-    return "professional business planning strategy";
+    if (isBusinessTopic) return 'business strategy planning professional meeting';
+    if (isTechTopic) return 'technology innovation development process';
+    if (isMarketingTopic) return 'marketing strategy creative planning';
+    return 'professional business planning strategy';
   }
-  
-  return "professional business presentation modern office";
+
+  return 'professional business presentation modern office';
 }
 
 // ENHANCED ATS-OPTIMIZED RESUME GENERATOR WITH GUIDED INPUT
-export async function generateGuidedResume({ 
+export async function generateGuidedResume({
   personalInfo,
   professionalSummary,
   workExperience,
@@ -580,8 +609,8 @@ export async function generateGuidedResume({
   certifications,
   links,
   targetRole,
-  jobDescription
-}: { 
+  jobDescription,
+}: {
   personalInfo: any;
   professionalSummary: string;
   workExperience: any[];
@@ -595,7 +624,7 @@ export async function generateGuidedResume({
 }) {
   try {
     await validateApiConnection();
-    
+
     const systemPrompt = `You are an expert ATS-optimized resume creator. Create a 100% ATS-OPTIMIZED professional resume based on the provided information.
 
     CRITICAL ATS REQUIREMENTS:
@@ -710,16 +739,22 @@ ${jobDescription ? `Job Description: ${jobDescription}` : ''}`;
       maxTokens: 6000,
     });
   } catch (error) {
-    console.error("Error generating guided resume:", error);
-    throw new Error(`Failed to generate guided resume: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('Error generating guided resume:', error);
+    throw new Error(
+      `Failed to generate guided resume: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
 // ENHANCED RESUME STEP GUIDANCE GENERATOR
-export async function generateResumeStepGuidance(step: string, targetRole: string, existingData?: any) {
+export async function generateResumeStepGuidance(
+  step: string,
+  targetRole: string,
+  existingData?: any,
+) {
   try {
     await validateApiConnection();
-    
+
     const systemPrompt = `You are an expert resume guidance counselor. Provide intelligent, personalized guidance for resume sections.
 
     CURRENT STEP: ${step}
@@ -761,20 +796,22 @@ EXISTING DATA: ${existingData ? JSON.stringify(existingData) : 'None'}`;
       maxTokens: 3000,
     });
   } catch (error) {
-    console.error("Error generating step guidance:", error);
-    throw new Error(`Failed to generate step guidance: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('Error generating step guidance:', error);
+    throw new Error(
+      `Failed to generate step guidance: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
 // Enhanced letter generator with improved structure
-export async function generateLetter({ 
-  prompt, 
-  fromName, 
-  fromAddress, 
-  toName, 
-  toAddress, 
-  letterType 
-}: { 
+export async function generateLetter({
+  prompt,
+  fromName,
+  fromAddress,
+  toName,
+  toAddress,
+  letterType,
+}: {
   prompt: string;
   fromName: string;
   fromAddress?: string;
@@ -784,7 +821,7 @@ export async function generateLetter({
 }) {
   try {
     await validateApiConnection();
-    
+
     const systemPrompt = `You are an expert professional letter writer. Create professional letters with proper formatting and tone.
     
     LETTER TYPE: ${letterType}
@@ -836,42 +873,46 @@ TO: ${toName}${toAddress ? `, ${toAddress}` : ''}`;
       temperature: 0.7,
       maxTokens: 4000,
     });
-    
+
     // Ensure the letter has the expected structure
     return {
       from: {
         name: letterData.from?.name || fromName,
-        address: letterData.from?.address || fromAddress || ""
+        address: letterData.from?.address || fromAddress || '',
       },
       to: {
         name: letterData.to?.name || toName,
-        address: letterData.to?.address || toAddress || ""
+        address: letterData.to?.address || toAddress || '',
       },
-      date: letterData.date || new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      }),
-      subject: letterData.subject || "Re: " + prompt.substring(0, 30) + "...",
-      content: letterData.content || "Letter content not available."
+      date:
+        letterData.date ||
+        new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
+      subject: letterData.subject || 'Re: ' + prompt.substring(0, 30) + '...',
+      content: letterData.content || 'Letter content not available.',
     };
   } catch (error) {
-    console.error("Error generating letter:", error);
-    throw new Error(`Failed to generate letter: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('Error generating letter:', error);
+    throw new Error(
+      `Failed to generate letter: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
 // ENHANCED ATS ANALYSIS WITH DETAILED SCORING
-export async function generateATSScore({ 
-  resumeContent, 
-  jobDescription 
-}: { 
-  resumeContent: string; 
+export async function generateATSScore({
+  resumeContent,
+  jobDescription,
+}: {
+  resumeContent: string;
   jobDescription: string;
 }) {
   try {
     await validateApiConnection();
-    
+
     const systemPrompt = `You are an expert ATS (Applicant Tracking System) analyzer. Perform comprehensive ATS analysis of resumes.
 
     Provide detailed ATS scoring and analysis as JSON:
@@ -940,22 +981,24 @@ JOB DESCRIPTION: ${jobDescription}`;
       maxTokens: 5000,
     });
   } catch (error) {
-    console.error("Error analyzing resume:", error);
-    throw new Error(`Failed to analyze resume: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('Error analyzing resume:', error);
+    throw new Error(
+      `Failed to analyze resume: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
 // ENHANCED DIAGRAM GENERATOR WITH MERMAID SYNTAX
-export async function generateDiagram({ 
-  prompt, 
-  diagramType = 'flowchart' 
-}: { 
-  prompt: string; 
+export async function generateDiagram({
+  prompt,
+  diagramType = 'flowchart',
+}: {
+  prompt: string;
   diagramType?: string;
 }) {
   try {
     await validateApiConnection();
-    
+
     const systemPrompt = `You are an expert diagram creator. Generate professional diagrams using Mermaid syntax.
 
     Return as JSON with this structure:
@@ -1023,7 +1066,9 @@ export async function generateDiagram({
       maxTokens: 3000,
     });
   } catch (error) {
-    console.error("Error generating diagram:", error);
-    throw new Error(`Failed to generate diagram: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('Error generating diagram:', error);
+    throw new Error(
+      `Failed to generate diagram: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }

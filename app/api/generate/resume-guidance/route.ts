@@ -10,19 +10,13 @@ export async function POST(request: Request) {
     const { step, targetRole, existingData } = body;
 
     if (!step || !targetRole) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     const guidance = await generateResumeStepGuidance(step, targetRole, existingData);
     return NextResponse.json(guidance);
   } catch (error) {
     console.error('Error generating resume guidance:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate guidance' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate guidance' }, { status: 500 });
   }
 }

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createRoute } from "@/lib/supabase/server";
-import { verifyMessage } from "ethers";
+import { NextRequest, NextResponse } from 'next/server';
+import { createRoute } from '@/lib/supabase/server';
+import { verifyMessage } from 'ethers';
 
 // Store used nonces (in production, use Redis or database)
 const usedNonces = new Set<string>();
@@ -11,10 +11,7 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!address || !signature || !message || !provider) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     // Check timestamp (message should be recent, within 5 minutes)
@@ -23,66 +20,48 @@ export async function POST(request: NextRequest) {
     const fiveMinutes = 5 * 60 * 1000;
 
     if (now - messageTime > fiveMinutes) {
-      return NextResponse.json(
-        { error: "Message expired" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Message expired' }, { status: 401 });
     }
 
     // Extract nonce from message
     const nonceMatch = message.match(/Nonce: ([a-zA-Z0-9]+)/);
     if (!nonceMatch) {
-      return NextResponse.json(
-        { error: "Invalid message format" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid message format' }, { status: 400 });
     }
 
     const nonce = nonceMatch[1];
 
     // Check if nonce has been used
     if (usedNonces.has(nonce)) {
-      return NextResponse.json(
-        { error: "Nonce already used" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Nonce already used' }, { status: 401 });
     }
 
     // Verify signature based on provider
     let recoveredAddress: string;
 
-    if (provider === "ethereum") {
+    if (provider === 'ethereum') {
       // Verify Ethereum signature
       try {
         recoveredAddress = verifyMessage(message, signature);
-        
+
         if (recoveredAddress.toLowerCase() !== address.toLowerCase()) {
-          return NextResponse.json(
-            { error: "Invalid signature" },
-            { status: 401 }
-          );
+          return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
         }
       } catch (error) {
-        console.error("Ethereum signature verification failed:", error);
-        return NextResponse.json(
-          { error: "Signature verification failed" },
-          { status: 401 }
-        );
+        console.error('Ethereum signature verification failed:', error);
+        return NextResponse.json({ error: 'Signature verification failed' }, { status: 401 });
       }
-    } else if (provider === "solana") {
+    } else if (provider === 'solana') {
       // For Solana, you would use @solana/web3.js to verify
       // This is a simplified version - implement proper Solana verification
       // using nacl.sign.detached.verify in production
-      
+
       // TODO: Implement Solana signature verification
       // For now, we'll accept it (NOT SECURE FOR PRODUCTION)
-      console.warn("Solana signature verification not fully implemented");
+      console.warn('Solana signature verification not fully implemented');
       recoveredAddress = address;
     } else {
-      return NextResponse.json(
-        { error: "Unsupported provider" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Unsupported provider' }, { status: 400 });
     }
 
     // Mark nonce as used
@@ -90,20 +69,17 @@ export async function POST(request: NextRequest) {
 
     // Create or get user in Supabase
     const supabase = createRoute();
-    
+
     // Check if user exists with this wallet address
     const { data: existingUser, error: fetchError } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("wallet_address", address.toLowerCase())
+      .from('profiles')
+      .select('*')
+      .eq('wallet_address', address.toLowerCase())
       .single();
 
-    if (fetchError && fetchError.code !== "PGRST116") {
-      console.error("Error fetching user:", fetchError);
-      return NextResponse.json(
-        { error: "Database error" },
-        { status: 500 }
-      );
+    if (fetchError && fetchError.code !== 'PGRST116') {
+      console.error('Error fetching user:', fetchError);
+      return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
 
     // If user doesn't exist, create a new one
@@ -115,17 +91,14 @@ export async function POST(request: NextRequest) {
           data: {
             wallet_address: address.toLowerCase(),
             wallet_provider: provider,
-            display_name: `${provider === "ethereum" ? "ETH" : "SOL"} User ${address.slice(0, 6)}`,
+            display_name: `${provider === 'ethereum' ? 'ETH' : 'SOL'} User ${address.slice(0, 6)}`,
           },
         },
       });
 
       if (createError) {
-        console.error("Error creating user:", createError);
-        return NextResponse.json(
-          { error: "Failed to create user" },
-          { status: 500 }
-        );
+        console.error('Error creating user:', createError);
+        return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
       }
     }
 
@@ -136,11 +109,8 @@ export async function POST(request: NextRequest) {
     });
 
     if (signInError) {
-      console.error("Error signing in:", signInError);
-      return NextResponse.json(
-        { error: "Failed to sign in" },
-        { status: 500 }
-      );
+      console.error('Error signing in:', signInError);
+      return NextResponse.json({ error: 'Failed to sign in' }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -152,10 +122,7 @@ export async function POST(request: NextRequest) {
       session: sessionData.session,
     });
   } catch (error) {
-    console.error("Web3 verification error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error('Web3 verification error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

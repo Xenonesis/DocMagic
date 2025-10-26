@@ -60,4 +60,4 @@ export async function sendWelcomeEmail(to: string, name?: string) {
     console.log(`Welcome email preview URL: ${previewUrl}`);
   }
   return { info, previewUrl };
-} 
+}

@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
-import { createRoute } from "@/lib/supabase/server";
-import { generateIconWithOpenRouter } from "@/lib/openrouter";
-import { generatePollinationsIconsAuto } from "@/lib/pollinations";
+import { NextResponse } from 'next/server';
+import { createRoute } from '@/lib/supabase/server';
+import { generateIconWithOpenRouter } from '@/lib/openrouter';
+import { generatePollinationsIconsAuto } from '@/lib/pollinations';
 
-export const runtime = "edge";
+export const runtime = 'edge';
 export const maxDuration = 60;
 
 interface IconRequest {
@@ -28,35 +28,32 @@ export async function POST(request: Request) {
 
     // Validate input
     if (!prompt || prompt.trim().length === 0) {
-      return NextResponse.json(
-        { error: "Icon description is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Icon description is required' }, { status: 400 });
     }
 
     // Check subscription limits for non-premium users
     if (user) {
       const { data: subscription } = await supabase
-        .from("subscriptions")
-        .select("*")
-        .eq("user_id", user.id)
+        .from('subscriptions')
+        .select('*')
+        .eq('user_id', user.id)
         .single();
 
-      if (subscription?.tier !== "premium") {
+      if (subscription?.tier !== 'premium') {
         // Check usage limits for free tier (10 icons per month)
         const { data: usage } = await supabase
-          .from("usage_stats")
-          .select("icons_generated")
-          .eq("user_id", user.id)
+          .from('usage_stats')
+          .select('icons_generated')
+          .eq('user_id', user.id)
           .single();
 
         if (usage && usage.icons_generated >= 10) {
           return NextResponse.json(
             {
-              error: "Free tier limit reached. Upgrade to Premium for unlimited icons.",
+              error: 'Free tier limit reached. Upgrade to Premium for unlimited icons.',
               upgradeRequired: true,
             },
-            { status: 403 }
+            { status: 403 },
           );
         }
       }
@@ -64,7 +61,7 @@ export async function POST(request: Request) {
 
     // Generate icons using selected provider
     let icons: string[];
-    
+
     if (provider === 'pollinations') {
       // Use Pollinations.ai for image-based icon generation
       icons = await generatePollinationsIconsAuto({
@@ -86,7 +83,7 @@ export async function POST(request: Request) {
 
     // Update usage stats if user is authenticated
     if (user) {
-      await supabase.rpc("increment_icons_generated", {
+      await supabase.rpc('increment_icons_generated', {
         p_user_id: user.id,
       });
     }
@@ -94,15 +91,15 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       icons,
-      message: "Icons generated successfully",
+      message: 'Icons generated successfully',
     });
   } catch (error) {
-    console.error("Error generating icon:", error);
+    console.error('Error generating icon:', error);
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : "Failed to generate icon",
+        error: error instanceof Error ? error.message : 'Failed to generate icon',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

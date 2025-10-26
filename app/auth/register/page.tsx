@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 import {
   Sparkles,
   Zap,
@@ -24,21 +24,21 @@ import {
   Loader2,
   MousePointer2,
   Fingerprint,
-} from "lucide-react";
-import { Web3AuthButton } from "@/components/auth/Web3AuthButton";
+} from 'lucide-react';
+import { Web3AuthButton } from '@/components/auth/Web3AuthButton';
 
 export default function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [redirectTo, setRedirectTo] = useState<string>("/");
+  const [redirectTo, setRedirectTo] = useState<string>('/');
   const router = useRouter();
   const { toast } = useToast();
   const supabase = createClient();
@@ -46,11 +46,11 @@ export default function Register() {
   // Animation mount effect and get redirect parameters
   useEffect(() => {
     setMounted(true);
-    
+
     // Get redirect parameters from URL
     const urlParams = new URLSearchParams(window.location.search);
     const redirectParam = urlParams.get('redirectTo');
-    
+
     if (redirectParam) {
       setRedirectTo(decodeURIComponent(redirectParam));
     }
@@ -76,26 +76,27 @@ export default function Register() {
     if (password !== confirmPassword) {
       toast({
         title: "Passwords don't match",
-        description: "Please make sure both passwords are identical.",
-        variant: "destructive",
+        description: 'Please make sure both passwords are identical.',
+        variant: 'destructive',
       });
       return;
     }
 
     if (password.length < 8) {
       toast({
-        title: "Password too short",
-        description: "Password must be at least 8 characters long.",
-        variant: "destructive",
+        title: 'Password too short',
+        description: 'Password must be at least 8 characters long.',
+        variant: 'destructive',
       });
       return;
     }
 
     if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
       toast({
-        title: "Password too weak",
-        description: "Password must contain at least one uppercase letter, one lowercase letter, and one number.",
-        variant: "destructive",
+        title: 'Password too weak',
+        description:
+          'Password must contain at least one uppercase letter, one lowercase letter, and one number.',
+        variant: 'destructive',
       });
       return;
     }
@@ -104,65 +105,61 @@ export default function Register() {
 
     try {
       // Call our internal API route to register the user
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
       });
 
       const result = await res.json();
 
       if (!res.ok) {
-        throw new Error(result.error || "Failed to create account");
+        throw new Error(result.error || 'Failed to create account');
       }
 
       toast({
-        title: "Account created successfully! ✨",
-        description: result.message || "You can now sign in with your credentials.",
+        title: 'Account created successfully! ✨',
+        description: result.message || 'You can now sign in with your credentials.',
       });
 
       // Redirect to sign-in page
-      router.push("/auth/signin");
+      router.push('/auth/signin');
     } catch (error: any) {
       // Enhanced error handling for Supabase registration
-      let userMessage = "Failed to create account. Please try again.";
+      let userMessage = 'Failed to create account. Please try again.';
       if (error?.message) {
         if (
-          error.message.includes("User already registered") ||
-          error.message.includes("User already exists") ||
-          error.message.includes("email address is already registered") ||
-          error.message.includes(
-            "duplicate key value violates unique constraint"
-          )
+          error.message.includes('User already registered') ||
+          error.message.includes('User already exists') ||
+          error.message.includes('email address is already registered') ||
+          error.message.includes('duplicate key value violates unique constraint')
         ) {
           userMessage =
-            "An account with this email already exists. Please sign in or use a different email.";
+            'An account with this email already exists. Please sign in or use a different email.';
         } else if (
-          error.message.includes("Invalid email") ||
-          error.message.includes("email is invalid")
+          error.message.includes('Invalid email') ||
+          error.message.includes('email is invalid')
         ) {
-          userMessage = "Please enter a valid email address.";
+          userMessage = 'Please enter a valid email address.';
         } else if (
-          error.message.includes("Password should be at least") ||
-          error.message.includes("Password is too short")
+          error.message.includes('Password should be at least') ||
+          error.message.includes('Password is too short')
         ) {
-          userMessage =
-            "Password is too short. Please use at least 6 characters.";
+          userMessage = 'Password is too short. Please use at least 6 characters.';
         } else if (
-          error.message.includes("rate limit") ||
-          error.message.includes("Too many requests")
+          error.message.includes('rate limit') ||
+          error.message.includes('Too many requests')
         ) {
-          userMessage =
-            "Too many attempts. Please wait a moment and try again.";
+          userMessage = 'Too many attempts. Please wait a moment and try again.';
         } else {
           userMessage = error.message;
         }
       }
-      console.error("Registration error:", error);
+      console.error('Registration error:', error);
       toast({
-        title: "Registration Failed",
+        title: 'Registration Failed',
         description: userMessage,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -198,7 +195,7 @@ export default function Register() {
 
       <div
         className={`w-full max-w-md mx-4 relative z-10 transition-all duration-1000 ease-out ${
-          mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
         {/* Enhanced card with advanced glass effect and magnetic cursor */}
@@ -216,7 +213,7 @@ export default function Register() {
           <div className="absolute bottom-4 left-4 group-hover:scale-125 transition-transform duration-300">
             <Star
               className="h-4 w-4 text-blue-500 animate-spin group-hover:animate-pulse"
-              style={{ animationDuration: "3s" }}
+              style={{ animationDuration: '3s' }}
             />
           </div>
           <div className="absolute top-1/2 left-4 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500">
@@ -227,26 +224,19 @@ export default function Register() {
             {/* Enhanced header with advanced animations */}
             <div
               className={`text-center mb-6 sm:mb-8 transition-all duration-700 delay-200 ${
-                mounted
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
+                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
               {/* Professional badge with hover effects */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-effect mb-4 badge-bg group hover:scale-105 transition-all duration-300 cursor-pointer">
                 <Sparkles className="h-4 w-4 text-yellow-500 group-hover:animate-pulse transition-transform duration-300" />
-                <span className="text-sm font-medium">
-                  Welcome Back
-                </span>
+                <span className="text-sm font-medium">Welcome Back</span>
                 <Wand2 className="h-4 w-4 text-blue-500 group-hover:animate-spin transition-transform duration-300" />
               </div>
 
               {/* Modern heading with typewriter effect simulation */}
               <h1 className="modern-display text-2xl sm:text-3xl font-bold mb-2 text-shadow-professional animate-fade-in-up">
-                Sign In to{" "}
-                <span className="bolt-gradient-text animate-text-glow">
-                  docverse
-                </span>
+                Sign In to <span className="bolt-gradient-text animate-text-glow">docverse</span>
               </h1>
               <p className="modern-body text-muted-foreground text-sm sm:text-base animate-fade-in-up delay-100">
                 Continue creating magical documents with AI
@@ -256,9 +246,7 @@ export default function Register() {
             {/* Enhanced Google Sign-Up Button */}
             <div
               className={`transition-all duration-500 delay-300 ${
-                mounted
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
+                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
               <Button
@@ -272,7 +260,7 @@ export default function Register() {
                     if (redirectTo && redirectTo !== '/') {
                       callbackUrl.searchParams.set('redirectTo', redirectTo);
                     }
-                    
+
                     const { data, error } = await supabase.auth.signInWithOAuth({
                       provider: 'google',
                       options: {
@@ -283,19 +271,20 @@ export default function Register() {
                         },
                       },
                     });
-                    
+
                     if (error) {
                       console.error('❌ OAuth initiation error:', error);
                       throw error;
                     }
-                    
+
                     console.log('✅ OAuth initiated, redirecting to Google...');
                   } catch (error: any) {
-                    console.error("Google sign up error:", error);
+                    console.error('Google sign up error:', error);
                     toast({
-                      title: "Sign Up Failed",
-                      description: error.message || "Failed to sign up with Google. Please try again.",
-                      variant: "destructive",
+                      title: 'Sign Up Failed',
+                      description:
+                        error.message || 'Failed to sign up with Google. Please try again.',
+                      variant: 'destructive',
                     });
                     setIsLoading(false);
                   }
@@ -325,7 +314,7 @@ export default function Register() {
                   </svg>
                   <span className="font-semibold">Continue with Google</span>
                 </div>
-                
+
                 {/* Enhanced effects matching the site style */}
                 <div className="absolute inset-0 shimmer opacity-10 group-hover:opacity-20 transition-opacity duration-500 rounded-xl"></div>
               </Button>
@@ -334,29 +323,17 @@ export default function Register() {
             {/* Web3 Wallet Authentication */}
             <div
               className={`space-y-3 transition-all duration-500 delay-350 ${
-                mounted
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
+                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              <Web3AuthButton
-                provider="ethereum"
-                redirectTo={redirectTo}
-                disabled={isLoading}
-              />
-              <Web3AuthButton
-                provider="solana"
-                redirectTo={redirectTo}
-                disabled={isLoading}
-              />
+              <Web3AuthButton provider="ethereum" redirectTo={redirectTo} disabled={isLoading} />
+              <Web3AuthButton provider="solana" redirectTo={redirectTo} disabled={isLoading} />
             </div>
 
             {/* Divider */}
             <div
               className={`relative my-6 transition-all duration-500 delay-400 ${
-                mounted
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
+                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
               <div className="absolute inset-0 flex items-center">
@@ -373,28 +350,22 @@ export default function Register() {
               {/* Enhanced Name field with advanced interactions */}
               <div
                 className={`space-y-2 transition-all duration-500 delay-500 ${
-                  mounted
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
+                  mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
                 <Label
                   htmlFor="name"
                   className={`text-sm font-medium flex items-center gap-2 professional-text transition-all duration-300 ${
-                    focusedField === "name" ? "text-yellow-600 scale-105" : ""
+                    focusedField === 'name' ? 'text-yellow-600 scale-105' : ''
                   }`}
                 >
                   <User
                     className={`h-4 w-4 text-muted-foreground transition-all duration-300 ${
-                      focusedField === "name"
-                        ? "text-yellow-500 animate-pulse"
-                        : ""
+                      focusedField === 'name' ? 'text-yellow-500 animate-pulse' : ''
                     }`}
                   />
                   Full Name
-                  {name && (
-                    <Check className="h-3 w-3 text-green-500 animate-scale-in" />
-                  )}
+                  {name && <Check className="h-3 w-3 text-green-500 animate-scale-in" />}
                 </Label>
                 <div className="relative group">
                   <Input
@@ -402,7 +373,7 @@ export default function Register() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    onFocus={() => setFocusedField("name")}
+                    onFocus={() => setFocusedField('name')}
                     onBlur={() => setFocusedField(null)}
                     placeholder="Enter your full name"
                     required
@@ -411,15 +382,15 @@ export default function Register() {
                   />
                   <div
                     className={`absolute inset-0 rounded-md border pointer-events-none transition-all duration-300 ${
-                      focusedField === "name"
-                        ? "border-yellow-400/40 shadow-lg shadow-yellow-400/20"
-                        : "border-yellow-400/20"
+                      focusedField === 'name'
+                        ? 'border-yellow-400/40 shadow-lg shadow-yellow-400/20'
+                        : 'border-yellow-400/20'
                     }`}
                   ></div>
                   {/* Progress indicator */}
                   <div
                     className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-yellow-400 to-blue-500 transition-all duration-300 ${
-                      name ? "w-full" : "w-0"
+                      name ? 'w-full' : 'w-0'
                     }`}
                   ></div>
                 </div>
@@ -428,26 +399,22 @@ export default function Register() {
               {/* Enhanced Email field with validation animations */}
               <div
                 className={`space-y-2 transition-all duration-500 delay-600 ${
-                  mounted
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
+                  mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
                 <Label
                   htmlFor="email"
                   className={`text-sm font-medium flex items-center gap-2 professional-text transition-all duration-300 ${
-                    focusedField === "email" ? "text-yellow-600 scale-105" : ""
+                    focusedField === 'email' ? 'text-yellow-600 scale-105' : ''
                   }`}
                 >
                   <Mail
                     className={`h-4 w-4 text-muted-foreground transition-all duration-300 ${
-                      focusedField === "email"
-                        ? "text-yellow-500 animate-pulse"
-                        : ""
+                      focusedField === 'email' ? 'text-yellow-500 animate-pulse' : ''
                     }`}
                   />
                   Email Address
-                  {email && email.includes("@") && (
+                  {email && email.includes('@') && (
                     <Check className="h-3 w-3 text-green-500 animate-scale-in" />
                   )}
                 </Label>
@@ -457,7 +424,7 @@ export default function Register() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    onFocus={() => setFocusedField("email")}
+                    onFocus={() => setFocusedField('email')}
                     onBlur={() => setFocusedField(null)}
                     placeholder="Enter your email"
                     required
@@ -466,19 +433,15 @@ export default function Register() {
                   />
                   <div
                     className={`absolute inset-0 rounded-md border pointer-events-none transition-all duration-300 ${
-                      focusedField === "email"
-                        ? "border-yellow-400/40 shadow-lg shadow-yellow-400/20"
-                        : "border-yellow-400/20"
+                      focusedField === 'email'
+                        ? 'border-yellow-400/40 shadow-lg shadow-yellow-400/20'
+                        : 'border-yellow-400/20'
                     }`}
                   ></div>
                   {/* Progress indicator */}
                   <div
                     className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-yellow-400 to-blue-500 transition-all duration-300 ${
-                      email && email.includes("@")
-                        ? "w-full"
-                        : email
-                        ? "w-1/2"
-                        : "w-0"
+                      email && email.includes('@') ? 'w-full' : email ? 'w-1/2' : 'w-0'
                     }`}
                   ></div>
                 </div>
@@ -487,24 +450,18 @@ export default function Register() {
               {/* Enhanced Password field with strength indicator */}
               <div
                 className={`space-y-2 transition-all duration-500 delay-700 ${
-                  mounted
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
+                  mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
                 <Label
                   htmlFor="password"
                   className={`text-sm font-medium flex items-center gap-2 professional-text transition-all duration-300 ${
-                    focusedField === "password"
-                      ? "text-yellow-600 scale-105"
-                      : ""
+                    focusedField === 'password' ? 'text-yellow-600 scale-105' : ''
                   }`}
                 >
                   <Lock
                     className={`h-4 w-4 text-muted-foreground transition-all duration-300 ${
-                      focusedField === "password"
-                        ? "text-yellow-500 animate-pulse"
-                        : ""
+                      focusedField === 'password' ? 'text-yellow-500 animate-pulse' : ''
                     }`}
                   />
                   Password
@@ -515,10 +472,10 @@ export default function Register() {
                 <div className="relative group">
                   <Input
                     id="password"
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    onFocus={() => setFocusedField("password")}
+                    onFocus={() => setFocusedField('password')}
                     onBlur={() => setFocusedField(null)}
                     placeholder="Create a password (min. 8 characters)"
                     required
@@ -530,21 +487,15 @@ export default function Register() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-110 hover:rotate-12"
                     disabled={isLoading}
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                   <div
                     className={`absolute inset-0 rounded-md border pointer-events-none transition-all duration-300 ${
-                      focusedField === "password"
-                        ? "border-yellow-400/40 shadow-lg shadow-yellow-400/20"
-                        : "border-yellow-400/20"
+                      focusedField === 'password'
+                        ? 'border-yellow-400/40 shadow-lg shadow-yellow-400/20'
+                        : 'border-yellow-400/20'
                     }`}
                   ></div>
                 </div>
@@ -559,11 +510,11 @@ export default function Register() {
                           className={`h-1 flex-1 rounded-full transition-all duration-300 ${
                             i < passwordStrength
                               ? i < 2
-                                ? "bg-red-400"
+                                ? 'bg-red-400'
                                 : i < 4
-                                ? "bg-yellow-400"
-                                : "bg-green-400"
-                              : "bg-gray-200 dark:bg-gray-700"
+                                  ? 'bg-yellow-400'
+                                  : 'bg-green-400'
+                              : 'bg-gray-200 dark:bg-gray-700'
                           }`}
                         />
                       ))}
@@ -571,17 +522,15 @@ export default function Register() {
                     <p
                       className={`text-xs transition-all duration-300 ${
                         passwordStrength < 2
-                          ? "text-red-500"
+                          ? 'text-red-500'
                           : passwordStrength < 4
-                          ? "text-yellow-500"
-                          : "text-green-500"
+                            ? 'text-yellow-500'
+                            : 'text-green-500'
                       }`}
                     >
-                      {passwordStrength < 2 && "Weak password"}
-                      {passwordStrength >= 2 &&
-                        passwordStrength < 4 &&
-                        "Medium strength"}
-                      {passwordStrength >= 4 && "Strong password"}
+                      {passwordStrength < 2 && 'Weak password'}
+                      {passwordStrength >= 2 && passwordStrength < 4 && 'Medium strength'}
+                      {passwordStrength >= 4 && 'Strong password'}
                     </p>
                   </div>
                 )}
@@ -590,24 +539,18 @@ export default function Register() {
               {/* Enhanced Confirm Password field with advanced validation */}
               <div
                 className={`space-y-2 transition-all duration-500 delay-800 ${
-                  mounted
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
+                  mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
                 <Label
                   htmlFor="confirmPassword"
                   className={`text-sm font-medium flex items-center gap-2 professional-text transition-all duration-300 ${
-                    focusedField === "confirmPassword"
-                      ? "text-yellow-600 scale-105"
-                      : ""
+                    focusedField === 'confirmPassword' ? 'text-yellow-600 scale-105' : ''
                   }`}
                 >
                   <Shield
                     className={`h-4 w-4 text-muted-foreground transition-all duration-300 ${
-                      focusedField === "confirmPassword"
-                        ? "text-yellow-500 animate-pulse"
-                        : ""
+                      focusedField === 'confirmPassword' ? 'text-yellow-500 animate-pulse' : ''
                     }`}
                   />
                   Confirm Password
@@ -618,17 +561,17 @@ export default function Register() {
                 <div className="relative group">
                   <Input
                     id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
+                    type={showConfirmPassword ? 'text' : 'password'}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    onFocus={() => setFocusedField("confirmPassword")}
+                    onFocus={() => setFocusedField('confirmPassword')}
                     onBlur={() => setFocusedField(null)}
                     placeholder="Confirm your password"
                     required
                     className={`glass-effect focus:ring-yellow-400/20 pl-4 pr-12 py-3 text-sm sm:text-base transition-all duration-300 group-hover:shadow-lg ${
                       confirmPassword && password !== confirmPassword
-                        ? "border-red-400/60 focus:border-red-400/80 hover:border-red-400/70"
-                        : "border-yellow-400/30 focus:border-yellow-400/60 hover:border-yellow-400/50"
+                        ? 'border-red-400/60 focus:border-red-400/80 hover:border-red-400/70'
+                        : 'border-yellow-400/30 focus:border-yellow-400/60 hover:border-yellow-400/50'
                     }`}
                     disabled={isLoading}
                   />
@@ -638,9 +581,7 @@ export default function Register() {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-110 hover:rotate-12"
                     disabled={isLoading}
                     aria-label={
-                      showConfirmPassword
-                        ? "Hide confirm password"
-                        : "Show confirm password"
+                      showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'
                     }
                   >
                     {showConfirmPassword ? (
@@ -651,23 +592,23 @@ export default function Register() {
                   </button>
                   <div
                     className={`absolute inset-0 rounded-md border pointer-events-none transition-all duration-300 ${
-                      focusedField === "confirmPassword"
+                      focusedField === 'confirmPassword'
                         ? confirmPassword && password !== confirmPassword
-                          ? "border-red-400/40 shadow-lg shadow-red-400/20"
-                          : "border-yellow-400/40 shadow-lg shadow-yellow-400/20"
+                          ? 'border-red-400/40 shadow-lg shadow-red-400/20'
+                          : 'border-yellow-400/40 shadow-lg shadow-yellow-400/20'
                         : confirmPassword && password !== confirmPassword
-                        ? "border-red-400/20"
-                        : "border-yellow-400/20"
+                          ? 'border-red-400/20'
+                          : 'border-yellow-400/20'
                     }`}
                   ></div>
                   {/* Progress indicator */}
                   <div
                     className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
                       confirmPassword && password === confirmPassword
-                        ? "w-full bg-gradient-to-r from-green-400 to-blue-500"
+                        ? 'w-full bg-gradient-to-r from-green-400 to-blue-500'
                         : confirmPassword && password !== confirmPassword
-                        ? "w-full bg-gradient-to-r from-red-400 to-orange-500"
-                        : "w-0"
+                          ? 'w-full bg-gradient-to-r from-red-400 to-orange-500'
+                          : 'w-0'
                     }`}
                   ></div>
                 </div>
@@ -693,9 +634,7 @@ export default function Register() {
               {/* Enhanced submit button with advanced animations */}
               <div
                 className={`transition-all duration-500 delay-900 ${
-                  mounted
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
+                  mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
                 <Button
@@ -708,9 +647,7 @@ export default function Register() {
                     {isLoading ? (
                       <>
                         <Loader2 className="h-5 w-5 animate-spin" />
-                        <span className="button-text font-bold">
-                          Creating account...
-                        </span>
+                        <span className="button-text font-bold">Creating account...</span>
                         <div className="flex gap-1">
                           <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce delay-100"></div>
                           <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce delay-200"></div>
@@ -720,9 +657,7 @@ export default function Register() {
                     ) : (
                       <>
                         <Sparkles className="h-5 w-5 button-icon text-yellow-200" />
-                        <span className="button-text font-bold tracking-wide">
-                          Create Account
-                        </span>
+                        <span className="button-text font-bold tracking-wide">Create Account</span>
                         <ArrowRight className="h-5 w-5 button-icon text-blue-200" />
                       </>
                     )}
@@ -752,9 +687,7 @@ export default function Register() {
             {/* Enhanced footer with advanced styling */}
             <div
               className={`mt-6 sm:mt-8 text-center transition-all duration-500 delay-1000 ${
-                mounted
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
+                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
               <div className="glass-effect p-4 rounded-xl border border-yellow-400/10 hover:border-yellow-400/20 transition-all duration-300 group hover:scale-105">
@@ -770,7 +703,7 @@ export default function Register() {
                   <span>Sign In</span>
                   <Sparkles
                     className="h-3 w-3 group-hover:animate-spin transition-transform duration-300"
-                    style={{ animationDuration: "2s" }}
+                    style={{ animationDuration: '2s' }}
                   />
                 </Link>
               </div>
@@ -779,9 +712,7 @@ export default function Register() {
             {/* Enhanced navigation link */}
             <div
               className={`mt-4 text-center transition-all duration-500 delay-1100 ${
-                mounted
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
+                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
               <Link

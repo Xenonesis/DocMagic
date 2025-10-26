@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -10,9 +10,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Share2, Copy, Check } from "lucide-react";
+} from '@/components/ui/dialog';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Share2, Copy, Check } from 'lucide-react';
 
 type ShareTemplateDialogProps = {
   open: boolean;
@@ -27,7 +27,7 @@ export function ShareTemplateDialog({
   templateId,
   templateTitle,
 }: ShareTemplateDialogProps) {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [canEdit, setCanEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -41,9 +41,9 @@ export function ShareTemplateDialog({
     setIsLoading(true);
     try {
       const response = await fetch(`/api/templates/${templateId}/shares`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email,
@@ -53,21 +53,21 @@ export function ShareTemplateDialog({
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to share template");
+        throw new Error(error.message || 'Failed to share template');
       }
 
       toast({
-        title: "Template shared successfully",
+        title: 'Template shared successfully',
         description: `${templateTitle} has been shared with ${email}.`,
       });
-      setEmail("");
+      setEmail('');
       onOpenChange(false);
     } catch (error) {
-      console.error("Error sharing template:", error);
+      console.error('Error sharing template:', error);
       toast({
-        title: "Error sharing template",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive",
+        title: 'Error sharing template',
+        description: error instanceof Error ? error.message : 'An error occurred',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -78,10 +78,10 @@ export function ShareTemplateDialog({
     navigator.clipboard.writeText(shareableLink);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
-    
+
     toast({
-      title: "Link copied to clipboard",
-      description: "Share this link with others to give them access.",
+      title: 'Link copied to clipboard',
+      description: 'Share this link with others to give them access.',
     });
   };
 
@@ -107,11 +107,7 @@ export function ShareTemplateDialog({
                 onChange={(e) => setEmail(e.target.value)}
                 className="flex-1"
               />
-              <Button 
-                type="button" 
-                onClick={handleShare}
-                disabled={isLoading || !email}
-              >
+              <Button type="button" onClick={handleShare} disabled={isLoading || !email}>
                 <Share2 className="mr-2 h-4 w-4" />
                 Share
               </Button>
@@ -135,11 +131,7 @@ export function ShareTemplateDialog({
           <div className="relative mt-4 pt-4 border-t">
             <Label>Shareable link</Label>
             <div className="flex gap-2 mt-2">
-              <Input
-                value={shareableLink}
-                readOnly
-                className="flex-1 text-xs truncate"
-              />
+              <Input value={shareableLink} readOnly className="flex-1 text-xs truncate" />
               <Button
                 type="button"
                 variant="outline"
@@ -161,11 +153,7 @@ export function ShareTemplateDialog({
         </div>
 
         <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-          >
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
             Close
           </Button>
         </DialogFooter>

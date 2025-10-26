@@ -1,6 +1,7 @@
 # ATS Analyzer AI Integration
 
 ## Overview
+
 The ATS Analyzer now uses AI to provide intelligent resume analysis and suggestions. It supports two AI providers with automatic fallback:
 
 1. **Primary**: OpenRouter with `meta-llama/llama-4-maverick:free`
@@ -9,11 +10,13 @@ The ATS Analyzer now uses AI to provide intelligent resume analysis and suggesti
 ## How It Works
 
 ### Priority Order
+
 1. **OpenRouter First**: If `OPENROUTER_API_KEY` is available, it uses `meta-llama/llama-4-maverick:free` model
 2. **Gemini Fallback**: If OpenRouter fails or is unavailable, it falls back to Gemini `2.0-flash-exp`
 3. **Basic Analysis**: If both AI providers fail, it uses rule-based analysis
 
 ### Features
+
 - **Keyword Analysis**: AI identifies missing keywords and suggests specific additions
 - **Section Improvements**: AI recommends which resume sections need enhancement
 - **Formatting Tips**: AI provides ATS-compatible formatting suggestions
@@ -39,6 +42,7 @@ GOOGLE_API_KEY=your-google-api-key-here
 ## Getting API Keys
 
 ### OpenRouter (Recommended - Free Tier Available)
+
 1. Visit https://openrouter.ai/
 2. Sign up for a free account
 3. Go to https://openrouter.ai/keys
@@ -46,6 +50,7 @@ GOOGLE_API_KEY=your-google-api-key-here
 5. The `meta-llama/llama-4-maverick:free` model is completely free!
 
 ### Google Gemini (Fallback)
+
 1. Visit https://aistudio.google.com/
 2. Sign in with your Google account
 3. Click "Get API Key"
@@ -95,6 +100,7 @@ GOOGLE_API_KEY=your-google-api-key-here
 ## Testing
 
 ### Option 1: Use the Web Interface
+
 1. Navigate to `http://localhost:3000/resume`
 2. Click on "ATS Analyzer" tab
 3. Upload a resume (PDF, DOCX, DOC, or TXT)
@@ -102,12 +108,14 @@ GOOGLE_API_KEY=your-google-api-key-here
 5. Click "AI Resume Analysis"
 
 ### Option 2: Use the Test Page
+
 1. Navigate to `http://localhost:3000/test-ats.html`
 2. Upload a resume file
 3. Paste a job description
 4. Click "Analyze Resume"
 
 ### Option 3: API Testing
+
 ```bash
 node test-ats-api.js
 ```
@@ -115,12 +123,14 @@ node test-ats-api.js
 ## Model Information
 
 ### meta-llama/llama-4-maverick:free
+
 - **Cost**: FREE
 - **Context**: 8K tokens
 - **Strengths**: Fast, good for structured outputs, completely free
 - **Best For**: Resume analysis, keyword extraction, suggestions
 
 ### gemini-2.0-flash-exp
+
 - **Cost**: FREE (generous quota)
 - **Context**: 32K tokens
 - **Strengths**: Excellent reasoning, fast, multimodal
@@ -129,18 +139,22 @@ node test-ats-api.js
 ## Troubleshooting
 
 ### No AI Analysis (Using Basic Analysis)
+
 - **Cause**: Neither API key is configured
 - **Solution**: Add at least one API key to `.env.local`
 
 ### OpenRouter Errors
+
 - **Cause**: Invalid API key or rate limit exceeded
 - **Solution**: Check your API key, or wait for rate limit reset. System will automatically fallback to Gemini.
 
 ### Gemini Errors
+
 - **Cause**: Invalid API key or quota exceeded
 - **Solution**: Check your API key at https://aistudio.google.com/
 
 ### Both AI Providers Failed
+
 - **Cause**: Network issues or both APIs are down
 - **Solution**: System will use basic rule-based analysis as fallback
 

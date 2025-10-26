@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ResumePreview } from "@/components/resume/resume-preview";
-import { ResumeTemplates } from "@/components/resume/resume-templates";
-import { GuidedResumeGenerator } from "@/components/resume/guided-resume-generator";
-import { useToast } from "@/hooks/use-toast";
-import { useAuthGuard, PROTECTED_ACTIVITIES } from "@/lib/auth-utils";
-import { ExportAuthDialog } from "@/components/ui/export-auth-dialog";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ResumePreview } from '@/components/resume/resume-preview';
+import { ResumeTemplates } from '@/components/resume/resume-templates';
+import { GuidedResumeGenerator } from '@/components/resume/guided-resume-generator';
+import { useToast } from '@/hooks/use-toast';
+import { useAuthGuard, PROTECTED_ACTIVITIES } from '@/lib/auth-utils';
+import { ExportAuthDialog } from '@/components/ui/export-auth-dialog';
 import {
   File as FileIcon,
   Loader2,
@@ -28,17 +28,17 @@ import {
   Target,
   Zap,
   Lock,
-} from "lucide-react";
-import { useSubscription } from "@/hooks/use-subscription";
-import { TooltipWithShortcut } from "../ui/tooltip";
+} from 'lucide-react';
+import { useSubscription } from '@/hooks/use-subscription';
+import { TooltipWithShortcut } from '../ui/tooltip';
 
 export function ResumeGenerator() {
-  const [prompt, setPrompt] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [prompt, setPrompt] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [resumeData, setResumeData] = useState<any>(null);
-  const [selectedTemplate, setSelectedTemplate] = useState("professional");
+  const [selectedTemplate, setSelectedTemplate] = useState('professional');
   const [isFullView, setIsFullView] = useState(false);
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [pendingDownloadFormat, setPendingDownloadFormat] = useState<'pdf' | 'docx' | null>(null);
@@ -50,10 +50,10 @@ export function ResumeGenerator() {
     setIsGenerating(true);
 
     try {
-      const response = await fetch("/api/generate/resume", {
-        method: "POST",
+      const response = await fetch('/api/generate/resume', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           prompt,
@@ -63,21 +63,21 @@ export function ResumeGenerator() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to generate resume");
+        throw new Error('Failed to generate resume');
       }
 
       const data = await response.json();
       setResumeData(data);
 
       toast({
-        title: "Resume generated! ✨",
-        description: "Your tailored resume is ready to preview and download",
+        title: 'Resume generated! ✨',
+        description: 'Your tailored resume is ready to preview and download',
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to generate resume. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to generate resume. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsGenerating(false);
@@ -109,11 +109,7 @@ export function ResumeGenerator() {
   };
 
   return (
-    <div
-      className={`space-y-6 transition-all duration-300 ${
-        isFullView ? "p-0" : "px-2 sm:px-0"
-      }`}
-    >
+    <div className={`space-y-6 transition-all duration-300 ${isFullView ? 'p-0' : 'px-2 sm:px-0'}`}>
       {/* Authentication Dialog */}
       <ExportAuthDialog
         open={showAuthDialog}
@@ -124,11 +120,11 @@ export function ResumeGenerator() {
 
       <Tabs defaultValue="guided" className="w-full">
         <div
-          className={`flex justify-center mb-4 sm:mb-6 overflow-x-auto scrollbar-hide ${isFullView ? "hidden" : ""}`}
+          className={`flex justify-center mb-4 sm:mb-6 overflow-x-auto scrollbar-hide ${isFullView ? 'hidden' : ''}`}
         >
           <TabsList
             className="glass-effect border border-yellow-400/30 p-1 sm:p-1.5 h-auto flex gap-1 sm:gap-2 min-w-max bg-white/80 dark:bg-gray-900/80 shadow-lg"
-            style={{ WebkitOverflowScrolling: "touch" }}
+            style={{ WebkitOverflowScrolling: 'touch' }}
           >
             <TabsTrigger
               value="guided"
@@ -158,7 +154,7 @@ export function ResumeGenerator() {
         </div>
 
         <TabsContent value="guided" className="space-y-6 pt-4">
-          <div className={`${isFullView ? "hidden" : ""}`}>
+          <div className={`${isFullView ? 'hidden' : ''}`}>
             <div className="text-center mb-8">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-effect mb-4 shimmer">
                 <Target className="h-4 w-4 text-yellow-500" />
@@ -169,35 +165,28 @@ export function ResumeGenerator() {
                 Build Your ATS-Friendly Resume
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Our AI-powered guided builder creates resumes that pass
-                Applicant Tracking Systems with perfect keyword optimization and
-                professional formatting
+                Our AI-powered guided builder creates resumes that pass Applicant Tracking Systems
+                with perfect keyword optimization and professional formatting
               </p>
             </div>
 
             <div className="glass-effect p-6 sm:p-8 rounded-2xl border border-yellow-400/20 relative overflow-hidden">
               <div className="absolute inset-0 shimmer opacity-20"></div>
               <div className="relative z-10">
-                <GuidedResumeGenerator
-                  onResumeGenerated={handleGuidedResumeGenerated}
-                />
+                <GuidedResumeGenerator onResumeGenerated={handleGuidedResumeGenerated} />
               </div>
             </div>
           </div>
 
           {resumeData && (
-            <div className={`${isFullView ? "w-full" : ""}`}>
+            <div className={`${isFullView ? 'w-full' : ''}`}>
               <div className="flex justify-between items-center mb-4">
                 <div className="text-center lg:text-left">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-effect mb-3">
                     <FileIcon className="h-3 w-3 text-blue-500" />
-                    <span className="text-xs font-medium">
-                      ATS-Optimized Resume
-                    </span>
+                    <span className="text-xs font-medium">ATS-Optimized Resume</span>
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-bold bolt-gradient-text">
-                    Preview
-                  </h2>
+                  <h2 className="text-xl sm:text-2xl font-bold bolt-gradient-text">Preview</h2>
                 </div>
 
                 <Button
@@ -222,15 +211,12 @@ export function ResumeGenerator() {
 
               <div
                 className={`glass-effect border border-yellow-400/20 rounded-xl overflow-hidden bg-white transition-all duration-300 relative ${
-                  isFullView ? "fixed inset-4 z-50 shadow-2xl" : ""
+                  isFullView ? 'fixed inset-4 z-50 shadow-2xl' : ''
                 }`}
               >
                 <div className="absolute inset-0 shimmer opacity-10"></div>
                 <div className="relative z-10">
-                  <ResumePreview
-                    resume={resumeData}
-                    template={selectedTemplate}
-                  />
+                  <ResumePreview resume={resumeData} template={selectedTemplate} />
                 </div>
               </div>
 
@@ -280,19 +266,13 @@ export function ResumeGenerator() {
         </TabsContent>
 
         <TabsContent value="quick" className="space-y-6 pt-4">
-          <div
-            className={`grid grid-cols-1 ${
-              isFullView ? "" : "lg:grid-cols-2"
-            } gap-6 sm:gap-8`}
-          >
+          <div className={`grid grid-cols-1 ${isFullView ? '' : 'lg:grid-cols-2'} gap-6 sm:gap-8`}>
             {/* Left Side - Form */}
-            <div className={isFullView ? "hidden" : "space-y-6"}>
+            <div className={isFullView ? 'hidden' : 'space-y-6'}>
               <div className="text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-effect mb-3">
                   <Wand2 className="h-3 w-3 text-yellow-500" />
-                  <span className="text-xs font-medium">
-                    Quick AI Resume Generator
-                  </span>
+                  <span className="text-xs font-medium">Quick AI Resume Generator</span>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold mb-2 bolt-gradient-text">
                   Generate Your Resume
@@ -305,10 +285,7 @@ export function ResumeGenerator() {
               <div className="space-y-4">
                 {/* Personal Information */}
                 <div className="space-y-2">
-                  <Label
-                    htmlFor="name"
-                    className="text-sm font-medium flex items-center gap-2"
-                  >
+                  <Label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
                     <User className="h-4 w-4 text-muted-foreground" />
                     Your Name
                   </Label>
@@ -323,10 +300,7 @@ export function ResumeGenerator() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label
-                    htmlFor="email"
-                    className="text-sm font-medium flex items-center gap-2"
-                  >
+                  <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
                     <Mail className="h-4 w-4 text-muted-foreground" />
                     Email
                   </Label>
@@ -343,10 +317,7 @@ export function ResumeGenerator() {
 
                 {/* Prompt */}
                 <div className="space-y-2">
-                  <Label
-                    htmlFor="prompt"
-                    className="text-sm font-medium flex items-center gap-2"
-                  >
+                  <Label htmlFor="prompt" className="text-sm font-medium flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-yellow-500" />
                     Describe your ideal resume
                   </Label>
@@ -382,9 +353,7 @@ export function ResumeGenerator() {
                       )}
                     </div>
 
-                    {!isGenerating && (
-                      <div className="absolute inset-0 shimmer opacity-30"></div>
-                    )}
+                    {!isGenerating && <div className="absolute inset-0 shimmer opacity-30"></div>}
                   </Button>
                 </TooltipWithShortcut>
               </div>
@@ -397,7 +366,13 @@ export function ResumeGenerator() {
                     Download Options
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    <TooltipWithShortcut content={isAuthenticated ? "Download resume as PDF file for sharing" : "Sign in to download your resume"}>
+                    <TooltipWithShortcut
+                      content={
+                        isAuthenticated
+                          ? 'Download resume as PDF file for sharing'
+                          : 'Sign in to download your resume'
+                      }
+                    >
                       <Button
                         variant="outline"
                         className="glass-effect border-yellow-400/30 hover:border-yellow-400/60 w-full sm:w-auto"
@@ -411,7 +386,13 @@ export function ResumeGenerator() {
                         Download PDF
                       </Button>
                     </TooltipWithShortcut>
-                    <TooltipWithShortcut content={isAuthenticated ? "Download as Word document for editing" : "Sign in to download your resume"}>
+                    <TooltipWithShortcut
+                      content={
+                        isAuthenticated
+                          ? 'Download as Word document for editing'
+                          : 'Sign in to download your resume'
+                      }
+                    >
                       <Button
                         variant="outline"
                         className="glass-effect border-yellow-400/30 hover:border-yellow-400/60 w-full sm:w-auto"
@@ -442,25 +423,19 @@ export function ResumeGenerator() {
             </div>
 
             {/* Right Side - Preview */}
-            <div className={`space-y-4 ${isFullView ? "w-full" : ""}`}>
+            <div className={`space-y-4 ${isFullView ? 'w-full' : ''}`}>
               <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
                 <div className="text-center lg:text-left">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-effect mb-3">
                     <FileIcon className="h-3 w-3 text-blue-500" />
                     <span className="text-xs font-medium">Live Preview</span>
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-bold bolt-gradient-text">
-                    Preview
-                  </h2>
+                  <h2 className="text-xl sm:text-2xl font-bold bolt-gradient-text">Preview</h2>
                 </div>
 
                 {resumeData && (
                   <TooltipWithShortcut
-                    content={
-                      isFullView
-                        ? "Return to normal view"
-                        : "View resume in full screen"
-                    }
+                    content={isFullView ? 'Return to normal view' : 'View resume in full screen'}
                   >
                     <Button
                       variant="outline"
@@ -487,15 +462,12 @@ export function ResumeGenerator() {
               {resumeData ? (
                 <div
                   className={`glass-effect border border-yellow-400/20 rounded-xl overflow-hidden bg-white transition-all duration-300 relative ${
-                    isFullView ? "fixed inset-4 z-50 shadow-2xl" : ""
+                    isFullView ? 'fixed inset-4 z-50 shadow-2xl' : ''
                   }`}
                 >
                   <div className="absolute inset-0 shimmer opacity-10"></div>
                   <div className="relative z-10">
-                    <ResumePreview
-                      resume={resumeData}
-                      template={selectedTemplate}
-                    />
+                    <ResumePreview resume={resumeData} template={selectedTemplate} />
                   </div>
                 </div>
               ) : (
@@ -510,19 +482,19 @@ export function ResumeGenerator() {
                       <div>
                         <p className="text-muted-foreground font-medium">
                           {isGenerating
-                            ? "Creating your resume with AI magic..."
-                            : "Your resume preview will appear here"}
+                            ? 'Creating your resume with AI magic...'
+                            : 'Your resume preview will appear here'}
                         </p>
                         {isGenerating && (
                           <div className="flex items-center justify-center gap-2 mt-2">
                             <div className="w-2 h-2 bg-yellow-500 rounded-full animate-bounce"></div>
                             <div
                               className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
-                              style={{ animationDelay: "0.1s" }}
+                              style={{ animationDelay: '0.1s' }}
                             ></div>
                             <div
                               className="w-2 h-2 bg-purple-500 rounded-full animate-bounce"
-                              style={{ animationDelay: "0.2s" }}
+                              style={{ animationDelay: '0.2s' }}
                             ></div>
                           </div>
                         )}
@@ -535,10 +507,7 @@ export function ResumeGenerator() {
           </div>
         </TabsContent>
 
-        <TabsContent
-          value="templates"
-          className={`pt-4 ${isFullView ? "hidden" : ""}`}
-        >
+        <TabsContent value="templates" className={`pt-4 ${isFullView ? 'hidden' : ''}`}>
           <div className="glass-effect p-6 rounded-xl border border-yellow-400/20 relative overflow-hidden">
             <div className="absolute inset-0 shimmer opacity-20"></div>
             <div className="relative z-10">

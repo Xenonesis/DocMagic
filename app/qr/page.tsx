@@ -1,9 +1,9 @@
-"use client";
-import { SiteHeader } from "@/components/site-header";
-import { QRGenerator } from "@/components/qr/qr-generator";
-import { Sparkles, QrCode, Zap, Star, Wand2, Download, Palette, Link2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { QRGeneratorSkeleton } from "@/components/ui/skeleton";
+'use client';
+import { SiteHeader } from '@/components/site-header';
+import { QRGenerator } from '@/components/qr/qr-generator';
+import { Sparkles, QrCode, Zap, Star, Wand2, Download, Palette, Link2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { QRGeneratorSkeleton } from '@/components/ui/skeleton';
 
 export default function QRPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +42,7 @@ export default function QRPage() {
             </div>
 
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6 leading-tight px-4">
-              Generate Custom{" "}
+              Generate Custom{' '}
               <span className="bolt-gradient-text relative inline-block">
                 QR Codes
                 <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
@@ -52,26 +52,11 @@ export default function QRPage() {
             </h1>
 
             <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-6 sm:leading-7 md:leading-8 text-muted-foreground max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-6 md:px-0">
-              Create{" "}
-              <span className="font-semibold text-yellow-600">
-                professional QR codes
-              </span>
-              {" "}for{" "}
-              <span className="font-semibold text-blue-600">
-                websites
-              </span>
-              ,{" "}
-              <span className="font-semibold text-purple-600">
-                contact info
-              </span>
-              , and{" "}
-              <span className="font-semibold text-green-600">
-                more
-              </span>
-              {" "}with{" "}
-              <span className="font-semibold bolt-gradient-text">
-                custom styling options
-              </span>
+              Create <span className="font-semibold text-yellow-600">professional QR codes</span>{' '}
+              for <span className="font-semibold text-blue-600">websites</span>,{' '}
+              <span className="font-semibold text-purple-600">contact info</span>, and{' '}
+              <span className="font-semibold text-green-600">more</span> with{' '}
+              <span className="font-semibold bolt-gradient-text">custom styling options</span>
             </p>
 
             {/* Stats bar */}
@@ -90,21 +75,13 @@ export default function QRPage() {
               </div>
               <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <Download className="inline h-3 w-3 sm:h-4 sm:w-4 text-green-500 mr-1" />
-                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">
-                  High-Res
-                </span>
-                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">
-                  Export
-                </span>
+                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">High-Res</span>
+                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">Export</span>
               </div>
               <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <QrCode className="inline h-3 w-3 sm:h-4 sm:w-4 text-purple-500 mr-1" />
-                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">
-                  Multiple
-                </span>
-                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">
-                  Types
-                </span>
+                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">Multiple</span>
+                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">Types</span>
               </div>
             </div>
           </div>
@@ -121,16 +98,12 @@ export default function QRPage() {
             <div className="absolute bottom-4 left-4">
               <Star
                 className="h-4 w-4 text-blue-500 animate-spin"
-                style={{ animationDuration: "3s" }}
+                style={{ animationDuration: '3s' }}
               />
             </div>
 
             <div className="relative z-10">
-              {isLoading ? (
-                <QRGeneratorSkeleton />
-              ) : (
-                <QRGenerator />
-              )}
+              {isLoading ? <QRGeneratorSkeleton /> : <QRGenerator />}
             </div>
           </div>
 
@@ -152,15 +125,11 @@ export default function QRPage() {
                 <div className="flex flex-wrap justify-center gap-3">
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <QrCode className="inline h-3 w-3 text-yellow-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Multiple Formats
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Multiple Formats</span>
                   </div>
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Zap className="inline h-3 w-3 text-blue-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Instant Preview
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Instant Preview</span>
                   </div>
                 </div>
               </div>

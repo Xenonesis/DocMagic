@@ -6,10 +6,7 @@ export async function POST(request: NextRequest) {
     const { prompt, type } = await request.json();
 
     if (!prompt || !type) {
-      return NextResponse.json(
-        { error: 'Prompt and type are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Prompt and type are required' }, { status: 400 });
     }
 
     // Create type-specific prompts
@@ -40,15 +37,12 @@ Make the template professional and persuasive.`,
 - description: A brief description of the template
 - content: A structured object with presentation elements like title, slides array with content, themes, layouts, etc.
 
-Make the template engaging and visually appealing.`
+Make the template engaging and visually appealing.`,
     };
 
     const systemPrompt = systemPrompts[type as keyof typeof systemPrompts];
     if (!systemPrompt) {
-      return NextResponse.json(
-        { error: 'Invalid template type' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid template type' }, { status: 400 });
     }
 
     const userPrompt = `User request: ${prompt}\n\nPlease return only valid JSON without any markdown formatting or additional text.`;
@@ -62,19 +56,12 @@ Make the template engaging and visually appealing.`
 
     // Validate the response structure
     if (!generatedTemplate.title || !generatedTemplate.content) {
-      return NextResponse.json(
-        { error: 'Invalid template structure generated' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Invalid template structure generated' }, { status: 500 });
     }
 
     return NextResponse.json(generatedTemplate);
-
   } catch (error) {
     console.error('Error generating AI template:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate template' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate template' }, { status: 500 });
   }
 }

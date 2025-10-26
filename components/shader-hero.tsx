@@ -422,15 +422,19 @@ export function ShaderHero() {
         <div className="text-center space-y-6 max-w-5xl mx-auto">
           {/* Main Heading with Animation */}
           <h1 className="modern-display text-5xl md:text-7xl lg:text-8xl font-bold leading-tight animate-fade-in-up animation-delay-200">
-            <span className="block">Create Stunning <span className="bolt-gradient-text">Documents</span></span>
-            <span className="block mt-2">in Seconds with <span className="bolt-gradient-text">AI</span></span>
+            <span className="block">
+              Create Stunning <span className="bolt-gradient-text">Documents</span>
+            </span>
+            <span className="block mt-2">
+              in Seconds with <span className="bolt-gradient-text">AI</span>
+            </span>
           </h1>
 
           {/* Subtitle with Animation */}
           <div className="max-w-3xl mx-auto animate-fade-in-up animation-delay-600">
             <p className="text-lg md:text-xl lg:text-2xl text-amber-100/90 font-light leading-relaxed">
-              Transform your ideas into professional resumes, presentations, CVs, and letters.
-              Our AI understands your needs and creates perfectly formatted documents instantly.
+              Transform your ideas into professional resumes, presentations, CVs, and letters. Our
+              AI understands your needs and creates perfectly formatted documents instantly.
             </p>
           </div>
 

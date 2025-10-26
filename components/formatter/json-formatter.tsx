@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import {
   Copy,
   Download,
@@ -14,33 +14,33 @@ import {
   Sparkles,
   AlertCircle,
   CheckCircle,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 export function JsonFormatter() {
-  const [inputJson, setInputJson] = useState("");
-  const [outputJson, setOutputJson] = useState("");
+  const [inputJson, setInputJson] = useState('');
+  const [outputJson, setOutputJson] = useState('');
   const [isValid, setIsValid] = useState<boolean | null>(null);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const [copied, setCopied] = useState(false);
-  const [indentation, setIndentation] = useState("2");
+  const [indentation, setIndentation] = useState('2');
   const { toast } = useToast();
 
   const validateAndFormat = (indent: string = indentation) => {
     if (!inputJson.trim()) {
       toast({
-        title: "⚠️ Empty Input",
-        description: "Please enter JSON to format",
-        variant: "destructive",
+        title: '⚠️ Empty Input',
+        description: 'Please enter JSON to format',
+        variant: 'destructive',
       });
       return;
     }
@@ -50,21 +50,21 @@ export function JsonFormatter() {
       const formatted = JSON.stringify(parsed, null, parseInt(indent));
       setOutputJson(formatted);
       setIsValid(true);
-      setErrorMessage("");
-      
+      setErrorMessage('');
+
       toast({
-        title: "✨ JSON Formatted",
-        description: "Your JSON has been formatted successfully!",
+        title: '✨ JSON Formatted',
+        description: 'Your JSON has been formatted successfully!',
       });
     } catch (error: any) {
       setIsValid(false);
       setErrorMessage(error.message);
-      setOutputJson("");
-      
+      setOutputJson('');
+
       toast({
-        title: "❌ Invalid JSON",
+        title: '❌ Invalid JSON',
         description: error.message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -72,9 +72,9 @@ export function JsonFormatter() {
   const minifyJson = () => {
     if (!inputJson.trim()) {
       toast({
-        title: "⚠️ Empty Input",
-        description: "Please enter JSON to minify",
-        variant: "destructive",
+        title: '⚠️ Empty Input',
+        description: 'Please enter JSON to minify',
+        variant: 'destructive',
       });
       return;
     }
@@ -84,21 +84,21 @@ export function JsonFormatter() {
       const minified = JSON.stringify(parsed);
       setOutputJson(minified);
       setIsValid(true);
-      setErrorMessage("");
-      
+      setErrorMessage('');
+
       toast({
-        title: "✨ JSON Minified",
-        description: "Your JSON has been minified successfully!",
+        title: '✨ JSON Minified',
+        description: 'Your JSON has been minified successfully!',
       });
     } catch (error: any) {
       setIsValid(false);
       setErrorMessage(error.message);
-      setOutputJson("");
-      
+      setOutputJson('');
+
       toast({
-        title: "❌ Invalid JSON",
+        title: '❌ Invalid JSON',
         description: error.message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -106,9 +106,9 @@ export function JsonFormatter() {
   const validateOnly = () => {
     if (!inputJson.trim()) {
       toast({
-        title: "⚠️ Empty Input",
-        description: "Please enter JSON to validate",
-        variant: "destructive",
+        title: '⚠️ Empty Input',
+        description: 'Please enter JSON to validate',
+        variant: 'destructive',
       });
       return;
     }
@@ -116,57 +116,57 @@ export function JsonFormatter() {
     try {
       JSON.parse(inputJson);
       setIsValid(true);
-      setErrorMessage("");
-      
+      setErrorMessage('');
+
       toast({
-        title: "✅ Valid JSON",
-        description: "Your JSON is valid!",
+        title: '✅ Valid JSON',
+        description: 'Your JSON is valid!',
       });
     } catch (error: any) {
       setIsValid(false);
       setErrorMessage(error.message);
-      
+
       toast({
-        title: "❌ Invalid JSON",
+        title: '❌ Invalid JSON',
         description: error.message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
 
   const escapeJson = () => {
     if (!inputJson.trim()) return;
-    
+
     const escaped = inputJson
-      .replace(/\\/g, "\\\\")
+      .replace(/\\/g, '\\\\')
       .replace(/"/g, '\\"')
-      .replace(/\n/g, "\\n")
-      .replace(/\r/g, "\\r")
-      .replace(/\t/g, "\\t");
-    
+      .replace(/\n/g, '\\n')
+      .replace(/\r/g, '\\r')
+      .replace(/\t/g, '\\t');
+
     setOutputJson(escaped);
-    
+
     toast({
-      title: "✨ JSON Escaped",
-      description: "Your JSON has been escaped successfully!",
+      title: '✨ JSON Escaped',
+      description: 'Your JSON has been escaped successfully!',
     });
   };
 
   const unescapeJson = () => {
     if (!inputJson.trim()) return;
-    
+
     const unescaped = inputJson
       .replace(/\\"/g, '"')
-      .replace(/\\\\/g, "\\")
-      .replace(/\\n/g, "\n")
-      .replace(/\\r/g, "\r")
-      .replace(/\\t/g, "\t");
-    
+      .replace(/\\\\/g, '\\')
+      .replace(/\\n/g, '\n')
+      .replace(/\\r/g, '\r')
+      .replace(/\\t/g, '\t');
+
     setOutputJson(unescaped);
-    
+
     toast({
-      title: "✨ JSON Unescaped",
-      description: "Your JSON has been unescaped successfully!",
+      title: '✨ JSON Unescaped',
+      description: 'Your JSON has been unescaped successfully!',
     });
   };
 
@@ -175,16 +175,14 @@ export function JsonFormatter() {
 
     try {
       const parsed = JSON.parse(inputJson);
-      
-      const convertToXml = (obj: any, rootName: string = "root"): string => {
-        if (typeof obj !== "object" || obj === null) {
+
+      const convertToXml = (obj: any, rootName: string = 'root'): string => {
+        if (typeof obj !== 'object' || obj === null) {
           return `<${rootName}>${obj}</${rootName}>`;
         }
 
         if (Array.isArray(obj)) {
-          return obj
-            .map((item, index) => convertToXml(item, `item${index}`))
-            .join("\n");
+          return obj.map((item, index) => convertToXml(item, `item${index}`)).join('\n');
         }
 
         let xml = `<${rootName}>\n`;
@@ -197,16 +195,16 @@ export function JsonFormatter() {
 
       const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' + convertToXml(parsed);
       setOutputJson(xml);
-      
+
       toast({
-        title: "✨ Converted to XML",
-        description: "Your JSON has been converted to XML!",
+        title: '✨ Converted to XML',
+        description: 'Your JSON has been converted to XML!',
       });
     } catch (error: any) {
       toast({
-        title: "❌ Conversion Failed",
+        title: '❌ Conversion Failed',
         description: error.message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -216,43 +214,43 @@ export function JsonFormatter() {
 
     try {
       const parsed = JSON.parse(inputJson);
-      
+
       if (!Array.isArray(parsed)) {
         toast({
-          title: "⚠️ Invalid Format",
-          description: "JSON must be an array of objects for CSV conversion",
-          variant: "destructive",
+          title: '⚠️ Invalid Format',
+          description: 'JSON must be an array of objects for CSV conversion',
+          variant: 'destructive',
         });
         return;
       }
 
       if (parsed.length === 0) {
-        setOutputJson("");
+        setOutputJson('');
         return;
       }
 
       const headers = Object.keys(parsed[0]);
-      const csvRows = [headers.join(",")];
+      const csvRows = [headers.join(',')];
 
       for (const row of parsed) {
         const values = headers.map((header) => {
           const value = row[header];
-          return typeof value === "string" ? `"${value}"` : value;
+          return typeof value === 'string' ? `"${value}"` : value;
         });
-        csvRows.push(values.join(","));
+        csvRows.push(values.join(','));
       }
 
-      setOutputJson(csvRows.join("\n"));
-      
+      setOutputJson(csvRows.join('\n'));
+
       toast({
-        title: "✨ Converted to CSV",
-        description: "Your JSON has been converted to CSV!",
+        title: '✨ Converted to CSV',
+        description: 'Your JSON has been converted to CSV!',
       });
     } catch (error: any) {
       toast({
-        title: "❌ Conversion Failed",
+        title: '❌ Conversion Failed',
         description: error.message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   };
@@ -263,43 +261,43 @@ export function JsonFormatter() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
       toast({
-        title: "📋 Copied!",
-        description: "JSON copied to clipboard",
+        title: '📋 Copied!',
+        description: 'JSON copied to clipboard',
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to copy JSON",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to copy JSON',
+        variant: 'destructive',
       });
     }
   };
 
   const downloadJson = () => {
-    const blob = new Blob([outputJson], { type: "application/json" });
+    const blob = new Blob([outputJson], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = "formatted.json";
+    a.download = 'formatted.json';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     toast({
-      title: "💾 Downloaded",
-      description: "JSON file saved successfully!",
+      title: '💾 Downloaded',
+      description: 'JSON file saved successfully!',
     });
   };
 
   const clearAll = () => {
-    setInputJson("");
-    setOutputJson("");
+    setInputJson('');
+    setOutputJson('');
     setIsValid(null);
-    setErrorMessage("");
+    setErrorMessage('');
     toast({
-      title: "🗑️ Cleared",
-      description: "All JSON has been cleared",
+      title: '🗑️ Cleared',
+      description: 'All JSON has been cleared',
     });
   };
 
@@ -315,9 +313,11 @@ export function JsonFormatter() {
             Validator & Converter
           </Badge>
         </div>
-        
+
         <div className="flex items-center gap-2">
-          <Label htmlFor="indentation" className="text-sm">Indent:</Label>
+          <Label htmlFor="indentation" className="text-sm">
+            Indent:
+          </Label>
           <Select value={indentation} onValueChange={setIndentation}>
             <SelectTrigger id="indentation" className="w-20">
               <SelectValue />
@@ -333,20 +333,19 @@ export function JsonFormatter() {
 
       {/* Validation Status */}
       {isValid !== null && (
-        <Alert variant={isValid ? "default" : "destructive"} className="animate-in fade-in slide-in-from-top duration-300">
+        <Alert
+          variant={isValid ? 'default' : 'destructive'}
+          className="animate-in fade-in slide-in-from-top duration-300"
+        >
           {isValid ? (
             <>
               <CheckCircle className="h-4 w-4" />
-              <AlertDescription>
-                ✅ Valid JSON - Ready to use!
-              </AlertDescription>
+              <AlertDescription>✅ Valid JSON - Ready to use!</AlertDescription>
             </>
           ) : (
             <>
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                ❌ {errorMessage}
-              </AlertDescription>
+              <AlertDescription>❌ {errorMessage}</AlertDescription>
             </>
           )}
         </Alert>
@@ -358,9 +357,7 @@ export function JsonFormatter() {
           <Label htmlFor="input-json" className="text-base font-semibold">
             Input JSON
           </Label>
-          <Badge variant="outline">
-            {inputJson.length} characters
-          </Badge>
+          <Badge variant="outline">{inputJson.length} characters</Badge>
         </div>
         <Textarea
           id="input-json"
@@ -369,7 +366,7 @@ export function JsonFormatter() {
           onChange={(e) => {
             setInputJson(e.target.value);
             setIsValid(null);
-            setErrorMessage("");
+            setErrorMessage('');
           }}
           className="min-h-[250px] font-mono text-sm resize-y"
         />
@@ -382,7 +379,7 @@ export function JsonFormatter() {
             <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
               JSON Operations
             </h3>
-            
+
             {/* Format & Validate */}
             <div>
               <p className="text-xs font-medium text-muted-foreground mb-2">Format & Validate</p>
@@ -396,20 +393,10 @@ export function JsonFormatter() {
                   <Sparkles className="h-3 w-3 mr-1" />
                   Format JSON
                 </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={minifyJson}
-                  disabled={!inputJson}
-                >
+                <Button size="sm" variant="outline" onClick={minifyJson} disabled={!inputJson}>
                   Minify
                 </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={validateOnly}
-                  disabled={!inputJson}
-                >
+                <Button size="sm" variant="outline" onClick={validateOnly} disabled={!inputJson}>
                   <CheckCircle className="h-3 w-3 mr-1" />
                   Validate Only
                 </Button>
@@ -420,20 +407,10 @@ export function JsonFormatter() {
             <div>
               <p className="text-xs font-medium text-muted-foreground mb-2">String Operations</p>
               <div className="flex flex-wrap gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={escapeJson}
-                  disabled={!inputJson}
-                >
+                <Button size="sm" variant="outline" onClick={escapeJson} disabled={!inputJson}>
                   Escape JSON
                 </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={unescapeJson}
-                  disabled={!inputJson}
-                >
+                <Button size="sm" variant="outline" onClick={unescapeJson} disabled={!inputJson}>
                   Unescape JSON
                 </Button>
               </div>
@@ -443,20 +420,10 @@ export function JsonFormatter() {
             <div>
               <p className="text-xs font-medium text-muted-foreground mb-2">Convert To</p>
               <div className="flex flex-wrap gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={jsonToXml}
-                  disabled={!inputJson}
-                >
+                <Button size="sm" variant="outline" onClick={jsonToXml} disabled={!inputJson}>
                   Convert to XML
                 </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={jsonToCsv}
-                  disabled={!inputJson}
-                >
+                <Button size="sm" variant="outline" onClick={jsonToCsv} disabled={!inputJson}>
                   Convert to CSV
                 </Button>
               </div>

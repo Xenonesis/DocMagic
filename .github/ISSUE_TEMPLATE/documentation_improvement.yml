@@ -1,8 +1,8 @@
-name: "📚 Documentation Improvement"
-description: "Suggest changes or additions to the project documentation."
-title: "[Docs]: "
+name: '📚 Documentation Improvement'
+description: 'Suggest changes or additions to the project documentation.'
+title: '[Docs]: '
 labels: [documentation]
-assignees: []  # Optional: add default reviewer(s)
+assignees: [] # Optional: add default reviewer(s)
 body:
   - type: markdown
     attributes:
@@ -14,17 +14,17 @@ body:
   - type: textarea
     id: issue-description
     attributes:
-      label: "📝 What needs improvement?"
-      description: "Describe the issue, gap, or unclear area in the documentation."
-      placeholder: "e.g., The installation instructions for macOS are missing steps for Homebrew setup."
+      label: '📝 What needs improvement?'
+      description: 'Describe the issue, gap, or unclear area in the documentation.'
+      placeholder: 'e.g., The installation instructions for macOS are missing steps for Homebrew setup.'
     validations:
       required: true
 
   - type: textarea
     id: suggested-fix
     attributes:
-      label: "💡 Suggested Fix"
-      description: "If you have a specific suggestion, improvement, or change in mind, share it here."
+      label: '💡 Suggested Fix'
+      description: 'If you have a specific suggestion, improvement, or change in mind, share it here.'
       placeholder: "Add a section for macOS Homebrew dependencies under 'Getting Started'."
     validations:
       required: false
@@ -32,17 +32,17 @@ body:
   - type: textarea
     id: additional-info
     attributes:
-      label: "📎 Additional Information"
-      description: "Include screenshots, links, examples, or related context to support your suggestion."
-      placeholder: "Here’s a link to the relevant section: https://github.com/example/project/docs/readme.md"
+      label: '📎 Additional Information'
+      description: 'Include screenshots, links, examples, or related context to support your suggestion.'
+      placeholder: 'Here’s a link to the relevant section: https://github.com/example/project/docs/readme.md'
     validations:
       required: false
 
   - type: checkboxes
     id: searched
     attributes:
-      label: "✅ Duplicate Check"
-      description: "Confirm that you’ve searched the existing issues and documentation."
+      label: '✅ Duplicate Check'
+      description: 'Confirm that you’ve searched the existing issues and documentation.'
       options:
         - label: "I have searched existing issues and documentation to ensure this hasn't already been addressed."
           required: true

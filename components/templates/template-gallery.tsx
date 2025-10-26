@@ -13,7 +13,15 @@ import { TemplatePreview } from './template-preview';
 import { useTemplates } from '@/hooks/use-templates';
 import { getTemplateTypeIcon } from '@/lib/templates';
 
-type TemplateCategory = 'all' | 'resume' | 'presentation' | 'letter' | 'cv' | 'featured' | 'recent' | 'mine';
+type TemplateCategory =
+  | 'all'
+  | 'resume'
+  | 'presentation'
+  | 'letter'
+  | 'cv'
+  | 'featured'
+  | 'recent'
+  | 'mine';
 
 interface TemplateGalleryProps {
   onSelectTemplate?: (template: Template) => void;
@@ -32,36 +40,38 @@ export function TemplateGallery({
   showTabs = true,
   filterByUser = false,
   limit,
-  className = "",
+  className = '',
 }: TemplateGalleryProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<TemplateCategory>('all');
-  
+
   const { templates, isLoading, error } = useTemplates();
-  
+
   // Filter templates based on search and category
-  const filteredTemplates = templates.filter(template => {
-    const matchesSearch = 
-      template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      template.description?.toLowerCase().includes(searchQuery.toLowerCase());
-      
-    const matchesCategory = 
-      activeCategory === 'all' || 
-      template.type === activeCategory ||
-      (activeCategory === 'mine' && !template.is_default) ||
-      (activeCategory === 'featured' && template.is_featured) ||
-      (activeCategory === 'recent' && isRecent(template.updated_at));
-      
-    const matchesUser = !filterByUser || template.user_id === 'current-user-id'; // Replace with actual user ID
-    
-    return matchesSearch && matchesCategory && matchesUser;
-  }).slice(0, limit);
-  
-  const featuredTemplates = templates.filter(t => t.is_featured);
-  const recentTemplates = templates.filter(t => isRecent(t.updated_at));
-  const myTemplates = templates.filter(t => !t.is_default);
-  
+  const filteredTemplates = templates
+    .filter((template) => {
+      const matchesSearch =
+        template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        template.description?.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesCategory =
+        activeCategory === 'all' ||
+        template.type === activeCategory ||
+        (activeCategory === 'mine' && !template.is_default) ||
+        (activeCategory === 'featured' && template.is_featured) ||
+        (activeCategory === 'recent' && isRecent(template.updated_at));
+
+      const matchesUser = !filterByUser || template.user_id === 'current-user-id'; // Replace with actual user ID
+
+      return matchesSearch && matchesCategory && matchesUser;
+    })
+    .slice(0, limit);
+
+  const featuredTemplates = templates.filter((t) => t.is_featured);
+  const recentTemplates = templates.filter((t) => isRecent(t.updated_at));
+  const myTemplates = templates.filter((t) => !t.is_default);
+
   const categories = [
     { id: 'all', label: 'All Templates' },
     { id: 'featured', label: 'Featured', count: featuredTemplates.length },
@@ -72,14 +82,14 @@ export function TemplateGallery({
     { id: 'letter', label: 'Cover Letters', icon: '✉️' },
     { id: 'cv', label: 'CVs', icon: '📑' },
   ];
-  
+
   function isRecent(dateString: string) {
     const date = new Date(dateString);
     const now = new Date();
     const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
     return date > thirtyDaysAgo;
   }
-  
+
   const handleUseTemplate = (template: Template) => {
     if (onSelectTemplate) {
       onSelectTemplate(template);
@@ -87,7 +97,7 @@ export function TemplateGallery({
       router.push(`/templates/${template.id}/use`);
     }
   };
-  
+
   const handleCreateNew = () => {
     if (onCreateNew) {
       onCreateNew();
@@ -95,7 +105,7 @@ export function TemplateGallery({
       router.push('/templates/new');
     }
   };
-  
+
   if (isLoading) {
     return (
       <div className={`space-y-6 ${className}`}>
@@ -103,9 +113,7 @@ export function TemplateGallery({
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
               <h2 className="text-2xl font-bold tracking-tight">Templates</h2>
-              <p className="text-muted-foreground">
-                Browse and manage your document templates
-              </p>
+              <p className="text-muted-foreground">Browse and manage your document templates</p>
             </div>
             <Button onClick={handleCreateNew}>
               <Plus className="h-4 w-4 mr-2" />
@@ -113,7 +121,7 @@ export function TemplateGallery({
             </Button>
           </div>
         )}
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
             <Skeleton key={i} className="h-64 w-full rounded-lg" />
@@ -122,7 +130,7 @@ export function TemplateGallery({
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center">
@@ -139,11 +147,11 @@ export function TemplateGallery({
       </div>
     );
   }
-  
+
   const renderTemplates = (templatesToRender: Template[]) => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {templatesToRender.length > 0 ? (
-        templatesToRender.map(template => (
+        templatesToRender.map((template) => (
           <TemplatePreview
             key={template.id}
             template={template}
@@ -171,16 +179,14 @@ export function TemplateGallery({
       )}
     </div>
   );
-  
+
   return (
     <div className={`space-y-6 ${className}`}>
       {showHeader && (
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
             <h2 className="text-2xl font-bold tracking-tight">Templates</h2>
-            <p className="text-muted-foreground">
-              Browse and manage your document templates
-            </p>
+            <p className="text-muted-foreground">Browse and manage your document templates</p>
           </div>
           <Button onClick={handleCreateNew}>
             <Plus className="h-4 w-4 mr-2" />
@@ -188,7 +194,7 @@ export function TemplateGallery({
           </Button>
         </div>
       )}
-      
+
       <div className="flex flex-col space-y-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
@@ -210,12 +216,10 @@ export function TemplateGallery({
               </Button>
             )}
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground whitespace-nowrap">
-              Filter by:
-            </span>
+            <span className="text-sm text-muted-foreground whitespace-nowrap">Filter by:</span>
             <select
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               value={activeCategory}
@@ -231,7 +235,7 @@ export function TemplateGallery({
             </select>
           </div>
         </div>
-        
+
         {showTabs ? (
           <Tabs defaultValue="all" className="w-full">
             <TabsList className="grid w-full grid-cols-4">
@@ -240,22 +244,14 @@ export function TemplateGallery({
               <TabsTrigger value="recent">Recent</TabsTrigger>
               <TabsTrigger value="mine">My Templates</TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="all">
-              {renderTemplates(filteredTemplates)}
-            </TabsContent>
-            
-            <TabsContent value="featured">
-              {renderTemplates(featuredTemplates)}
-            </TabsContent>
-            
-            <TabsContent value="recent">
-              {renderTemplates(recentTemplates)}
-            </TabsContent>
-            
-            <TabsContent value="mine">
-              {renderTemplates(myTemplates)}
-            </TabsContent>
+
+            <TabsContent value="all">{renderTemplates(filteredTemplates)}</TabsContent>
+
+            <TabsContent value="featured">{renderTemplates(featuredTemplates)}</TabsContent>
+
+            <TabsContent value="recent">{renderTemplates(recentTemplates)}</TabsContent>
+
+            <TabsContent value="mine">{renderTemplates(myTemplates)}</TabsContent>
           </Tabs>
         ) : (
           renderTemplates(filteredTemplates)

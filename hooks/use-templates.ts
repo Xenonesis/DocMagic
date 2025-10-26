@@ -1,6 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useUser } from "@/hooks/use-user";
-import { Database } from "@/types/supabase";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useUser } from '@/hooks/use-user';
+import { Database } from '@/types/supabase';
 
 type Template = Database['public']['Tables']['templates']['Row'];
 type TemplateInsert = Database['public']['Tables']['templates']['Insert'];
@@ -13,7 +13,7 @@ export const useTemplates = () => {
 
   const fetchTemplates = async (): Promise<Template[]> => {
     if (!userId) return [];
-    
+
     const response = await fetch('/api/templates');
     if (!response.ok) {
       throw new Error('Failed to fetch templates');
@@ -27,27 +27,30 @@ export const useTemplates = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(template),
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || 'Failed to create template');
     }
-    
+
     return response.json();
   };
 
-  const updateTemplate = async (id: string, updates: Partial<TemplateUpdate>): Promise<Template> => {
+  const updateTemplate = async (
+    id: string,
+    updates: Partial<TemplateUpdate>,
+  ): Promise<Template> => {
     const response = await fetch(`/api/templates/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updates),
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || 'Failed to update template');
     }
-    
+
     return response.json();
   };
 
@@ -55,20 +58,24 @@ export const useTemplates = () => {
     const response = await fetch(`/api/templates/${id}`, {
       method: 'DELETE',
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || 'Failed to delete template');
     }
   };
 
-  const shareTemplate = async (templateId: string, email: string, canEdit: boolean): Promise<void> => {
+  const shareTemplate = async (
+    templateId: string,
+    email: string,
+    canEdit: boolean,
+  ): Promise<void> => {
     const response = await fetch(`/api/templates/${templateId}/shares`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, can_edit: canEdit }),
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || 'Failed to share template');
@@ -79,7 +86,7 @@ export const useTemplates = () => {
     const response = await fetch(`/api/templates/${templateId}/shares/${shareId}`, {
       method: 'DELETE',
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || 'Failed to remove share');
@@ -107,7 +114,7 @@ export const useTemplates = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<TemplateUpdate> }) => 
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<TemplateUpdate> }) =>
       updateTemplate(id, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['templates', userId] });
@@ -122,15 +129,22 @@ export const useTemplates = () => {
   });
 
   const shareMutation = useMutation({
-    mutationFn: ({ templateId, email, canEdit }: { templateId: string; email: string; canEdit: boolean }) => 
-      shareTemplate(templateId, email, canEdit),
+    mutationFn: ({
+      templateId,
+      email,
+      canEdit,
+    }: {
+      templateId: string;
+      email: string;
+      canEdit: boolean;
+    }) => shareTemplate(templateId, email, canEdit),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['templates', userId] });
     },
   });
 
   const removeShareMutation = useMutation({
-    mutationFn: ({ templateId, shareId }: { templateId: string; shareId: string }) => 
+    mutationFn: ({ templateId, shareId }: { templateId: string; shareId: string }) =>
       removeShare(templateId, shareId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['templates', userId] });

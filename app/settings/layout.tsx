@@ -1,10 +1,6 @@
-import { SiteHeader } from "@/components/site-header";
+import { SiteHeader } from '@/components/site-header';
 
-export default function SettingsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function SettingsLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <SiteHeader />

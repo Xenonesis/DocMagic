@@ -7,21 +7,38 @@ import { useTheme } from 'next-themes';
 import { useUsageStats } from '@/hooks/use-usage-stats';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Settings, Sparkles, Zap, Sun, Moon, Laptop, BarChart3, FileText, Layout, TrendingUp } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Settings,
+  Sparkles,
+  Zap,
+  Sun,
+  Moon,
+  Laptop,
+  BarChart3,
+  FileText,
+  Layout,
+  TrendingUp,
+} from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export default function SettingsPage() {
   const { user, loading } = useAuth();
   const { theme, setTheme, resolvedTheme } = useTheme();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const { 
-    documentsCreated, 
-    templatesUsed, 
-    templatesCreated, 
-    successRate, 
-    loading: statsLoading, 
-    error: statsError 
+  const {
+    documentsCreated,
+    templatesUsed,
+    templatesCreated,
+    successRate,
+    loading: statsLoading,
+    error: statsError,
   } = useUsageStats();
 
   useEffect(() => {
@@ -57,14 +74,12 @@ export default function SettingsPage() {
                 <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-yellow-400 to-blue-600 rounded-2xl flex items-center justify-center">
                   <Settings className="h-8 w-8 text-white" />
                 </div>
-                <h1 className="text-2xl font-bold mb-2">
-                  Access Your Settings
-                </h1>
+                <h1 className="text-2xl font-bold mb-2">Access Your Settings</h1>
                 <p className="text-muted-foreground">
                   Sign in to manage your profile, preferences, and account settings
                 </p>
               </div>
-              <Button 
+              <Button
                 onClick={() => router.push('/auth/signin')}
                 className="w-full bg-gradient-to-r from-yellow-400 to-blue-600 text-white font-semibold"
                 size="lg"
@@ -88,9 +103,13 @@ export default function SettingsPage() {
             <span className="text-sm font-medium">Account Settings</span>
             <Sparkles className="h-4 w-4 text-blue-500" />
           </div>
-          
+
           <h1 className="text-3xl font-bold mb-2">
-            Your <span className="bg-gradient-to-r from-yellow-400 to-blue-600 bg-clip-text text-transparent">docverse</span> Account
+            Your{' '}
+            <span className="bg-gradient-to-r from-yellow-400 to-blue-600 bg-clip-text text-transparent">
+              docverse
+            </span>{' '}
+            Account
           </h1>
           <p className="text-muted-foreground">
             Manage your profile, subscription, and preferences
@@ -149,34 +168,43 @@ export default function SettingsPage() {
                           </SelectItem>
                         </SelectContent>
                       </Select>
-                      
+
                       {/* Debug info */}
                       <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
-                        <div>Current theme: <span className="font-mono">{theme}</span></div>
-                        <div>Resolved theme: <span className="font-mono">{resolvedTheme}</span></div>
-                        <div>HTML has dark class: <span className="font-mono">{document?.documentElement?.classList?.contains('dark') ? 'Yes' : 'No'}</span></div>
+                        <div>
+                          Current theme: <span className="font-mono">{theme}</span>
+                        </div>
+                        <div>
+                          Resolved theme: <span className="font-mono">{resolvedTheme}</span>
+                        </div>
+                        <div>
+                          HTML has dark class:{' '}
+                          <span className="font-mono">
+                            {document?.documentElement?.classList?.contains('dark') ? 'Yes' : 'No'}
+                          </span>
+                        </div>
                       </div>
-                      
+
                       {/* Alternative theme buttons for testing */}
                       <div className="flex gap-2">
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant={theme === 'light' ? 'default' : 'outline'}
                           onClick={() => setTheme('light')}
                         >
                           <Sun className="h-4 w-4 mr-1" />
                           Light
                         </Button>
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant={theme === 'dark' ? 'default' : 'outline'}
                           onClick={() => setTheme('dark')}
                         >
                           <Moon className="h-4 w-4 mr-1" />
                           Dark
                         </Button>
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant={theme === 'system' ? 'default' : 'outline'}
                           onClick={() => setTheme('system')}
                         >
@@ -273,10 +301,7 @@ export default function SettingsPage() {
 
           {/* Back to Home */}
           <div className="text-center">
-            <Button
-              onClick={() => router.push('/')}
-              variant="outline"
-            >
+            <Button onClick={() => router.push('/')} variant="outline">
               ← Back to Home
             </Button>
           </div>

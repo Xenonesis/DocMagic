@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { useAuthGuard, getActivityDescription } from "@/lib/auth-utils";
-import { Loader2, Lock, Sparkles } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import { useAuthGuard, getActivityDescription } from '@/lib/auth-utils';
+import { Loader2, Lock, Sparkles } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface AuthButtonProps {
   activity: string;
   onAuthenticatedClick: () => void;
   children: React.ReactNode;
   className?: string;
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
-  size?: "default" | "sm" | "lg" | "icon";
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+  size?: 'default' | 'sm' | 'lg' | 'icon';
   disabled?: boolean;
   showAuthIcon?: boolean;
   authPromptTitle?: string;
@@ -23,8 +23,8 @@ export function AuthButton({
   onAuthenticatedClick,
   children,
   className,
-  variant = "default",
-  size = "default",
+  variant = 'default',
+  size = 'default',
   disabled = false,
   showAuthIcon = true,
   authPromptTitle,
@@ -38,21 +38,16 @@ export function AuthButton({
       onAuthenticatedClick();
     } else {
       const title = authPromptTitle || `Sign in to ${getActivityDescription(activity)}`;
-      const description = authPromptDescription || `You need to be signed in to ${getActivityDescription(activity)}.`;
-      
+      const description =
+        authPromptDescription || `You need to be signed in to ${getActivityDescription(activity)}.`;
+
       requireAuth(activity);
     }
   };
 
   if (loading) {
     return (
-      <Button
-        variant={variant}
-        size={size}
-        disabled={true}
-        className={cn(className)}
-        {...props}
-      >
+      <Button variant={variant} size={size} disabled={true} className={cn(className)} {...props}>
         <Loader2 className="h-4 w-4 animate-spin mr-2" />
         Loading...
       </Button>
@@ -64,17 +59,12 @@ export function AuthButton({
       variant={variant}
       size={size}
       disabled={disabled}
-      className={cn(
-        className,
-        !isAuthenticated && showAuthIcon && "relative"
-      )}
+      className={cn(className, !isAuthenticated && showAuthIcon && 'relative')}
       onClick={handleClick}
       {...props}
     >
-      {!isAuthenticated && showAuthIcon && (
-        <Lock className="h-4 w-4 mr-2" />
-      )}
-      {isAuthenticated && showAuthIcon && variant === "default" && (
+      {!isAuthenticated && showAuthIcon && <Lock className="h-4 w-4 mr-2" />}
+      {isAuthenticated && showAuthIcon && variant === 'default' && (
         <Sparkles className="h-4 w-4 mr-2" />
       )}
       {children}
@@ -88,12 +78,12 @@ export function CreateDocumentButton({
   children,
   className,
   ...props
-}: Omit<AuthButtonProps, "activity">) {
+}: Omit<AuthButtonProps, 'activity'>) {
   return (
     <AuthButton
       activity="create_document"
       onAuthenticatedClick={onAuthenticatedClick}
-      className={cn("bolt-gradient text-white font-semibold", className)}
+      className={cn('bolt-gradient text-white font-semibold', className)}
       authPromptTitle="Sign in to create documents"
       authPromptDescription="Create professional documents with AI assistance."
       {...props}
@@ -108,12 +98,12 @@ export function SaveDocumentButton({
   children,
   className,
   ...props
-}: Omit<AuthButtonProps, "activity">) {
+}: Omit<AuthButtonProps, 'activity'>) {
   return (
     <AuthButton
       activity="save_document"
       onAuthenticatedClick={onAuthenticatedClick}
-      className={cn("bg-green-600 hover:bg-green-700 text-white", className)}
+      className={cn('bg-green-600 hover:bg-green-700 text-white', className)}
       authPromptTitle="Sign in to save documents"
       authPromptDescription="Save your documents to access them later."
       {...props}
@@ -128,12 +118,12 @@ export function DownloadDocumentButton({
   children,
   className,
   ...props
-}: Omit<AuthButtonProps, "activity">) {
+}: Omit<AuthButtonProps, 'activity'>) {
   return (
     <AuthButton
       activity="download_document"
       onAuthenticatedClick={onAuthenticatedClick}
-      className={cn("bg-blue-600 hover:bg-blue-700 text-white", className)}
+      className={cn('bg-blue-600 hover:bg-blue-700 text-white', className)}
       authPromptTitle="Sign in to download documents"
       authPromptDescription="Download your documents in various formats."
       {...props}
@@ -148,12 +138,12 @@ export function EditTemplateButton({
   children,
   className,
   ...props
-}: Omit<AuthButtonProps, "activity">) {
+}: Omit<AuthButtonProps, 'activity'>) {
   return (
     <AuthButton
       activity="edit_template"
       onAuthenticatedClick={onAuthenticatedClick}
-      className={cn("bg-purple-600 hover:bg-purple-700 text-white", className)}
+      className={cn('bg-purple-600 hover:bg-purple-700 text-white', className)}
       authPromptTitle="Sign in to edit templates"
       authPromptDescription="Customize templates to match your needs."
       {...props}
@@ -187,18 +177,15 @@ export function AuthLink({
     if (!isAuthenticated) {
       e.preventDefault();
       const title = authPromptTitle || `Sign in to ${getActivityDescription(activity)}`;
-      const description = authPromptDescription || `You need to be signed in to ${getActivityDescription(activity)}.`;
-      
+      const description =
+        authPromptDescription || `You need to be signed in to ${getActivityDescription(activity)}.`;
+
       requireAuth(activity, href);
     }
   };
 
   return (
-    <a
-      href={href}
-      className={cn(className)}
-      onClick={handleClick}
-    >
+    <a href={href} className={cn(className)} onClick={handleClick}>
       {children}
     </a>
   );

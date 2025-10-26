@@ -1,16 +1,19 @@
 # QR Generator Test Suite
 
 ## Overview
+
 This test suite comprehensively verifies the QR Generator component functionality, ensuring all features work correctly.
 
 ## Test Coverage
 
 ### Component Rendering (3 tests)
+
 - ✅ Renders the QR generator with default state
 - ✅ Renders all QR type options (URL, Text, Email, Phone, SMS, WiFi, Contact, Location)
 - ✅ Displays URL input field by default
 
 ### QR Type Selection (5 tests)
+
 - ✅ Switches to email type and shows email-specific fields
 - ✅ Switches to phone type and shows phone field
 - ✅ Switches to WiFi type and shows WiFi-specific fields (SSID, password, encryption)
@@ -18,17 +21,20 @@ This test suite comprehensively verifies the QR Generator component functionalit
 - ✅ Switches to location type and shows coordinate fields
 
 ### QR Code Generation (4 tests)
+
 - ✅ Shows error toast when generating without data
 - ✅ Accepts URL input for URL type
 - ✅ Accepts email input for email type
 - ✅ Accepts WiFi credentials for WiFi type
 
 ### Style Tab (3 tests)
+
 - ✅ Switches to style tab and displays styling options
 - ✅ Allows changing QR code size
 - ✅ Allows changing colors
 
 ### Input Validation (4 tests)
+
 - ✅ Validates contact information fields (name, phone, email)
 - ✅ Validates location coordinates (latitude, longitude)
 - ✅ Validates phone number input
@@ -61,6 +67,7 @@ npm test
 ## Mocking Strategy
 
 The test suite uses the following mocks:
+
 - `qr-code-styling`: Mocked to avoid actual QR code rendering in tests
 - `useToast`: Mocked to verify toast notifications
 - Clipboard API: Mocked for copy functionality tests (future enhancement)

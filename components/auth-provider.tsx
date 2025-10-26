@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useEffect, useState, useMemo } from "react";
-import { User } from "@supabase/supabase-js";
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useState, useMemo } from 'react';
+import { User } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null;
@@ -11,10 +11,10 @@ interface AuthContextType {
   signOut: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType>({ 
-  user: null, 
+const AuthContext = createContext<AuthContextType>({
+  user: null,
   loading: true,
-  signOut: async () => {}
+  signOut: async () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -27,7 +27,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Get initial session
     const getInitialSession = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
         if (error) {
           console.error('Error getting session:', error);
         }
@@ -44,18 +47,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     getInitialSession();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user ?? null);
-        setLoading(false);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
 
-        // Handle sign out event
-        if (event === 'SIGNED_OUT') {
-          router.push('/');
-          router.refresh();
-        }
+      // Handle sign out event
+      if (event === 'SIGNED_OUT') {
+        router.push('/');
+        router.refresh();
       }
-    );
+    });
 
     return () => {
       subscription.unsubscribe();
@@ -73,11 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  return (
-    <AuthContext.Provider value={{ user, loading, signOut }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, loading, signOut }}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => {

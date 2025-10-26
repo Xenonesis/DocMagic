@@ -1,9 +1,9 @@
-"use client";
-import { SiteHeader } from "@/components/site-header";
-import { DiagramGenerator } from "@/components/diagram/diagram-generator";
-import { Sparkles, Workflow, Zap, Star, Wand2, Share2, Eye, Download, Code } from "lucide-react";
-import { useEffect, useState } from "react";
-import { DiagramGeneratorSkeleton } from "@/components/ui/skeleton";
+'use client';
+import { SiteHeader } from '@/components/site-header';
+import { DiagramGenerator } from '@/components/diagram/diagram-generator';
+import { Sparkles, Workflow, Zap, Star, Wand2, Share2, Eye, Download, Code } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { DiagramGeneratorSkeleton } from '@/components/ui/skeleton';
 
 export default function DiagramPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +42,7 @@ export default function DiagramPage() {
             </div>
 
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6 leading-tight px-4">
-              Create Visual{" "}
+              Create Visual{' '}
               <span className="bolt-gradient-text relative inline-block">
                 Diagrams & Flowcharts
                 <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
@@ -52,31 +52,17 @@ export default function DiagramPage() {
             </h1>
 
             <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-6 sm:leading-7 md:leading-8 text-muted-foreground max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-6 md:px-0">
-              Design{" "}
-              <span className="font-semibold text-yellow-600">
-                flowcharts
-              </span>
-              ,{" "}
-              <span className="font-semibold text-blue-600">
-                system architectures
-              </span>
-              , and{" "}
-              <span className="font-semibold text-purple-600">
-                process diagrams
-              </span>{" "}
-              with{" "}
-              <span className="font-semibold bolt-gradient-text">
-                AI-powered Mermaid syntax
-              </span>
+              Design <span className="font-semibold text-yellow-600">flowcharts</span>,{' '}
+              <span className="font-semibold text-blue-600">system architectures</span>, and{' '}
+              <span className="font-semibold text-purple-600">process diagrams</span> with{' '}
+              <span className="font-semibold bolt-gradient-text">AI-powered Mermaid syntax</span>
             </p>
 
             {/* Stats bar */}
             <div className="mt-4 sm:mt-6 md:mt-8 flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 px-4">
               <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <Sparkles className="inline h-3 w-3 sm:h-4 sm:w-4 text-yellow-500 mr-1" />
-                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">
-                  AI-Powered
-                </span>
+                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">AI-Powered</span>
               </div>
               <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <Eye className="inline h-3 w-3 sm:h-4 sm:w-4 text-blue-500 mr-1" />
@@ -86,21 +72,13 @@ export default function DiagramPage() {
               </div>
               <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <Download className="inline h-3 w-3 sm:h-4 sm:w-4 text-green-500 mr-1" />
-                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">
-                  Export
-                </span>
-                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">
-                  SVG/PNG
-                </span>
+                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">Export</span>
+                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">SVG/PNG</span>
               </div>
               <div className="glass-effect px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:scale-105 transition-transform duration-300 cursor-pointer">
                 <Code className="inline h-3 w-3 sm:h-4 sm:w-4 text-purple-500 mr-1" />
-                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">
-                  Mermaid
-                </span>
-                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">
-                  Syntax
-                </span>
+                <span className="bolt-gradient-text font-bold text-xs sm:text-sm">Mermaid</span>
+                <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">Syntax</span>
               </div>
             </div>
           </div>
@@ -117,16 +95,12 @@ export default function DiagramPage() {
             <div className="absolute bottom-4 left-4">
               <Star
                 className="h-4 w-4 text-blue-500 animate-spin"
-                style={{ animationDuration: "3s" }}
+                style={{ animationDuration: '3s' }}
               />
             </div>
 
             <div className="relative z-10">
-              {isLoading ? (
-                <DiagramGeneratorSkeleton />
-              ) : (
-                <DiagramGenerator />
-              )}
+              {isLoading ? <DiagramGeneratorSkeleton /> : <DiagramGenerator />}
             </div>
           </div>
 
@@ -148,15 +122,11 @@ export default function DiagramPage() {
                 <div className="flex flex-wrap justify-center gap-3">
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Workflow className="inline h-3 w-3 text-yellow-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Professional Templates
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Professional Templates</span>
                   </div>
                   <div className="glass-effect px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform duration-300">
                     <Zap className="inline h-3 w-3 text-blue-500 mr-1" />
-                    <span className="bolt-gradient-text font-semibold">
-                      Instant Export
-                    </span>
+                    <span className="bolt-gradient-text font-semibold">Instant Export</span>
                   </div>
                 </div>
               </div>
