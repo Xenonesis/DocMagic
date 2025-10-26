@@ -28,7 +28,6 @@ import {
   FileText,
   Activity,
   Camera,
-  Upload,
 } from 'lucide-react';
 
 interface UserProfile {
@@ -84,7 +83,6 @@ export default function ProfilePage() {
     try {
       if (!authUser) return;
 
-      // Set user profile data
       const profile: UserProfile = {
         id: authUser.id,
         email: authUser.email || '',
@@ -107,32 +105,27 @@ export default function ProfilePage() {
         website: profile.website || '',
       });
 
-      // Load real user statistics from database with error handling
       let templatesCount = 0;
       let documentsCount = 0;
       let lastActivity = authUser.created_at;
 
       try {
-        // Try to get templates count
         const templatesResult = await supabase
           .from('templates')
           .select('id')
           .eq('user_id', authUser.id);
-
         templatesCount = templatesResult.data?.length || 0;
       } catch (error) {
         console.warn('Templates table not found or accessible:', error);
       }
 
       try {
-        // Try to get documents count and last activity
         const documentsResult = await supabase
           .from('documents')
           .select('id, created_at')
           .eq('user_id', authUser.id)
           .order('created_at', { ascending: false })
           .limit(1);
-
         documentsCount = documentsResult.data?.length || 0;
         lastActivity = documentsResult.data?.[0]?.created_at || authUser.created_at;
       } catch (error) {
@@ -158,7 +151,6 @@ export default function ProfilePage() {
     const file = event.target.files?.[0];
     if (!file || !userProfile) return;
 
-    // Validate file type and size
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
       toast({
@@ -170,7 +162,6 @@ export default function ProfilePage() {
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      // 5MB limit
       toast({
         title: 'File too large',
         description: 'Please upload an image smaller than 5MB',
@@ -182,29 +173,23 @@ export default function ProfilePage() {
     try {
       setUploadingAvatar(true);
 
-      // Upload to Supabase Storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${userProfile.id}-${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`; // Remove avatars/ prefix since we're already in the avatars bucket
+      const filePath = `${fileName}`;
 
       const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file);
 
       if (uploadError) {
-        // Handle specific bucket not found error
         if (uploadError.message?.includes('Bucket not found')) {
-          throw new Error(
-            'Storage bucket not configured. Please contact support or check the setup guide.',
-          );
+          throw new Error('Storage bucket not configured. Please contact support or check the setup guide.');
         }
         throw uploadError;
       }
 
-      // Get public URL
       const {
         data: { publicUrl },
       } = supabase.storage.from('avatars').getPublicUrl(filePath);
 
-      // Update user metadata with new avatar URL
       const { error: updateError } = await supabase.auth.updateUser({
         data: {
           avatar_url: publicUrl,
@@ -213,7 +198,6 @@ export default function ProfilePage() {
 
       if (updateError) throw updateError;
 
-      // Update local state
       setUserProfile((prev) => (prev ? { ...prev, avatar_url: publicUrl } : null));
 
       toast({
@@ -224,13 +208,10 @@ export default function ProfilePage() {
       console.error('Error uploading avatar:', error);
 
       let errorMessage = 'Failed to upload profile picture';
-
       if (error.message?.includes('Storage bucket not configured')) {
-        errorMessage =
-          'Profile picture upload is not configured yet. Please check the setup guide.';
+        errorMessage = 'Profile picture upload is not configured yet. Please check the setup guide.';
       } else if (error.message?.includes('Bucket not found')) {
-        errorMessage =
-          'Storage bucket not found. Please create the "avatars" bucket in Supabase Storage.';
+        errorMessage = 'Storage bucket not found. Please create the "avatars" bucket in Supabase Storage.';
       }
 
       toast({
@@ -249,7 +230,6 @@ export default function ProfilePage() {
     try {
       setSaving(true);
 
-      // Update user metadata
       const { error } = await supabase.auth.updateUser({
         data: {
           name: formData.name,
@@ -262,7 +242,6 @@ export default function ProfilePage() {
 
       if (error) throw error;
 
-      // Update local state
       setUserProfile((prev) =>
         prev
           ? {
@@ -277,17 +256,10 @@ export default function ProfilePage() {
       );
 
       setEditing(false);
-      toast({
-        title: 'Success',
-        description: 'Profile updated successfully',
-      });
+      toast({ title: 'Success', description: 'Profile updated successfully' });
     } catch (error) {
       console.error('Error updating profile:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to update profile',
-        variant: 'destructive',
-      });
+      toast({ title: 'Error', description: 'Failed to update profile', variant: 'destructive' });
     } finally {
       setSaving(false);
     }
@@ -323,223 +295,161 @@ export default function ProfilePage() {
     });
   };
 
+  let content: React.ReactNode;
+
   if (authLoading) {
-    return (
-      <div>
-        <SiteHeader />
-        <div className="container mx-auto py-8 pt-24">
-          <div className="max-w-4xl mx-auto space-y-6">
-            <div className="animate-pulse">
-              <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
-              <div className="grid gap-6 md:grid-cols-3">
-                <div className="md:col-span-2">
-                  <div className="h-64 bg-gray-200 rounded-lg"></div>
-                </div>
-                <div className="h-64 bg-gray-200 rounded-lg"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!authUser || !userProfile) {
-    return (
-      <div>
-        <SiteHeader />
-        <div className="container mx-auto py-8 pt-24">
-          <div className="text-center">
-            <p>Please sign in to view your profile.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      <SiteHeader />
-      <div className="container mx-auto py-8 pt-24">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
-              <p className="text-muted-foreground">Manage your account settings and preferences</p>
-            </div>
-            {!editing ? (
-              <Button onClick={() => setEditing(true)}>
-                <Edit3 className="mr-2 h-4 w-4" />
-                Edit Profile
-              </Button>
-            ) : (
-              <div className="flex gap-2">
-                <Button onClick={handleSave} disabled={saving}>
-                  <Save className="mr-2 h-4 w-4" />
-                  {saving ? 'Saving...' : 'Save'}
-                </Button>
-                <Button variant="outline" onClick={handleCancel}>
-                  <X className="mr-2 h-4 w-4" />
-                  Cancel
-                </Button>
-              </div>
-            )}
-          </div>
-
+    content = (
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
           <div className="grid gap-6 md:grid-cols-3">
-            {/* Main Profile Card */}
             <div className="md:col-span-2">
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center space-x-4">
-                    <div className="relative">
-                      <Avatar className="h-20 w-20">
-                        <AvatarImage src={userProfile.avatar_url} alt={userProfile.name} />
-                        <AvatarFallback className="text-lg">
-                          {userProfile.name ? getInitials(userProfile.name) : <User className="h-8 w-8" />}
-                        </AvatarFallback>
-                      </Avatar>
-                      {editing && (
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full p-0"
-                          onClick={() => fileInputRef.current?.click()}
-                          disabled={uploadingAvatar}
-                        >
-                          {uploadingAvatar ? (
-                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                          ) : (
-                            <Camera className="h-4 w-4" />
-                          )}
-                        </Button>
-                      )}
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleAvatarUpload}
-                        className="hidden"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-2xl">{userProfile.name || 'Anonymous User'}</CardTitle>
-                      <CardDescription className="flex items-center mt-1">
-                        <Mail className="mr-2 h-4 w-4" />
-                        {userProfile.email}
-                      </CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* Basic Information */}
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Basic Information</h3>
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div>
-                        <Label htmlFor="name">Full Name</Label>
-                        {editing ? (
-                          <Input
-                            id="name"
-                            value={formData.name}
-                            onChange={(e) =>
-                              setFormData((prev) => ({ ...prev, name: e.target.value }))
-                            }
-                            placeholder="Enter your full name"
-                          />
-                        ) : (
-                          <p className="mt-1 text-sm text-muted-foreground">
-                            {userProfile.name || 'Not provided'}
-                          </p>
-                        )}
-                      </div>
-                      <div>
-                        <Label htmlFor="email">Email</Label>
-                        <p className="mt-1 text-sm text-muted-foreground">{userProfile.email}</p>
-                      </div>
-                    </div>
-                  </div>
+              <div className="h-64 bg-gray-200 rounded-lg"></div>
+            </div>
+            <div className="h-64 bg-gray-200 rounded-lg"></div>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (!authUser || !userProfile) {
+    content = (
+      <div className="text-center">
+        <p>Please sign in to view your profile.</p>
+      </div>
+    );
+  } else {
+    content = (
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
+            <p className="text-muted-foreground">Manage your account settings and preferences</p>
+          </div>
+          {!editing ? (
+            <Button onClick={() => setEditing(true)}>
+              <Edit3 className="mr-2 h-4 w-4" />
+              Edit Profile
+            </Button>
+          ) : (
+            <div className="flex gap-2">
+              <Button onClick={handleSave} disabled={saving}>
+                <Save className="mr-2 h-4 w-4" />
+                {saving ? 'Saving...' : 'Save'}
+              </Button>
+              <Button variant="outline" onClick={handleCancel}>
+                <X className="mr-2 h-4 w-4" />
+                Cancel
+              </Button>
+            </div>
+          )}
+        </div>
 
-                  <Separator />
-
-                  {/* Contact Information */}
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div>
-                        <Label htmlFor="phone">Phone</Label>
-                        {editing ? (
-                          <Input
-                            id="phone"
-                            value={formData.phone}
-                            onChange={(e) =>
-                              setFormData((prev) => ({ ...prev, phone: e.target.value }))
-                            }
-                            placeholder="Enter your phone number"
-                          />
-                        ) : (
-                          <p className="mt-1 text-sm text-muted-foreground flex items-center">
-                            {userProfile.phone ? (
-                              <>
-                                <Phone className="mr-2 h-4 w-4" />
-                                {userProfile.phone}
-                              </>
-                            ) : (
-                              'Not provided'
-                            )}
-                          </p>
-                        )}
-                      </div>
-                      <div>
-                        <Label htmlFor="location">Location</Label>
-                        {editing ? (
-                          <Input
-                            id="location"
-                            value={formData.location}
-                            onChange={(e) =>
-                              setFormData((prev) => ({ ...prev, location: e.target.value }))
-                            }
-                            placeholder="Enter your location"
-                          />
-                        ) : (
-                          <p className="mt-1 text-sm text-muted-foreground flex items-center">
-                            {userProfile.location ? (
-                              <>
-                                <MapPin className="mr-2 h-4 w-4" />
-                                {userProfile.location}
-                              </>
-                            ) : (
-                              'Not provided'
-                            )}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <Label htmlFor="website">Website</Label>
+        <div className="grid gap-6 md:grid-cols-3">
+          <div className="md:col-span-2">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center space-x-4">
+                  <div className="relative">
+                    <Avatar className="h-20 w-20">
+                      <AvatarImage src={userProfile.avatar_url} alt={userProfile.name} />
+                      <AvatarFallback className="text-lg">
+                        {userProfile.name ? getInitials(userProfile.name) : <User className="h-8 w-8" />}
+                      </AvatarFallback>
+                    </Avatar>
+                    {editing && (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full p-0"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingAvatar}
+                      >
+                        <Camera className="h-4 w-4" />
+                      </Button>
+                    )}
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarUpload}
+                      className="hidden"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl">{userProfile.name || 'Anonymous User'}</CardTitle>
+                    <CardDescription className="flex items-center mt-1">
+                      <Mail className="mr-2 h-4 w-4" />
+                      {userProfile.email}
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Basic Information</h3>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <Label htmlFor="name">Full Name</Label>
                       {editing ? (
                         <Input
-                          id="website"
-                          value={formData.website}
-                          onChange={(e) =>
-                            setFormData((prev) => ({ ...prev, website: e.target.value }))
-                          }
-                          placeholder="Enter your website URL"
+                          id="name"
+                          value={formData.name}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+                          placeholder="Enter your full name"
+                        />
+                      ) : (
+                        <p className="mt-1 text-sm text-muted-foreground">{userProfile.name || 'Not provided'}</p>
+                      )}
+                    </div>
+                    <div>
+                      <Label htmlFor="email">Email</Label>
+                      <p className="mt-1 text-sm text-muted-foreground">{userProfile.email}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <Label htmlFor="phone">Phone</Label>
+                      {editing ? (
+                        <Input
+                          id="phone"
+                          value={formData.phone}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
+                          placeholder="Enter your phone number"
                         />
                       ) : (
                         <p className="mt-1 text-sm text-muted-foreground flex items-center">
-                          {userProfile.website ? (
+                          {userProfile.phone ? (
                             <>
-                              <Globe className="mr-2 h-4 w-4" />
-                              <a
-                                href={userProfile.website}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline"
-                              >
-                                {userProfile.website}
-                              </a>
+                              <Phone className="mr-2 h-4 w-4" />
+                              {userProfile.phone}
+                            </>
+                          ) : (
+                            'Not provided'
+                          )}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label htmlFor="location">Location</Label>
+                      {editing ? (
+                        <Input
+                          id="location"
+                          value={formData.location}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, location: e.target.value }))}
+                          placeholder="Enter your location"
+                        />
+                      ) : (
+                        <p className="mt-1 text-sm text-muted-foreground flex items-center">
+                          {userProfile.location ? (
+                            <>
+                              <MapPin className="mr-2 h-4 w-4" />
+                              {userProfile.location}
                             </>
                           ) : (
                             'Not provided'
@@ -548,119 +458,133 @@ export default function ProfilePage() {
                       )}
                     </div>
                   </div>
-
-                  <Separator />
-
-                  {/* Bio */}
-                  <div>
-                    <Label htmlFor="bio">Bio</Label>
+                  <div className="mt-4">
+                    <Label htmlFor="website">Website</Label>
                     {editing ? (
-                      <Textarea
-                        id="bio"
-                        value={formData.bio}
-                        onChange={(e) => setFormData((prev) => ({ ...prev, bio: e.target.value }))}
-                        placeholder="Tell us about yourself..."
-                        rows={4}
+                      <Input
+                        id="website"
+                        value={formData.website}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, website: e.target.value }))}
+                        placeholder="Enter your website URL"
                       />
                     ) : (
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {userProfile.bio || 'No bio provided'}
+                      <p className="mt-1 text-sm text-muted-foreground flex items-center">
+                        {userProfile.website ? (
+                          <>
+                            <Globe className="mr-2 h-4 w-4" />
+                            <a href={userProfile.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                              {userProfile.website}
+                            </a>
+                          </>
+                        ) : (
+                          'Not provided'
+                        )}
                       </p>
                     )}
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
 
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Account Stats */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Activity className="mr-2 h-5 w-5" />
-                    Activity
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Templates Created</span>
-                    <Badge variant="secondary">{stats?.templates_created || 0}</Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Documents Generated</span>
-                    <Badge variant="secondary">{stats?.documents_generated || 0}</Badge>
-                  </div>
-                </CardContent>
-              </Card>
+                <Separator />
 
-              {/* Account Information */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Shield className="mr-2 h-5 w-5" />
-                    Account Info
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="bio">Bio</Label>
+                  {editing ? (
+                    <Textarea
+                      id="bio"
+                      value={formData.bio}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, bio: e.target.value }))}
+                      placeholder="Tell us about yourself..."
+                      rows={4}
+                    />
+                  ) : (
+                    <p className="mt-1 text-sm text-muted-foreground">{userProfile.bio || 'No bio provided'}</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Activity className="mr-2 h-5 w-5" />
+                  Activity
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Templates Created</span>
+                  <Badge variant="secondary">{stats?.templates_created || 0}</Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Documents Generated</span>
+                  <Badge variant="secondary">{stats?.documents_generated || 0}</Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Shield className="mr-2 h-5 w-5" />
+                  Account Info
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label className="text-sm font-medium">Member Since</Label>
+                  <p className="text-sm text-muted-foreground flex items-center mt-1">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    {formatDate(userProfile.created_at)}
+                  </p>
+                </div>
+                {userProfile.last_sign_in_at && (
                   <div>
-                    <Label className="text-sm font-medium">Member Since</Label>
+                    <Label className="text-sm font-medium">Last Sign In</Label>
                     <p className="text-sm text-muted-foreground flex items-center mt-1">
                       <Calendar className="mr-2 h-4 w-4" />
-                      {formatDate(userProfile.created_at)}
+                      {formatDate(userProfile.last_sign_in_at)}
                     </p>
                   </div>
-                  {userProfile.last_sign_in_at && (
-                    <div>
-                      <Label className="text-sm font-medium">Last Sign In</Label>
-                      <p className="text-sm text-muted-foreground flex items-center mt-1">
-                        <Calendar className="mr-2 h-4 w-4" />
-                        {formatDate(userProfile.last_sign_in_at)}
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                )}
+              </CardContent>
+            </Card>
 
-              {/* Quick Actions */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <FileText className="mr-2 h-5 w-5" />
-                    Quick Actions
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start"
-                    onClick={() => router.push('/templates')}
-                  >
-                    <FileText className="mr-2 h-4 w-4" />
-                    Browse Templates
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start"
-                    onClick={() => router.push('/resume')}
-                  >
-                    <FileText className="mr-2 h-4 w-4" />
-                    Create Resume
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start"
-                    onClick={() => router.push('/settings')}
-                  >
-                    <Shield className="mr-2 h-4 w-4" />
-                    Account Settings
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <FileText className="mr-2 h-5 w-5" />
+                  Quick Actions
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Button variant="outline" className="w-full justify-start" onClick={() => router.push('/templates')}>
+                  <FileText className="mr-2 h-4 w-4" />
+                  Browse Templates
+                </Button>
+                <Button variant="outline" className="w-full justify-start" onClick={() => router.push('/resume')}>
+                  <FileText className="mr-2 h-4 w-4" />
+                  Create Resume
+                </Button>
+                <Button variant="outline" className="w-full justify-start" onClick={() => router.push('/settings')}>
+                  <Shield className="mr-2 h-4 w-4" />
+                  Account Settings
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <SiteHeader />
+      <main className="flex-1 page-with-header-only">
+        <div className="container mx-auto py-8">{content}</div>
+      </main>
     </div>
   );
 }
