@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { useAuth } from '@/components/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -50,9 +51,9 @@ interface UserStats {
 }
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const { user: authUser, loading: authLoading } = useAuth();
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<UserStats | null>(null);
-  const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -70,26 +71,21 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    loadUserProfile();
-  }, []);
+    if (!authLoading) {
+      if (!authUser) {
+        router.push('/auth/signin?redirectTo=/profile');
+      } else {
+        loadUserProfile();
+      }
+    }
+  }, [authUser, authLoading, router]);
 
   const loadUserProfile = async () => {
     try {
-      setLoading(true);
-
-      // Get current user
-      const {
-        data: { user: authUser },
-        error: authError,
-      } = await supabase.auth.getUser();
-
-      if (authError || !authUser) {
-        router.push('/auth/signin');
-        return;
-      }
+      if (!authUser) return;
 
       // Set user profile data
-      const userProfile: UserProfile = {
+      const profile: UserProfile = {
         id: authUser.id,
         email: authUser.email || '',
         name: authUser.user_metadata?.name || authUser.user_metadata?.full_name || '',
@@ -102,13 +98,13 @@ export default function ProfilePage() {
         last_sign_in_at: authUser.last_sign_in_at || undefined,
       };
 
-      setUser(userProfile);
+      setUserProfile(profile);
       setFormData({
-        name: userProfile.name || '',
-        bio: userProfile.bio || '',
-        location: userProfile.location || '',
-        phone: userProfile.phone || '',
-        website: userProfile.website || '',
+        name: profile.name || '',
+        bio: profile.bio || '',
+        location: profile.location || '',
+        phone: profile.phone || '',
+        website: profile.website || '',
       });
 
       // Load real user statistics from database with error handling
@@ -155,14 +151,12 @@ export default function ProfilePage() {
         description: 'Failed to load profile data',
         variant: 'destructive',
       });
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !user) return;
+    if (!file || !userProfile) return;
 
     // Validate file type and size
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -190,7 +184,7 @@ export default function ProfilePage() {
 
       // Upload to Supabase Storage
       const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      const fileName = `${userProfile.id}-${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`; // Remove avatars/ prefix since we're already in the avatars bucket
 
       const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file);
@@ -220,7 +214,7 @@ export default function ProfilePage() {
       if (updateError) throw updateError;
 
       // Update local state
-      setUser((prev) => (prev ? { ...prev, avatar_url: publicUrl } : null));
+      setUserProfile((prev) => (prev ? { ...prev, avatar_url: publicUrl } : null));
 
       toast({
         title: 'Success',
@@ -250,7 +244,7 @@ export default function ProfilePage() {
   };
 
   const handleSave = async () => {
-    if (!user) return;
+    if (!userProfile) return;
 
     try {
       setSaving(true);
@@ -269,7 +263,7 @@ export default function ProfilePage() {
       if (error) throw error;
 
       // Update local state
-      setUser((prev) =>
+      setUserProfile((prev) =>
         prev
           ? {
               ...prev,
@@ -300,14 +294,14 @@ export default function ProfilePage() {
   };
 
   const handleCancel = () => {
-    if (!user) return;
+    if (!userProfile) return;
 
     setFormData({
-      name: user.name || '',
-      bio: user.bio || '',
-      location: user.location || '',
-      phone: user.phone || '',
-      website: user.website || '',
+      name: userProfile.name || '',
+      bio: userProfile.bio || '',
+      location: userProfile.location || '',
+      phone: userProfile.phone || '',
+      website: userProfile.website || '',
     });
     setEditing(false);
   };
@@ -329,7 +323,7 @@ export default function ProfilePage() {
     });
   };
 
-  if (loading) {
+  if (authLoading) {
     return (
       <div>
         <SiteHeader />
@@ -350,7 +344,7 @@ export default function ProfilePage() {
     );
   }
 
-  if (!user) {
+  if (!authUser || !userProfile) {
     return (
       <div>
         <SiteHeader />
@@ -401,9 +395,9 @@ export default function ProfilePage() {
                   <div className="flex items-center space-x-4">
                     <div className="relative">
                       <Avatar className="h-20 w-20">
-                        <AvatarImage src={user.avatar_url} alt={user.name} />
+                        <AvatarImage src={userProfile.avatar_url} alt={userProfile.name} />
                         <AvatarFallback className="text-lg">
-                          {user.name ? getInitials(user.name) : <User className="h-8 w-8" />}
+                          {userProfile.name ? getInitials(userProfile.name) : <User className="h-8 w-8" />}
                         </AvatarFallback>
                       </Avatar>
                       {editing && (
@@ -430,10 +424,10 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div className="flex-1">
-                      <CardTitle className="text-2xl">{user.name || 'Anonymous User'}</CardTitle>
+                      <CardTitle className="text-2xl">{userProfile.name || 'Anonymous User'}</CardTitle>
                       <CardDescription className="flex items-center mt-1">
                         <Mail className="mr-2 h-4 w-4" />
-                        {user.email}
+                        {userProfile.email}
                       </CardDescription>
                     </div>
                   </div>
@@ -456,13 +450,13 @@ export default function ProfilePage() {
                           />
                         ) : (
                           <p className="mt-1 text-sm text-muted-foreground">
-                            {user.name || 'Not provided'}
+                            {userProfile.name || 'Not provided'}
                           </p>
                         )}
                       </div>
                       <div>
                         <Label htmlFor="email">Email</Label>
-                        <p className="mt-1 text-sm text-muted-foreground">{user.email}</p>
+                        <p className="mt-1 text-sm text-muted-foreground">{userProfile.email}</p>
                       </div>
                     </div>
                   </div>
@@ -486,10 +480,10 @@ export default function ProfilePage() {
                           />
                         ) : (
                           <p className="mt-1 text-sm text-muted-foreground flex items-center">
-                            {user.phone ? (
+                            {userProfile.phone ? (
                               <>
                                 <Phone className="mr-2 h-4 w-4" />
-                                {user.phone}
+                                {userProfile.phone}
                               </>
                             ) : (
                               'Not provided'
@@ -510,10 +504,10 @@ export default function ProfilePage() {
                           />
                         ) : (
                           <p className="mt-1 text-sm text-muted-foreground flex items-center">
-                            {user.location ? (
+                            {userProfile.location ? (
                               <>
                                 <MapPin className="mr-2 h-4 w-4" />
-                                {user.location}
+                                {userProfile.location}
                               </>
                             ) : (
                               'Not provided'
@@ -535,16 +529,16 @@ export default function ProfilePage() {
                         />
                       ) : (
                         <p className="mt-1 text-sm text-muted-foreground flex items-center">
-                          {user.website ? (
+                          {userProfile.website ? (
                             <>
                               <Globe className="mr-2 h-4 w-4" />
                               <a
-                                href={user.website}
+                                href={userProfile.website}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-blue-600 hover:underline"
                               >
-                                {user.website}
+                                {userProfile.website}
                               </a>
                             </>
                           ) : (
@@ -570,7 +564,7 @@ export default function ProfilePage() {
                       />
                     ) : (
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {user.bio || 'No bio provided'}
+                        {userProfile.bio || 'No bio provided'}
                       </p>
                     )}
                   </div>
@@ -613,15 +607,15 @@ export default function ProfilePage() {
                     <Label className="text-sm font-medium">Member Since</Label>
                     <p className="text-sm text-muted-foreground flex items-center mt-1">
                       <Calendar className="mr-2 h-4 w-4" />
-                      {formatDate(user.created_at)}
+                      {formatDate(userProfile.created_at)}
                     </p>
                   </div>
-                  {user.last_sign_in_at && (
+                  {userProfile.last_sign_in_at && (
                     <div>
                       <Label className="text-sm font-medium">Last Sign In</Label>
                       <p className="text-sm text-muted-foreground flex items-center mt-1">
                         <Calendar className="mr-2 h-4 w-4" />
-                        {formatDate(user.last_sign_in_at)}
+                        {formatDate(userProfile.last_sign_in_at)}
                       </p>
                     </div>
                   )}

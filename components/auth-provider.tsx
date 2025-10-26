@@ -20,8 +20,10 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = useMemo(() => createClient(), []);
   const router = useRouter();
+  
+  // Create a single supabase client instance - important for auth state
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     // Get initial session

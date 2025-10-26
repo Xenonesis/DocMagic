@@ -83,7 +83,7 @@ export async function middleware(req: NextRequest) {
 
   // Pages that require full authentication
   const fullyProtectedRoutes = [
-    '/profile',
+    // '/profile', // Removed - profile page handles its own auth using AuthProvider
     // '/settings', // Temporarily removed to allow access - settings page handles its own auth
     '/payment-demo',
   ];
