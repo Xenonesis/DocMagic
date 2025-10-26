@@ -25,7 +25,7 @@ const nextConfig = {
           {
             key: 'Permissions-Policy',
             value:
-              "camera=(), microphone=(), geolocation=(), interest-cohort=(), accelerometer=(), autoplay=(), clipboard-read=(), clipboard-write=(), fullscreen=*, magnetometer=(), payment=(), usb=()",
+              "camera=(), microphone=(), geolocation=(), interest-cohort=(), accelerometer=(), autoplay=(), clipboard-read=(), fullscreen=*, magnetometer=(), payment=(), usb=()",
           }
         ],
       },

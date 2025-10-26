@@ -21,6 +21,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuthGuard } from '@/lib/auth-utils';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from 'docx';
 
 interface ResumeData {
   name?: string;
@@ -77,9 +78,11 @@ interface ResumePreviewProps {
   resume: ResumeData;
   template: string;
   onChange?: (newResume: ResumeData) => void;
+  onExportPDF?: () => React.MutableRefObject<(() => Promise<void>) | null>;
+  onExportWord?: () => React.MutableRefObject<(() => Promise<void>) | null>;
 }
 
-export function ResumePreview({ resume, template, onChange }: ResumePreviewProps) {
+export function ResumePreview({ resume, template, onChange, onExportPDF, onExportWord }: ResumePreviewProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const { toast } = useToast();
@@ -235,12 +238,100 @@ export function ResumePreview({ resume, template, onChange }: ResumePreviewProps
       const element = document.getElementById('resume-content');
       if (!element) throw new Error('Resume content element not found');
 
-      const canvas = await html2canvas(element, {
+      // Create an isolated iframe without any stylesheets
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'absolute';
+      iframe.style.left = '-9999px';
+      iframe.style.top = '0';
+      iframe.style.width = element.offsetWidth + 'px';
+      iframe.style.height = element.offsetHeight + 'px';
+      document.body.appendChild(iframe);
+
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!iframeDoc) throw new Error('Could not access iframe document');
+
+      // Write a minimal HTML structure with no external stylesheets
+      iframeDoc.open();
+      iframeDoc.write('<!DOCTYPE html><html><head><meta charset="utf-8"></head><body></body></html>');
+      iframeDoc.close();
+
+      // Capture all computed styles from the original element tree
+      const captureAndApplyStyles = (originalEl: Element, targetParent: HTMLElement) => {
+        if (!(originalEl instanceof HTMLElement)) return null;
+        
+        const computedStyle = window.getComputedStyle(originalEl);
+        const clone = originalEl.cloneNode(false) as HTMLElement;
+        
+        // Build inline style string from computed styles
+        let styleStr = '';
+        const importantProps = [
+          'display', 'position', 'width', 'height', 'min-width', 'min-height', 'max-width', 'max-height',
+          'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
+          'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
+          'border', 'border-width', 'border-style', 'border-color', 'border-radius',
+          'color', 'background-color', 'background', 'background-image',
+          'font-size', 'font-weight', 'font-family', 'line-height', 'letter-spacing',
+          'text-align', 'text-decoration', 'text-transform',
+          'flex', 'flex-direction', 'flex-wrap', 'justify-content', 'align-items', 'gap',
+          'grid', 'grid-template-columns', 'grid-gap',
+          'overflow', 'white-space', 'word-wrap', 'word-break',
+          'box-shadow', 'text-shadow', 'opacity', 'z-index'
+        ];
+        
+        importantProps.forEach(prop => {
+          const value = computedStyle.getPropertyValue(prop);
+          if (value && value !== 'none' && value !== 'normal' && value !== 'auto') {
+            styleStr += `${prop}:${value};`;
+          }
+        });
+        
+        clone.setAttribute('style', styleStr);
+        clone.removeAttribute('class');
+        clone.removeAttribute('id');
+        
+        // Copy text content for text nodes
+        if (originalEl.childNodes.length > 0) {
+          Array.from(originalEl.childNodes).forEach(child => {
+            if (child.nodeType === Node.TEXT_NODE) {
+              clone.appendChild(iframeDoc.createTextNode(child.textContent || ''));
+            } else if (child.nodeType === Node.ELEMENT_NODE) {
+              const childClone = captureAndApplyStyles(child as Element, clone);
+              if (childClone) clone.appendChild(childClone);
+            }
+          });
+        }
+        
+        if (targetParent) {
+          targetParent.appendChild(clone);
+        }
+        
+        return clone;
+      };
+
+      // Clone the entire element tree with inline styles into the iframe
+      const iframeBody = iframeDoc.body;
+      iframeBody.style.margin = '0';
+      iframeBody.style.padding = '0';
+      iframeBody.style.backgroundColor = '#ffffff';
+      
+      captureAndApplyStyles(element, iframeBody);
+
+      // Wait a bit for the iframe to render
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Capture the iframe content with html2canvas
+      const canvas = await html2canvas(iframeBody, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff',
+        logging: false,
+        width: element.offsetWidth,
+        height: element.offsetHeight,
       });
+
+      // Remove the iframe
+      document.body.removeChild(iframe);
 
       const imgData = canvas.toDataURL('image/png');
 
@@ -276,7 +367,22 @@ export function ResumePreview({ resume, template, onChange }: ResumePreviewProps
     }
   };
 
-  const exportToWord = () => {
+  // Expose export functions to parent via refs
+  React.useEffect(() => {
+    if (onExportPDF) {
+      const ref = onExportPDF();
+      ref.current = exportToPDF;
+    }
+  }, [onExportPDF]);
+
+  React.useEffect(() => {
+    if (onExportWord) {
+      const ref = onExportWord();
+      ref.current = exportToWord;
+    }
+  }, [onExportWord]);
+
+  const exportToWord = async () => {
     // Check authentication before downloading
     if (!isAuthenticated) {
       toast({
@@ -287,10 +393,265 @@ export function ResumePreview({ resume, template, onChange }: ResumePreviewProps
       return;
     }
 
-    toast({
-      title: 'Coming Soon',
-      description: 'Word export will be available in the next update.',
-    });
+    setIsExporting(true);
+
+    try {
+      const doc = new Document({
+        sections: [
+          {
+            properties: {},
+            children: [
+              // Header - Name
+              new Paragraph({
+                text: resume.name || 'Your Name',
+                heading: HeadingLevel.HEADING_1,
+                alignment: AlignmentType.CENTER,
+                spacing: { after: 200 },
+              }),
+              // Contact Information
+              ...(resume.email || resume.phone || resume.location
+                ? [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      spacing: { after: 400 },
+                      children: [
+                        resume.email ? new TextRun({ text: resume.email + ' ' }) : new TextRun(''),
+                        resume.phone
+                          ? new TextRun({ text: '| ' + resume.phone.toString() + ' ' })
+                          : new TextRun(''),
+                        resume.location ? new TextRun({ text: '| ' + resume.location }) : new TextRun(''),
+                      ],
+                    }),
+                  ]
+                : []),
+              // Professional Links
+              ...((resume.linkedin || resume.github || resume.website || resume.portfolio)
+                ? [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      spacing: { after: 400 },
+                      children: [
+                        resume.linkedin ? new TextRun({ text: resume.linkedin + ' ' }) : new TextRun(''),
+                        resume.github ? new TextRun({ text: '| ' + resume.github + ' ' }) : new TextRun(''),
+                        resume.website ? new TextRun({ text: '| ' + resume.website + ' ' }) : new TextRun(''),
+                        resume.portfolio ? new TextRun({ text: '| ' + resume.portfolio }) : new TextRun(''),
+                      ],
+                    }),
+                  ]
+                : []),
+              // Professional Summary
+              ...(resume.summary
+                ? [
+                    new Paragraph({
+                      text: 'Professional Summary',
+                      heading: HeadingLevel.HEADING_2,
+                      spacing: { before: 200, after: 200 },
+                    }),
+                    new Paragraph({
+                      text: resume.summary,
+                      spacing: { after: 400 },
+                    }),
+                  ]
+                : []),
+              // Work Experience
+              ...(resume.experience && resume.experience.length > 0
+                ? [
+                    new Paragraph({
+                      text: 'Work Experience',
+                      heading: HeadingLevel.HEADING_2,
+                      spacing: { before: 200, after: 200 },
+                    }),
+                    ...resume.experience.flatMap((exp) => [
+                      new Paragraph({
+                        children: [
+                          new TextRun({ text: exp.title || 'Job Title', bold: true }),
+                          new TextRun({ text: ' - ' + (exp.company || 'Company Name') }),
+                        ],
+                        spacing: { after: 100 },
+                      }),
+                      new Paragraph({
+                        children: [
+                          new TextRun({
+                            text:
+                              (exp.location ? exp.location + ' | ' : '') + (exp.date || 'Date Range'),
+                            italics: true,
+                          }),
+                        ],
+                        spacing: { after: 100 },
+                      }),
+                      ...(exp.description || []).map(
+                        (desc) =>
+                          new Paragraph({
+                            text: '• ' + desc,
+                            spacing: { after: 100 },
+                          }),
+                      ),
+                      new Paragraph({ text: '', spacing: { after: 200 } }),
+                    ]),
+                  ]
+                : []),
+              // Education
+              ...(resume.education && resume.education.length > 0
+                ? [
+                    new Paragraph({
+                      text: 'Education',
+                      heading: HeadingLevel.HEADING_2,
+                      spacing: { before: 200, after: 200 },
+                    }),
+                    ...resume.education.flatMap((edu) => [
+                      new Paragraph({
+                        children: [
+                          new TextRun({ text: edu.degree || 'Degree', bold: true }),
+                          new TextRun({ text: ' - ' + (edu.institution || 'Institution') }),
+                        ],
+                        spacing: { after: 100 },
+                      }),
+                      new Paragraph({
+                        children: [
+                          new TextRun({
+                            text:
+                              (edu.location ? edu.location + ' | ' : '') + (edu.date || 'Year'),
+                            italics: true,
+                          }),
+                        ],
+                        spacing: { after: 100 },
+                      }),
+                      ...(edu.gpa
+                        ? [
+                            new Paragraph({
+                              text: 'GPA: ' + edu.gpa,
+                              spacing: { after: 100 },
+                            }),
+                          ]
+                        : []),
+                      ...(edu.honors
+                        ? [
+                            new Paragraph({
+                              text: edu.honors,
+                              spacing: { after: 100 },
+                            }),
+                          ]
+                        : []),
+                      new Paragraph({ text: '', spacing: { after: 200 } }),
+                    ]),
+                  ]
+                : []),
+              // Skills
+              ...(resume.skills
+                ? [
+                    new Paragraph({
+                      text: 'Skills',
+                      heading: HeadingLevel.HEADING_2,
+                      spacing: { before: 200, after: 200 },
+                    }),
+                    ...Object.entries(resume.skills).flatMap(([category, skillList]) =>
+                      skillList && (skillList as string[]).length > 0
+                        ? [
+                            new Paragraph({
+                              children: [
+                                new TextRun({
+                                  text: category.charAt(0).toUpperCase() + category.slice(1) + ': ',
+                                  bold: true,
+                                }),
+                                new TextRun({ text: (skillList as string[]).join(', ') }),
+                              ],
+                              spacing: { after: 100 },
+                            }),
+                          ]
+                        : [],
+                    ),
+                  ]
+                : []),
+              // Projects
+              ...(resume.projects && resume.projects.length > 0
+                ? [
+                    new Paragraph({
+                      text: 'Projects',
+                      heading: HeadingLevel.HEADING_2,
+                      spacing: { before: 200, after: 200 },
+                    }),
+                    ...resume.projects.flatMap((proj) => [
+                      new Paragraph({
+                        children: [
+                          new TextRun({ text: proj.name || 'Project Name', bold: true }),
+                          ...(proj.link ? [new TextRun({ text: ' - ' + proj.link })] : []),
+                        ],
+                        spacing: { after: 100 },
+                      }),
+                      new Paragraph({
+                        text: proj.description || 'Project description',
+                        spacing: { after: 100 },
+                      }),
+                      ...(proj.technologies && proj.technologies.length > 0
+                        ? [
+                            new Paragraph({
+                              text: 'Technologies: ' + proj.technologies.join(', '),
+                              spacing: { after: 100 },
+                            }),
+                          ]
+                        : []),
+                      new Paragraph({ text: '', spacing: { after: 200 } }),
+                    ]),
+                  ]
+                : []),
+              // Certifications
+              ...(resume.certifications && resume.certifications.length > 0
+                ? [
+                    new Paragraph({
+                      text: 'Certifications',
+                      heading: HeadingLevel.HEADING_2,
+                      spacing: { before: 200, after: 200 },
+                    }),
+                    ...resume.certifications.flatMap((cert) => [
+                      new Paragraph({
+                        children: [
+                          new TextRun({ text: cert.name || 'Certification Name', bold: true }),
+                          new TextRun({ text: ' - ' + (cert.issuer || 'Issuing Organization') }),
+                        ],
+                        spacing: { after: 100 },
+                      }),
+                      new Paragraph({
+                        children: [
+                          new TextRun({
+                            text:
+                              (cert.credential ? 'Credential ID: ' + cert.credential + ' | ' : '') +
+                              (cert.date || 'Issue Date'),
+                            italics: true,
+                          }),
+                        ],
+                        spacing: { after: 100 },
+                      }),
+                      new Paragraph({ text: '', spacing: { after: 200 } }),
+                    ]),
+                  ]
+                : []),
+            ],
+          },
+        ],
+      });
+
+      const blob = await Packer.toBlob(doc);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${resume.name?.replace(/\s+/g, '-').toLowerCase() || 'resume'}.docx`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+
+      toast({
+        title: 'Resume exported!',
+        description: 'Your resume has been downloaded as a Word document.',
+      });
+    } catch (error) {
+      console.error('Error exporting to Word:', error);
+      toast({
+        title: 'Export failed',
+        description: 'Failed to export resume to Word. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const renderProfessionalTemplate = () => (

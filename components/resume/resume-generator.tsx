@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -45,6 +45,8 @@ export function ResumeGenerator() {
   const { toast } = useToast();
   const { isPro } = useSubscription();
   const { isAuthenticated, requireAuth } = useAuthGuard();
+  const exportPDFRef = useRef<(() => Promise<void>) | null>(null);
+  const exportWordRef = useRef<(() => Promise<void>) | null>(null);
 
   const generateResume = async () => {
     setIsGenerating(true);
@@ -88,7 +90,7 @@ export function ResumeGenerator() {
     setResumeData(resume);
   };
 
-  const handleDownload = (format: 'pdf' | 'docx') => {
+  const handleDownload = async (format: 'pdf' | 'docx') => {
     // Check if user is authenticated
     if (!isAuthenticated) {
       setPendingDownloadFormat(format);
@@ -96,11 +98,18 @@ export function ResumeGenerator() {
       return;
     }
 
-    // TODO: Implement actual download logic
-    toast({
-      title: `Downloading ${format.toUpperCase()}`,
-      description: `Your resume is being downloaded as ${format.toUpperCase()}`,
-    });
+    // Call the actual export functions from ResumePreview
+    if (format === 'pdf' && exportPDFRef.current) {
+      await exportPDFRef.current();
+    } else if (format === 'docx' && exportWordRef.current) {
+      await exportWordRef.current();
+    } else {
+      toast({
+        title: 'Error',
+        description: 'Export function not available. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleAuthDialogSignIn = () => {
@@ -216,7 +225,12 @@ export function ResumeGenerator() {
               >
                 <div className="absolute inset-0 shimmer opacity-10"></div>
                 <div className="relative z-10">
-                  <ResumePreview resume={resumeData} template={selectedTemplate} />
+                  <ResumePreview 
+                    resume={resumeData} 
+                    template={selectedTemplate}
+                    onExportPDF={() => exportPDFRef}
+                    onExportWord={() => exportWordRef}
+                  />
                 </div>
               </div>
 
@@ -467,7 +481,12 @@ export function ResumeGenerator() {
                 >
                   <div className="absolute inset-0 shimmer opacity-10"></div>
                   <div className="relative z-10">
-                    <ResumePreview resume={resumeData} template={selectedTemplate} />
+                    <ResumePreview 
+                      resume={resumeData} 
+                      template={selectedTemplate}
+                      onExportPDF={() => exportPDFRef}
+                      onExportWord={() => exportWordRef}
+                    />
                   </div>
                 </div>
               ) : (
