@@ -1144,6 +1144,29 @@
   opacity: 0;
 }
 
+/* Generic fade-in utility used across pages */
+@keyframes fade-in-generic {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in-generic 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* Simple animation delay utilities */
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-400 { animation-delay: 0.4s; }
+.animation-delay-600 { animation-delay: 0.6s; }
+.animation-delay-800 { animation-delay: 0.8s; }
+
 /* Performance-Optimized Animation Classes */
 .animate-slide-in-left {
   animation: slide-in-left 0.8s ease-out forwards;
