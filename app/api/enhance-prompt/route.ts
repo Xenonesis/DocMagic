@@ -1,4 +1,7 @@
 import { NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import { generateOpenRouterCompletion } from '@/lib/openrouter';
 
 export const maxDuration = 30;

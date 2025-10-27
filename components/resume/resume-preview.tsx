@@ -19,8 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useAuthGuard } from '@/lib/auth-utils';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+// Dynamic imports will be used inside handlers to avoid SSR/prerender issues
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from 'docx';
 
 interface ResumeData {
@@ -320,7 +319,7 @@ export function ResumePreview({ resume, template, onChange, onExportPDF, onExpor
       await new Promise(resolve => setTimeout(resolve, 100));
 
       // Capture the iframe content with html2canvas
-      const canvas = await html2canvas(iframeBody, {
+      const canvas = await ((await import('html2canvas')).default)(iframeBody, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
@@ -336,6 +335,7 @@ export function ResumePreview({ resume, template, onChange, onExportPDF, onExpor
       const imgData = canvas.toDataURL('image/png');
 
       // A4 dimensions in mm: 210 x 297
+      const { jsPDF } = await import('jspdf');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();

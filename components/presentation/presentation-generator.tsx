@@ -36,8 +36,7 @@ import {
   Maximize2,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+// Dynamic imports will be used inside handlers to avoid SSR/prerender issues
 
 type GenerationStep = 'input' | 'outline' | 'theme' | 'generated';
 
@@ -249,6 +248,7 @@ export function PresentationGenerator() {
     setIsExporting(true);
 
     try {
+      const { jsPDF } = await import('jspdf');
       const pdf = new jsPDF('landscape', 'pt', 'a4');
 
       for (let i = 0; i < slides.length; i++) {

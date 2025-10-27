@@ -91,7 +91,7 @@ export default function EditTemplatePage({ params }: EditTemplatePageProps) {
         <div className="floating-orb w-24 h-24 sm:w-36 sm:h-36 bolt-gradient opacity-20 bottom-20 -right-18"></div>
 
         <SiteHeader />
-        <main className="flex-1 relative z-10">
+        <main className="flex-1 relative z-10 page-with-header-only">
           <div className="container py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center items-center h-64">
               <div className="glass-effect p-8 rounded-2xl">
@@ -126,7 +126,7 @@ export default function EditTemplatePage({ params }: EditTemplatePageProps) {
       />
 
       <SiteHeader />
-      <main className="flex-1 relative z-10">
+      <main className="flex-1 relative z-10 page-with-header-only">
         <div className="w-full max-w-7xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
           {/* Enhanced Header */}
           <div className="text-center mb-8 sm:mb-12 w-full flex flex-col items-center">

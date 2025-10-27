@@ -21,8 +21,7 @@ import {
   Receipt,
   Palette,
 } from 'lucide-react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+// Dynamic imports will be used inside handlers to avoid SSR/prerender issues
 
 function uid() {
   return Math.random().toString(36).slice(2, 9);
@@ -117,6 +116,7 @@ export function InvoiceGenerator() {
         backgroundColor: '#ffffff',
       });
       const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = await import('jspdf');
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();

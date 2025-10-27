@@ -30,8 +30,9 @@ import {
   Check,
   Send,
 } from 'lucide-react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+// Defer heavy, browser-only libs to client at runtime to avoid SSR/prerender issues
+// We'll dynamic-import them inside the exportToPDF function.
+
 import {
   Dialog,
   DialogContent,
@@ -182,6 +183,9 @@ ${letterData.content || ''}
   };
 
   const exportToPDF = async () => {
+    // Dynamic import to avoid SSR/prerender requiring these modules
+    const html2canvas = (await import('html2canvas')).default;
+    const { jsPDF } = await import('jspdf');
     if (!letterData) return;
 
     // Check if user is authenticated

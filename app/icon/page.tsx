@@ -31,7 +31,7 @@ export default function IconPage() {
       />
 
       <SiteHeader />
-      <main className="flex-1 relative z-10 pt-20">
+      <main className="flex-1 relative z-10 page-with-header-only">
         <div className="container py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           {/* Enhanced Header */}
           <div className="text-center mb-6 sm:mb-8 md:mb-10 animate-in fade-in slide-in-from-top duration-700">

@@ -41,8 +41,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+// Dynamic imports will be used inside handlers to avoid SSR/prerender issues
 
 interface ResumeTemplatesProps {
   selectedTemplate: string;
@@ -1177,7 +1176,7 @@ export function ResumeTemplates({
       const element = document.getElementById('resume-preview');
       if (!element) throw new Error('Preview element not found');
 
-      const canvas = await html2canvas(element, {
+      const canvas = await ((await import('html2canvas')).default)(element, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
@@ -1187,6 +1186,7 @@ export function ResumeTemplates({
       const imgData = canvas.toDataURL('image/png');
 
       // A4 dimensions in mm: 210 x 297
+      const { jsPDF } = await import('jspdf');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();

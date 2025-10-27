@@ -31,7 +31,7 @@ export default function NewTemplatePage() {
       />
 
       <SiteHeader />
-      <main className="flex-1 relative z-10">
+      <main className="flex-1 relative z-10 page-with-header-only">
         <div className="container py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
           {/* Enhanced Header */}
           <div className="text-center mb-8 sm:mb-12">

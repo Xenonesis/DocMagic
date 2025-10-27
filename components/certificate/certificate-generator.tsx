@@ -33,8 +33,7 @@ import {
   Star,
   Palette,
 } from 'lucide-react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+// Dynamic imports will be used inside handlers to avoid SSR/prerender issues
 
 export function CertificateGenerator() {
   const [recipientName, setRecipientName] = useState('');
@@ -132,6 +131,7 @@ export function CertificateGenerator() {
       });
 
       const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = await import('jspdf');
       const pdf = new jsPDF({
         orientation: 'landscape',
         unit: 'mm',
