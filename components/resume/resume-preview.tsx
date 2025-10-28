@@ -276,12 +276,48 @@ export function ResumePreview({ resume, template, onChange, onExportPDF, onExpor
           'overflow', 'white-space', 'word-wrap', 'word-break',
           'box-shadow', 'text-shadow', 'opacity', 'z-index'
         ];
+
+        // Helper to normalize modern color formats (oklch, lab, lch) to rgb/rgba
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const toRGB = (val: string): string => {
+          try {
+            if (!ctx) return val;
+            // Reset and set to desired value; browser normalizes on readback
+            ctx.fillStyle = '#000';
+            // Some values like gradients are not supported by canvas fillStyle; will throw
+            (ctx as any).fillStyle = val;
+            const normalized = (ctx as any).fillStyle as string;
+            return typeof normalized === 'string' && normalized ? normalized : val;
+          } catch {
+            return val;
+          }
+        };
         
         importantProps.forEach(prop => {
-          const value = computedStyle.getPropertyValue(prop);
-          if (value && value !== 'none' && value !== 'normal' && value !== 'auto') {
-            styleStr += `${prop}:${value};`;
+          const raw = computedStyle.getPropertyValue(prop);
+          if (!raw || raw === 'none' || raw === 'normal' || raw === 'auto') return;
+          let value = raw.trim();
+
+          // If the value contains unsupported color functions, try to normalize or skip
+          const containsModern = value.includes('oklch(') || value.includes('lch(') || value.includes('lab(');
+          if (containsModern) {
+            // Attempt conversion for simple color properties
+            if (prop === 'color' || prop === 'background-color' || prop === 'border-color') {
+              const converted = toRGB(value);
+              if (converted && !converted.includes('oklch(') && !converted.includes('lch(') && !converted.includes('lab(')) {
+                value = converted;
+              } else {
+                // Skip if we can't convert
+                return;
+              }
+            } else {
+              // Skip complex properties (background, shadows, etc.) if they still contain modern colors
+              return;
+            }
           }
+
+          styleStr += `${prop}:${value};`;
         });
         
         clone.setAttribute('style', styleStr);

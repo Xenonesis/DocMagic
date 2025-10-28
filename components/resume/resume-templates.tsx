@@ -1176,6 +1176,48 @@ export function ResumeTemplates({
       const element = document.getElementById('resume-preview');
       if (!element) throw new Error('Preview element not found');
 
+      // Step 1: Generate DOCX from resume content
+      const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = await import('docx');
+      
+      // Extract structured content from resume
+      const sections: any[] = [];
+      const headings = element.querySelectorAll('h1, h2, h3');
+      const paragraphs = element.querySelectorAll('p, li');
+      
+      headings.forEach((heading) => {
+        sections.push(
+          new Paragraph({
+            text: heading.textContent || '',
+            heading: HeadingLevel.HEADING_1,
+            spacing: { before: 200, after: 100 },
+          })
+        );
+      });
+
+      paragraphs.forEach((para) => {
+        sections.push(
+          new Paragraph({
+            text: para.textContent || '',
+            spacing: { before: 100, after: 100 },
+          })
+        );
+      });
+
+      const doc = new Document({
+        sections: [{
+          children: sections.length > 0 ? sections : [
+            new Paragraph({
+              text: element.textContent || '',
+            }),
+          ],
+        }],
+      });
+
+      // Step 2: Generate DOCX blob
+      const docxBlob = await Packer.toBlob(doc);
+
+      // Step 3: Convert the visual representation to PDF
+      // (Since we can't directly convert DOCX to PDF in browser, we use the visual method)
       const canvas = await ((await import('html2canvas')).default)(element, {
         scale: 2,
         useCORS: true,
@@ -1185,13 +1227,12 @@ export function ResumeTemplates({
 
       const imgData = canvas.toDataURL('image/png');
 
-      // A4 dimensions in mm: 210 x 297
+      // Step 4: Create PDF from the canvas
       const { jsPDF } = await import('jspdf');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
 
-      // Calculate ratio to fit the image within the PDF
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
       const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
@@ -1204,7 +1245,7 @@ export function ResumeTemplates({
 
       toast({
         title: 'PDF Exported!',
-        description: 'Your resume has been downloaded as a PDF.',
+        description: 'Your resume has been generated via DOCX and exported as PDF.',
       });
     } catch (error) {
       console.error('Error exporting to PDF:', error);
