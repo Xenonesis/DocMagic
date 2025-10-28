@@ -23,11 +23,11 @@ async function extractTextFromFile(file) {
     // Handle PDF files
     if (fileName.endsWith('.pdf')) {
       // Load pdf-parse dynamically in the API route context
-      const pdfParse = require('pdf-parse');
-      // pdf-parse exports a default function, access it properly
-      const parser = pdfParse.default || pdfParse;
-      const data = await parser(buffer);
-      return data.text;
+      // pdf-parse v2 uses a class-based API
+      const { PDFParse } = require('pdf-parse');
+      const parser = new PDFParse({ data: buffer });
+      const result = await parser.getText();
+      return result.text;
     }
 
     // Handle DOCX files

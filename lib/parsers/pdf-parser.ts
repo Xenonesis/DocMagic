@@ -4,7 +4,9 @@
 
 export async function extractTextFromPdf(file: File): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
-  const pdfParse = require('pdf-parse');
-  const data = await pdfParse(buffer);
-  return data.text;
+  // pdf-parse v2 uses a class-based API
+  const { PDFParse } = require('pdf-parse');
+  const parser = new PDFParse({ data: buffer });
+  const result = await parser.getText();
+  return result.text;
 }
