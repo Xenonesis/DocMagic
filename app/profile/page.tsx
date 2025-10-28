@@ -11,6 +11,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { SiteHeader } from '@/components/site-header';
@@ -28,6 +31,13 @@ import {
   FileText,
   Activity,
   Camera,
+  CheckCircle,
+  AlertCircle,
+  Loader2,
+  TrendingUp,
+  Award,
+  Clock,
+  Sparkles,
 } from 'lucide-react';
 
 interface UserProfile {
@@ -49,6 +59,13 @@ interface UserStats {
   last_activity: string;
 }
 
+interface FormErrors {
+  name?: string;
+  phone?: string;
+  website?: string;
+  bio?: string;
+}
+
 export default function ProfilePage() {
   const { user: authUser, loading: authLoading } = useAuth();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -63,6 +80,8 @@ export default function ProfilePage() {
     phone: '',
     website: '',
   });
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [activeTab, setActiveTab] = useState('profile');
 
   const { toast } = useToast();
   const router = useRouter();
@@ -105,19 +124,8 @@ export default function ProfilePage() {
         website: profile.website || '',
       });
 
-      let templatesCount = 0;
       let documentsCount = 0;
       let lastActivity = authUser.created_at;
-
-      try {
-        const templatesResult = await supabase
-          .from('templates')
-          .select('id')
-          .eq('user_id', authUser.id);
-        templatesCount = templatesResult.data?.length || 0;
-      } catch (error) {
-        console.warn('Templates table not found or accessible:', error);
-      }
 
       try {
         const documentsResult = await supabase
@@ -133,7 +141,7 @@ export default function ProfilePage() {
       }
 
       setStats({
-        templates_created: templatesCount,
+        templates_created: 0, // Placeholder until templates table is properly configured
         documents_generated: documentsCount,
         last_activity: lastActivity,
       });
@@ -287,6 +295,41 @@ export default function ProfilePage() {
       .slice(0, 2);
   };
 
+  const validateForm = (): boolean => {
+    const errors: FormErrors = {};
+
+    if (formData.name && formData.name.length < 2) {
+      errors.name = 'Name must be at least 2 characters';
+    }
+
+    if (formData.phone && !/^\+?[\d\s\-\(\)]{10,}$/.test(formData.phone)) {
+      errors.phone = 'Please enter a valid phone number';
+    }
+
+    if (formData.website && !/^https?:\/\/.+/.test(formData.website)) {
+      errors.website = 'Please enter a valid URL starting with http:// or https://';
+    }
+
+    if (formData.bio && formData.bio.length > 500) {
+      errors.bio = 'Bio must be less than 500 characters';
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const getCompletionPercentage = () => {
+    if (!userProfile) return 0;
+    let completed = 1; // email is always there
+    if (userProfile.name) completed++;
+    if (userProfile.bio) completed++;
+    if (userProfile.location) completed++;
+    if (userProfile.phone) completed++;
+    if (userProfile.website) completed++;
+    if (userProfile.avatar_url) completed++;
+    return Math.round((completed / 7) * 100);
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -319,271 +362,464 @@ export default function ProfilePage() {
     );
   } else {
     content = (
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
-            <p className="text-muted-foreground">Manage your account settings and preferences</p>
-          </div>
-          {!editing ? (
-            <Button onClick={() => setEditing(true)}>
-              <Edit3 className="mr-2 h-4 w-4" />
-              Edit Profile
-            </Button>
-          ) : (
-            <div className="flex gap-2">
-              <Button onClick={handleSave} disabled={saving}>
-                <Save className="mr-2 h-4 w-4" />
-                {saving ? 'Saving...' : 'Save'}
-              </Button>
-              <Button variant="outline" onClick={handleCancel}>
-                <X className="mr-2 h-4 w-4" />
-                Cancel
-              </Button>
+      <TooltipProvider>
+        <div className="max-w-6xl mx-auto space-y-8">
+          {/* Header Section */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
+              <p className="text-muted-foreground">Manage your account settings and preferences</p>
             </div>
-          )}
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="md:col-span-2">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center space-x-4">
-                  <div className="relative">
-                    <Avatar className="h-20 w-20">
-                      <AvatarImage src={userProfile.avatar_url} alt={userProfile.name} />
-                      <AvatarFallback className="text-lg">
-                        {userProfile.name ? getInitials(userProfile.name) : <User className="h-8 w-8" />}
-                      </AvatarFallback>
-                    </Avatar>
-                    {editing && (
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full p-0"
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={uploadingAvatar}
-                      >
-                        <Camera className="h-4 w-4" />
-                      </Button>
-                    )}
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleAvatarUpload}
-                      className="hidden"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <CardTitle className="text-2xl">{userProfile.name || 'Anonymous User'}</CardTitle>
-                    <CardDescription className="flex items-center mt-1">
-                      <Mail className="mr-2 h-4 w-4" />
-                      {userProfile.email}
-                    </CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">Basic Information</h3>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div>
-                      <Label htmlFor="name">Full Name</Label>
-                      {editing ? (
-                        <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-                          placeholder="Enter your full name"
-                        />
-                      ) : (
-                        <p className="mt-1 text-sm text-muted-foreground">{userProfile.name || 'Not provided'}</p>
-                      )}
-                    </div>
-                    <div>
-                      <Label htmlFor="email">Email</Label>
-                      <p className="mt-1 text-sm text-muted-foreground">{userProfile.email}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div>
-                      <Label htmlFor="phone">Phone</Label>
-                      {editing ? (
-                        <Input
-                          id="phone"
-                          value={formData.phone}
-                          onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
-                          placeholder="Enter your phone number"
-                        />
-                      ) : (
-                        <p className="mt-1 text-sm text-muted-foreground flex items-center">
-                          {userProfile.phone ? (
-                            <>
-                              <Phone className="mr-2 h-4 w-4" />
-                              {userProfile.phone}
-                            </>
-                          ) : (
-                            'Not provided'
-                          )}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <Label htmlFor="location">Location</Label>
-                      {editing ? (
-                        <Input
-                          id="location"
-                          value={formData.location}
-                          onChange={(e) => setFormData((prev) => ({ ...prev, location: e.target.value }))}
-                          placeholder="Enter your location"
-                        />
-                      ) : (
-                        <p className="mt-1 text-sm text-muted-foreground flex items-center">
-                          {userProfile.location ? (
-                            <>
-                              <MapPin className="mr-2 h-4 w-4" />
-                              {userProfile.location}
-                            </>
-                          ) : (
-                            'Not provided'
-                          )}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <Label htmlFor="website">Website</Label>
-                    {editing ? (
-                      <Input
-                        id="website"
-                        value={formData.website}
-                        onChange={(e) => setFormData((prev) => ({ ...prev, website: e.target.value }))}
-                        placeholder="Enter your website URL"
-                      />
-                    ) : (
-                      <p className="mt-1 text-sm text-muted-foreground flex items-center">
-                        {userProfile.website ? (
-                          <>
-                            <Globe className="mr-2 h-4 w-4" />
-                            <a href={userProfile.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                              {userProfile.website}
-                            </a>
-                          </>
-                        ) : (
-                          'Not provided'
-                        )}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div>
-                  <Label htmlFor="bio">Bio</Label>
-                  {editing ? (
-                    <Textarea
-                      id="bio"
-                      value={formData.bio}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, bio: e.target.value }))}
-                      placeholder="Tell us about yourself..."
-                      rows={4}
-                    />
+            {!editing ? (
+              <Button onClick={() => setEditing(true)} className="hover-lift">
+                <Edit3 className="mr-2 h-4 w-4" />
+                Edit Profile
+              </Button>
+            ) : (
+              <div className="flex gap-2">
+                <Button onClick={handleSave} disabled={saving} className="hover-lift">
+                  {saving ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
-                    <p className="mt-1 text-sm text-muted-foreground">{userProfile.bio || 'No bio provided'}</p>
+                    <Save className="mr-2 h-4 w-4" />
                   )}
-                </div>
-              </CardContent>
-            </Card>
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </Button>
+                <Button variant="outline" onClick={handleCancel} className="hover-lift">
+                  <X className="mr-2 h-4 w-4" />
+                  Cancel
+                </Button>
+              </div>
+            )}
           </div>
 
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Activity className="mr-2 h-5 w-5" />
-                  Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Templates Created</span>
-                  <Badge variant="secondary">{stats?.templates_created || 0}</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Documents Generated</span>
-                  <Badge variant="secondary">{stats?.documents_generated || 0}</Badge>
-                </div>
-              </CardContent>
-            </Card>
+          {/* Profile Completion Progress */}
+          <Card className="card-sky">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium">Profile Completion</span>
+                <span className="text-sm text-muted-foreground">{getCompletionPercentage()}%</span>
+              </div>
+              <Progress value={getCompletionPercentage()} className="h-2" />
+              <p className="text-xs text-muted-foreground mt-2">
+                Complete your profile to unlock all features
+              </p>
+            </CardContent>
+          </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Shield className="mr-2 h-5 w-5" />
-                  Account Info
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label className="text-sm font-medium">Member Since</Label>
-                  <p className="text-sm text-muted-foreground flex items-center mt-1">
-                    <Calendar className="mr-2 h-4 w-4" />
-                    {formatDate(userProfile.created_at)}
-                  </p>
+          {/* Main Content with Tabs */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="profile" className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                Profile
+              </TabsTrigger>
+              <TabsTrigger value="activity" className="flex items-center gap-2">
+                <Activity className="h-4 w-4" />
+                Activity
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="flex items-center gap-2">
+                <Shield className="h-4 w-4" />
+                Account
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="profile" className="space-y-6">
+              <div className="grid gap-8 lg:grid-cols-3">
+                {/* Profile Form */}
+                <div className="lg:col-span-2 space-y-6">
+                  <Card className="hover-lift">
+                    <CardHeader>
+                      <div className="flex items-center space-x-4">
+                        <div className="relative group">
+                          <Avatar className="h-24 w-24 ring-4 ring-background shadow-lg">
+                            <AvatarImage src={userProfile.avatar_url} alt={userProfile.name} />
+                            <AvatarFallback className="text-xl bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                              {userProfile.name ? getInitials(userProfile.name) : <User className="h-8 w-8" />}
+                            </AvatarFallback>
+                          </Avatar>
+                          {editing && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  size="sm"
+                                  className="absolute -bottom-2 -right-2 h-10 w-10 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-primary hover:bg-primary/90"
+                                  onClick={() => fileInputRef.current?.click()}
+                                  disabled={uploadingAvatar}
+                                >
+                                  {uploadingAvatar ? (
+                                    <Loader2 className="h-5 w-5 animate-spin" />
+                                  ) : (
+                                    <Camera className="h-5 w-5" />
+                                  )}
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Change profile picture</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleAvatarUpload}
+                            className="hidden"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <CardTitle className="text-2xl">{userProfile.name || 'Anonymous User'}</CardTitle>
+                          <CardDescription className="flex items-center mt-1">
+                            <Mail className="mr-2 h-4 w-4" />
+                            {userProfile.email}
+                          </CardDescription>
+                          {userProfile.bio && (
+                            <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+                              {userProfile.bio}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      {/* Basic Information */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-4 flex items-center">
+                          <User className="mr-2 h-5 w-5" />
+                          Basic Information
+                        </h3>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label htmlFor="name" className="text-sm font-medium">
+                              Full Name {formErrors.name && <span className="text-destructive">*</span>}
+                            </Label>
+                            {editing ? (
+                              <Input
+                                id="name"
+                                value={formData.name}
+                                onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+                                placeholder="Enter your full name"
+                                className={formErrors.name ? 'border-destructive' : ''}
+                              />
+                            ) : (
+                              <p className="text-sm text-muted-foreground py-2 px-3 bg-muted rounded-md">
+                                {userProfile.name || 'Not provided'}
+                              </p>
+                            )}
+                            {formErrors.name && (
+                              <p className="text-xs text-destructive flex items-center">
+                                <AlertCircle className="h-3 w-3 mr-1" />
+                                {formErrors.name}
+                              </p>
+                            )}
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium">Email Address</Label>
+                            <p className="text-sm text-muted-foreground py-2 px-3 bg-muted rounded-md flex items-center">
+                              <Mail className="h-4 w-4 mr-2" />
+                              {userProfile.email}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Contact Information */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-4 flex items-center">
+                          <Phone className="mr-2 h-5 w-5" />
+                          Contact Information
+                        </h3>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label htmlFor="phone" className="text-sm font-medium">
+                              Phone Number {formErrors.phone && <span className="text-destructive">*</span>}
+                            </Label>
+                            {editing ? (
+                              <Input
+                                id="phone"
+                                value={formData.phone}
+                                onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
+                                placeholder="+1 (555) 123-4567"
+                                className={formErrors.phone ? 'border-destructive' : ''}
+                              />
+                            ) : (
+                              <p className="text-sm text-muted-foreground py-2 px-3 bg-muted rounded-md flex items-center">
+                                {userProfile.phone ? (
+                                  <>
+                                    <Phone className="h-4 w-4 mr-2" />
+                                    {userProfile.phone}
+                                  </>
+                                ) : (
+                                  'Not provided'
+                                )}
+                              </p>
+                            )}
+                            {formErrors.phone && (
+                              <p className="text-xs text-destructive flex items-center">
+                                <AlertCircle className="h-3 w-3 mr-1" />
+                                {formErrors.phone}
+                              </p>
+                            )}
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="location" className="text-sm font-medium">Location</Label>
+                            {editing ? (
+                              <Input
+                                id="location"
+                                value={formData.location}
+                                onChange={(e) => setFormData((prev) => ({ ...prev, location: e.target.value }))}
+                                placeholder="City, Country"
+                              />
+                            ) : (
+                              <p className="text-sm text-muted-foreground py-2 px-3 bg-muted rounded-md flex items-center">
+                                {userProfile.location ? (
+                                  <>
+                                    <MapPin className="h-4 w-4 mr-2" />
+                                    {userProfile.location}
+                                  </>
+                                ) : (
+                                  'Not provided'
+                                )}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="mt-4 space-y-2">
+                          <Label htmlFor="website" className="text-sm font-medium">
+                            Website {formErrors.website && <span className="text-destructive">*</span>}
+                          </Label>
+                          {editing ? (
+                            <Input
+                              id="website"
+                              value={formData.website}
+                              onChange={(e) => setFormData((prev) => ({ ...prev, website: e.target.value }))}
+                              placeholder="https://yourwebsite.com"
+                              className={formErrors.website ? 'border-destructive' : ''}
+                            />
+                          ) : (
+                            <p className="text-sm text-muted-foreground py-2 px-3 bg-muted rounded-md flex items-center">
+                              {userProfile.website ? (
+                                <>
+                                  <Globe className="h-4 w-4 mr-2" />
+                                  <a
+                                    href={userProfile.website}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-primary hover:underline"
+                                  >
+                                    {userProfile.website}
+                                  </a>
+                                </>
+                              ) : (
+                                'Not provided'
+                              )}
+                            </p>
+                          )}
+                          {formErrors.website && (
+                            <p className="text-xs text-destructive flex items-center">
+                              <AlertCircle className="h-3 w-3 mr-1" />
+                              {formErrors.website}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      {/* Bio */}
+                      <div className="space-y-2">
+                        <Label htmlFor="bio" className="text-sm font-medium">
+                          Bio {formErrors.bio && <span className="text-destructive">*</span>}
+                        </Label>
+                        {editing ? (
+                          <Textarea
+                            id="bio"
+                            value={formData.bio}
+                            onChange={(e) => setFormData((prev) => ({ ...prev, bio: e.target.value }))}
+                            placeholder="Tell us about yourself, your interests, and what you do..."
+                            rows={4}
+                            className={`resize-none ${formErrors.bio ? 'border-destructive' : ''}`}
+                          />
+                        ) : (
+                          <p className="text-sm text-muted-foreground py-3 px-3 bg-muted rounded-md min-h-[100px]">
+                            {userProfile.bio || 'No bio provided'}
+                          </p>
+                        )}
+                        {formErrors.bio && (
+                          <p className="text-xs text-destructive flex items-center">
+                            <AlertCircle className="h-3 w-3 mr-1" />
+                            {formErrors.bio}
+                          </p>
+                        )}
+                        {editing && (
+                          <p className="text-xs text-muted-foreground">
+                            {formData.bio.length}/500 characters
+                          </p>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-                {userProfile.last_sign_in_at && (
-                  <div>
-                    <Label className="text-sm font-medium">Last Sign In</Label>
-                    <p className="text-sm text-muted-foreground flex items-center mt-1">
-                      <Calendar className="mr-2 h-4 w-4" />
-                      {formatDate(userProfile.last_sign_in_at)}
+
+                {/* Sidebar */}
+                <div className="space-y-6">
+                  {/* Activity Stats */}
+                  <Card className="card-mint hover-lift">
+                    <CardHeader>
+                      <CardTitle className="flex items-center">
+                        <Activity className="mr-2 h-5 w-5" />
+                        Activity Overview
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg">
+                        <div className="flex items-center">
+                          <FileText className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span className="text-sm">Documents Created</span>
+                        </div>
+                        <Badge variant="secondary" className="font-mono">
+                          {stats?.documents_generated || 0}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg">
+                        <div className="flex items-center">
+                          <TrendingUp className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span className="text-sm">Templates Used</span>
+                        </div>
+                        <Badge variant="secondary" className="font-mono">
+                          {stats?.templates_created || 0}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg">
+                        <div className="flex items-center">
+                          <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span className="text-sm">Last Activity</span>
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {stats?.last_activity ? formatDate(stats.last_activity) : 'Never'}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Quick Actions */}
+                  <Card className="card-sky hover-lift">
+                    <CardHeader>
+                      <CardTitle className="flex items-center">
+                        <Award className="mr-2 h-5 w-5" />
+                        Quick Actions
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start hover-lift"
+                        onClick={() => router.push('/templates')}
+                      >
+                        <FileText className="mr-2 h-4 w-4" />
+                        Browse Templates
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start hover-lift"
+                        onClick={() => router.push('/resume')}
+                      >
+                        <FileText className="mr-2 h-4 w-4" />
+                        Create Resume
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start hover-lift"
+                        onClick={() => router.push('/settings')}
+                      >
+                        <Shield className="mr-2 h-4 w-4" />
+                        Account Settings
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="activity" className="space-y-6">
+              <Card className="hover-lift">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Activity className="mr-2 h-5 w-5" />
+                    Recent Activity
+                  </CardTitle>
+                  <CardDescription>
+                    Your recent document creation and template usage activity
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-12">
+                    <Activity className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">Activity Tracking</h3>
+                    <p className="text-muted-foreground">
+                      Activity tracking will be available once you start creating documents.
                     </p>
                   </div>
-                )}
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <FileText className="mr-2 h-5 w-5" />
-                  Quick Actions
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <Button variant="outline" className="w-full justify-start" onClick={() => router.push('/templates')}>
-                  <FileText className="mr-2 h-4 w-4" />
-                  Browse Templates
-                </Button>
-                <Button variant="outline" className="w-full justify-start" onClick={() => router.push('/resume')}>
-                  <FileText className="mr-2 h-4 w-4" />
-                  Create Resume
-                </Button>
-                <Button variant="outline" className="w-full justify-start" onClick={() => router.push('/settings')}>
-                  <Shield className="mr-2 h-4 w-4" />
-                  Account Settings
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+            <TabsContent value="settings" className="space-y-6">
+              <Card className="hover-lift">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Shield className="mr-2 h-5 w-5" />
+                    Account Information
+                  </CardTitle>
+                  <CardDescription>
+                    Your account details and security information
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Member Since</Label>
+                      <div className="flex items-center p-3 bg-muted rounded-lg">
+                        <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
+                        <span className="text-sm">{formatDate(userProfile.created_at)}</span>
+                      </div>
+                    </div>
+                    {userProfile.last_sign_in_at && (
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">Last Sign In</Label>
+                        <div className="flex items-center p-3 bg-muted rounded-lg">
+                          <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span className="text-sm">{formatDate(userProfile.last_sign_in_at)}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="pt-4 border-t">
+                    <Button
+                      variant="outline"
+                      onClick={() => router.push('/settings')}
+                      className="hover-lift"
+                    >
+                      <Shield className="mr-2 h-4 w-4" />
+                      Manage Account Settings
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
-      </div>
+      </TooltipProvider>
     );
   }
 
   return (
     <div className="min-h-screen flex flex-col">
       <SiteHeader />
-      <main className="flex-1 page-with-header-only">
-        <div className="container mx-auto py-8">{content}</div>
+      <main className="flex-1 page-with-header">
+        <div className="container mx-auto px-4 py-8 max-w-5xl">{content}</div>
       </main>
     </div>
   );
