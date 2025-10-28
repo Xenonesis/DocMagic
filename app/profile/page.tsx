@@ -38,6 +38,7 @@ import {
   Award,
   Clock,
   Sparkles,
+  RefreshCw,
 } from 'lucide-react';
 
 interface UserProfile {
@@ -59,6 +60,15 @@ interface UserStats {
   last_activity: string;
 }
 
+interface ActivityItem {
+  id: string;
+  title: string;
+  type: string;
+  action: 'created' | 'updated';
+  created_at: string;
+  updated_at: string;
+}
+
 interface FormErrors {
   name?: string;
   phone?: string;
@@ -70,6 +80,8 @@ export default function ProfilePage() {
   const { user: authUser, loading: authLoading } = useAuth();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<UserStats | null>(null);
+  const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([]);
+  const [loadingActivity, setLoadingActivity] = useState(false);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -110,7 +122,7 @@ export default function ProfilePage() {
         bio: authUser.user_metadata?.bio || '',
         location: authUser.user_metadata?.location || '',
         phone: authUser.user_metadata?.phone || '',
-        website: authUser.user_metadata?.website || '',
+        website: authUser.website || '',
         created_at: authUser.created_at,
         last_sign_in_at: authUser.last_sign_in_at || undefined,
       };
@@ -125,26 +137,56 @@ export default function ProfilePage() {
       });
 
       let documentsCount = 0;
+      let templatesCount = 0;
       let lastActivity = authUser.created_at;
 
       try {
+        // Get documents count and data
         const documentsResult = await supabase
           .from('documents')
           .select('id, created_at')
           .eq('user_id', authUser.id)
-          .order('created_at', { ascending: false })
-          .limit(1);
+          .order('created_at', { ascending: false });
+        
         documentsCount = documentsResult.data?.length || 0;
-        lastActivity = documentsResult.data?.[0]?.created_at || authUser.created_at;
+        
+        if (documentsResult.data && documentsResult.data.length > 0) {
+          lastActivity = documentsResult.data[0].created_at;
+        }
       } catch (error) {
         console.warn('Documents table not found or accessible:', error);
       }
 
+      try {
+        // Get templates count
+        const templatesResult = await supabase
+          .from('templates')
+          .select('id, created_at')
+          .eq('user_id', authUser.id)
+          .order('created_at', { ascending: false });
+        
+        templatesCount = templatesResult.data?.length || 0;
+        
+        // Update last activity if template is more recent
+        if (templatesResult.data && templatesResult.data.length > 0) {
+          const templateDate = new Date(templatesResult.data[0].created_at);
+          const currentLastActivity = new Date(lastActivity);
+          if (templateDate > currentLastActivity) {
+            lastActivity = templatesResult.data[0].created_at;
+          }
+        }
+      } catch (error) {
+        console.warn('Templates table not found or accessible:', error);
+      }
+
       setStats({
-        templates_created: 0, // Placeholder until templates table is properly configured
+        templates_created: templatesCount,
         documents_generated: documentsCount,
         last_activity: lastActivity,
       });
+
+      // Load recent activity
+      await loadRecentActivity();
     } catch (error) {
       console.error('Error loading profile:', error);
       toast({
@@ -152,6 +194,76 @@ export default function ProfilePage() {
         description: 'Failed to load profile data',
         variant: 'destructive',
       });
+    }
+  };
+
+  const loadRecentActivity = async () => {
+    if (!authUser) return;
+    
+    setLoadingActivity(true);
+    try {
+      const activities: ActivityItem[] = [];
+
+      // Fetch recent documents
+      try {
+        const { data: documents, error: docsError } = await supabase
+          .from('documents')
+          .select('id, title, type, created_at, updated_at')
+          .eq('user_id', authUser.id)
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        if (!docsError && documents) {
+          documents.forEach((doc) => {
+            activities.push({
+              id: doc.id,
+              title: doc.title,
+              type: doc.type,
+              action: 'created',
+              created_at: doc.created_at,
+              updated_at: doc.updated_at,
+            });
+          });
+        }
+      } catch (error) {
+        console.warn('Could not fetch documents:', error);
+      }
+
+      // Fetch recent templates
+      try {
+        const { data: templates, error: templatesError } = await supabase
+          .from('templates')
+          .select('id, title, type, created_at, updated_at')
+          .eq('user_id', authUser.id)
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        if (!templatesError && templates) {
+          templates.forEach((template) => {
+            activities.push({
+              id: template.id,
+              title: template.title,
+              type: `${template.type} template`,
+              action: 'created',
+              created_at: template.created_at,
+              updated_at: template.updated_at,
+            });
+          });
+        }
+      } catch (error) {
+        console.warn('Could not fetch templates:', error);
+      }
+
+      // Sort by creation date (most recent first) and take top 15
+      const sortedActivities = activities
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        .slice(0, 15);
+
+      setRecentActivity(sortedActivities);
+    } catch (error) {
+      console.error('Error loading recent activity:', error);
+    } finally {
+      setLoadingActivity(false);
     }
   };
 
@@ -336,6 +448,34 @@ export default function ProfilePage() {
       month: 'long',
       day: 'numeric',
     });
+  };
+
+  const formatRelativeTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) {
+      return 'just now';
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
+    } else if (diffInSeconds < 604800) {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days} ${days === 1 ? 'day' : 'days'} ago`;
+    } else if (diffInSeconds < 2592000) {
+      const weeks = Math.floor(diffInSeconds / 604800);
+      return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
+    } else if (diffInSeconds < 31536000) {
+      const months = Math.floor(diffInSeconds / 2592000);
+      return `${months} ${months === 1 ? 'month' : 'months'} ago`;
+    } else {
+      const years = Math.floor(diffInSeconds / 31536000);
+      return `${years} ${years === 1 ? 'year' : 'years'} ago`;
+    }
   };
 
   let content: React.ReactNode;
@@ -746,22 +886,138 @@ export default function ProfilePage() {
             <TabsContent value="activity" className="space-y-6">
               <Card className="hover-lift">
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Activity className="mr-2 h-5 w-5" />
-                    Recent Activity
-                  </CardTitle>
-                  <CardDescription>
-                    Your recent document creation and template usage activity
-                  </CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="flex items-center">
+                        <Activity className="mr-2 h-5 w-5" />
+                        Recent Activity
+                      </CardTitle>
+                      <CardDescription>
+                        Your recent document creation and template usage activity
+                      </CardDescription>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={loadRecentActivity}
+                      disabled={loadingActivity}
+                      className="hover-lift"
+                    >
+                      <RefreshCw className={`h-4 w-4 mr-2 ${loadingActivity ? 'animate-spin' : ''}`} />
+                      Refresh
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-12">
-                    <Activity className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">Activity Tracking</h3>
-                    <p className="text-muted-foreground">
-                      Activity tracking will be available once you start creating documents.
-                    </p>
-                  </div>
+                  {loadingActivity ? (
+                    <div className="flex items-center justify-center py-12">
+                      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                      <span className="ml-3 text-muted-foreground">Loading activity...</span>
+                    </div>
+                  ) : recentActivity.length === 0 ? (
+                    <div className="text-center py-12">
+                      <Activity className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">No Activity Yet</h3>
+                      <p className="text-muted-foreground mb-4">
+                        Start creating documents and templates to see your activity here.
+                      </p>
+                      <Button onClick={() => router.push('/resume')} className="hover-lift">
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        Create Your First Document
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      {recentActivity.map((activity, index) => {
+                        const isRecent = new Date().getTime() - new Date(activity.created_at).getTime() < 24 * 60 * 60 * 1000;
+                        const wasUpdated = activity.created_at !== activity.updated_at;
+                        
+                        return (
+                          <div
+                            key={`${activity.id}-${index}`}
+                            className="flex items-center justify-between p-4 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-border"
+                          >
+                            <div className="flex items-center gap-4 flex-1 min-w-0">
+                              <div className="flex-shrink-0">
+                                {activity.type.includes('resume') && (
+                                  <div className="h-10 w-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                                    <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                  </div>
+                                )}
+                                {activity.type.includes('presentation') && (
+                                  <div className="h-10 w-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                                    <FileText className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                  </div>
+                                )}
+                                {activity.type.includes('letter') && (
+                                  <div className="h-10 w-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                                    <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
+                                  </div>
+                                )}
+                                {activity.type.includes('cv') && (
+                                  <div className="h-10 w-10 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                                    <FileText className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                                  </div>
+                                )}
+                                {activity.type.includes('template') && !activity.type.includes('resume') && !activity.type.includes('presentation') && !activity.type.includes('letter') && !activity.type.includes('cv') && (
+                                  <div className="h-10 w-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                                    <FileText className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <h4 className="font-medium truncate">{activity.title}</h4>
+                                  {isRecent && (
+                                    <Badge variant="secondary" className="text-xs">
+                                      New
+                                    </Badge>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <Badge variant="outline" className="text-xs capitalize">
+                                    {activity.type}
+                                  </Badge>
+                                  <span className="text-xs text-muted-foreground">•</span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {wasUpdated ? 'Updated' : 'Created'} {formatRelativeTime(wasUpdated ? activity.updated_at : activity.created_at)}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 flex-shrink-0 ml-4">
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="hover-lift"
+                                      onClick={() => {
+                                        if (activity.type.includes('template')) {
+                                          router.push(`/templates/${activity.id}/edit`);
+                                        } else if (activity.type === 'presentation') {
+                                          router.push(`/presentation/view/${activity.id}`);
+                                        } else {
+                                          // For other document types, redirect to the appropriate page
+                                          router.push(`/${activity.type}`);
+                                        }
+                                      }}
+                                    >
+                                      <Edit3 className="h-4 w-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>View/Edit</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
