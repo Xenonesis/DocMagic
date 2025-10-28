@@ -115,6 +115,7 @@ export function getActivityDescription(activity: string): string {
     [PROTECTED_ACTIVITIES.CHANGE_SETTINGS]: 'change your settings',
     [PROTECTED_ACTIVITIES.MAKE_PAYMENT]: 'make a payment',
     [PROTECTED_ACTIVITIES.UPLOAD_FILE]: 'upload files',
+    join_team: 'join the team',
   };
 
   return descriptions[activity] || 'perform this action';

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
 import { useTheme } from 'next-themes';
 import { useUsageStats } from '@/hooks/use-usage-stats';
+import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -198,11 +199,20 @@ export default function SettingsPage() {
   };
 
   const handleInviteTeam = () => {
+    const inviteUrl = `${window.location.origin}/auth/signin?activity=join_team&redirectTo=/settings`;
     const subject = encodeURIComponent('Join me on Docverse');
     const body = encodeURIComponent(
-      'Hey! I am using Docverse to generate polished documents in minutes. Join me so we can collaborate on templates together.',
+      `Hey! I am using Docverse to generate polished documents in minutes. Join me so we can collaborate on templates together.\n\nClick here to join: ${inviteUrl}`,
     );
-    window.open(`mailto:?subject=${subject}&body=${body}`);
+    navigator.clipboard.writeText(inviteUrl).then(() => {
+      toast({
+        title: 'Invite link copied!',
+        description: 'Share this link with your team members to invite them to Docverse.',
+      });
+    }).catch(() => {
+      // Fallback: open mailto with the link in body
+      window.open(`mailto:?subject=${subject}&body=${body}`);
+    });
   };
 
   if (loading) {
