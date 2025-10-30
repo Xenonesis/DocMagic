@@ -10,7 +10,8 @@ import {
   Code,
   Award,
   Receipt,
-  BookOpen, 
+  BookOpen,
+  Plus,
 } from 'lucide-react';
 
 export const navItems = [
@@ -79,6 +80,12 @@ export const navItems = [
     label: 'Templates',
     icon: FileText,
     tooltip: 'Browse and manage document templates',
+  },
+  {
+    href: '/more',
+    label: 'More',
+    icon: Plus,
+    tooltip: 'Explore more document types and tools',
   },
   {
     href: '/documentation',

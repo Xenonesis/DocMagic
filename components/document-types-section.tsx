@@ -211,17 +211,31 @@ export function DocumentTypesSection() {
           <p className="text-sm text-muted-foreground mb-4">
             Not sure which one to choose? Start with our most popular option
           </p>
-          <Button
-            asChild
-            size="lg"
-            className="bolt-gradient text-white font-bold px-8 py-6 rounded-full hover:scale-105 transition-all duration-300"
-          >
-            <Link href="/resume" className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5" />
-              Create Resume Now
-              <ArrowRight className="h-5 w-5" />
-            </Link>
-          </Button>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button
+              asChild
+              size="lg"
+              className="bolt-gradient text-white font-bold px-8 py-6 rounded-full hover:scale-105 transition-all duration-300"
+            >
+              <Link href="/resume" className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                Create Resume Now
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="font-bold px-8 py-6 rounded-full hover:scale-105 transition-all duration-300 border-2"
+            >
+              <Link href="/more" className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                Explore More Types
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </section>
