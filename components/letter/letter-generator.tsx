@@ -42,6 +42,14 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 
+// Import all 5 new features
+import { VoiceInputButton } from '@/components/ui/voice-input-button';
+import { TranslationPanel } from '@/components/ui/translation-panel';
+import { PersonalizationPanel } from '@/components/ui/personalization-panel';
+import { SmartSuggestionsPanel } from '@/components/ui/smart-suggestions-panel';
+import { DocumentComparisonPanel } from '@/components/ui/document-comparison-panel';
+import type { UserPreferences } from '@/lib/personalization-service';
+
 export function LetterGenerator() {
   const [prompt, setPrompt] = useState('');
   const [fromName, setFromName] = useState('');
@@ -62,6 +70,37 @@ export function LetterGenerator() {
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const { toast } = useToast();
   const { isAuthenticated, requireAuth } = useAuthGuard();
+
+  // State for new features
+  const [savedVersion, setSavedVersion] = useState('');
+  const [userPreferences, setUserPreferences] = useState<UserPreferences>({
+    industry: '',
+    role: '',
+    experienceLevel: 'mid',
+    tonePreference: 'professional',
+    stylePreference: 'detailed',
+  });
+
+  // Handlers for new features
+  const handleVoiceTranscript = (transcript: string) => {
+    setPrompt(prev => prev ? prev + ' ' + transcript : transcript);
+  };
+
+  const handleTranslated = (translatedContent: string) => {
+    setPrompt(translatedContent);
+  };
+
+  const handlePersonalized = (personalizedContent: string) => {
+    setPrompt(personalizedContent);
+  };
+
+  const handleSaveVersion = () => {
+    setSavedVersion(prompt);
+    toast({
+      title: 'Version saved',
+      description: 'You can now compare this version with future edits',
+    });
+  };
 
   const generateLetter = async () => {
     if (!prompt.trim()) {
@@ -457,12 +496,50 @@ ${letterData.content || ''}
               </Label>
               <Textarea
                 id="prompt"
-                placeholder="E.g., A cover letter for a software developer position at Google, highlighting my experience with React and cloud technologies"
+                placeholder="E.g., A cover letter for a software developer position... or use voice input!"
                 className="min-h-[120px] text-base glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20 resize-none"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 disabled={isGenerating}
               />
+            </div>
+
+            {/* NEW FEATURES: Voice, Translation, Personalization, Comparison */}
+            <div className="flex flex-wrap gap-2 items-center">
+              <VoiceInputButton
+                onTranscript={handleVoiceTranscript}
+                buttonSize="sm"
+              />
+              
+              <TranslationPanel
+                content={prompt}
+                onTranslated={handleTranslated}
+              />
+              
+              <PersonalizationPanel
+                content={prompt}
+                documentType="cover-letter"
+                onPersonalized={handlePersonalized}
+                defaultPreferences={userPreferences}
+              />
+              
+              {savedVersion && (
+                <DocumentComparisonPanel
+                  originalContent={savedVersion}
+                  modifiedContent={prompt}
+                  originalLabel="Saved"
+                  modifiedLabel="Current"
+                />
+              )}
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSaveVersion}
+                disabled={!prompt}
+              >
+                Save Version
+              </Button>
             </div>
 
             {/* Generate Button */}

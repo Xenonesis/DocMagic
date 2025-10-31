@@ -32,6 +32,14 @@ import {
 import { useSubscription } from '@/hooks/use-subscription';
 import { TooltipWithShortcut } from '../ui/tooltip';
 
+// Import all 5 new features
+import { VoiceInputButton } from '@/components/ui/voice-input-button';
+import { TranslationPanel } from '@/components/ui/translation-panel';
+import { PersonalizationPanel } from '@/components/ui/personalization-panel';
+import { SmartSuggestionsPanel } from '@/components/ui/smart-suggestions-panel';
+import { DocumentComparisonPanel } from '@/components/ui/document-comparison-panel';
+import type { UserPreferences } from '@/lib/personalization-service';
+
 export function ResumeGenerator() {
   const [prompt, setPrompt] = useState('');
   const [name, setName] = useState('');
@@ -47,6 +55,16 @@ export function ResumeGenerator() {
   const { isAuthenticated, requireAuth } = useAuthGuard();
   const exportPDFRef = useRef<(() => Promise<void>) | null>(null);
   const exportWordRef = useRef<(() => Promise<void>) | null>(null);
+
+  // State for new features
+  const [savedVersion, setSavedVersion] = useState('');
+  const [userPreferences, setUserPreferences] = useState<UserPreferences>({
+    industry: 'Technology',
+    role: '',
+    experienceLevel: 'mid',
+    tonePreference: 'professional',
+    stylePreference: 'concise',
+  });
 
   const generateResume = async () => {
     setIsGenerating(true);
@@ -88,6 +106,38 @@ export function ResumeGenerator() {
 
   const handleGuidedResumeGenerated = (resume: any) => {
     setResumeData(resume);
+  };
+
+  // Handler for voice input
+  const handleVoiceTranscript = (transcript: string) => {
+    setPrompt(prev => prev ? prev + ' ' + transcript : transcript);
+  };
+
+  // Handler for translation
+  const handleTranslated = (translatedContent: string) => {
+    setPrompt(translatedContent);
+  };
+
+  // Handler for personalization
+  const handlePersonalized = (personalizedContent: string) => {
+    setPrompt(personalizedContent);
+  };
+
+  // Save current version for comparison
+  const handleSaveVersion = () => {
+    setSavedVersion(prompt);
+    toast({
+      title: 'Version saved',
+      description: 'You can now compare this version with future edits',
+    });
+  };
+
+  // Get full resume content for suggestions
+  const getResumeContent = () => {
+    if (resumeData) {
+      return JSON.stringify(resumeData, null, 2);
+    }
+    return prompt;
   };
 
   const handleDownload = async (format: 'pdf' | 'docx') => {
@@ -337,12 +387,50 @@ export function ResumeGenerator() {
                   </Label>
                   <Textarea
                     id="prompt"
-                    placeholder="E.g., Senior React Developer resume for Google, highlighting frontend performance optimization and component architecture"
+                    placeholder="E.g., Senior React Developer resume for Google... or use voice input!"
                     className="min-h-[120px] text-base glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20 resize-none w-full px-3 py-2"
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     disabled={isGenerating}
                   />
+                </div>
+
+                {/* NEW FEATURES: Voice, Translation, Personalization, Comparison */}
+                <div className="flex flex-wrap gap-2 items-center">
+                  <VoiceInputButton
+                    onTranscript={handleVoiceTranscript}
+                    buttonSize="sm"
+                  />
+                  
+                  <TranslationPanel
+                    content={prompt}
+                    onTranslated={handleTranslated}
+                  />
+                  
+                  <PersonalizationPanel
+                    content={prompt}
+                    documentType="resume"
+                    onPersonalized={handlePersonalized}
+                    defaultPreferences={userPreferences}
+                  />
+                  
+                  {savedVersion && (
+                    <DocumentComparisonPanel
+                      originalContent={savedVersion}
+                      modifiedContent={prompt}
+                      originalLabel="Saved"
+                      modifiedLabel="Current"
+                    />
+                  )}
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSaveVersion}
+                    disabled={!prompt}
+                  >
+                    Save Version
+                  </Button>
                 </div>
 
                 {/* Generate Button with enhanced tooltip */}
