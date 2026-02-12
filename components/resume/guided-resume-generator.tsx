@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useResumeDraft } from '@/hooks/useResumeDraft';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -66,6 +67,15 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
   const { toast } = useToast();
   const { isAuthenticated } = useAuthGuard();
   const router = useRouter();
+
+  // Combined state for auto-save persistence
+  const [resumeFormData, setResumeFormData] = useState<any>(null);
+
+  // Auto-save resume draft to localStorage
+  const { clearDraft } = useResumeDraft(resumeFormData, setResumeFormData, {
+    showNotifications: true,
+    debounceMs: 1500,
+  });
 
   // Form data state
   const [personalInfo, setPersonalInfo] = useState({
@@ -134,6 +144,77 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
 
   // State for skills input
   const [newSkill, setNewSkill] = useState({ technical: '', programming: '', tools: '', soft: '' });
+
+  // Restore individual form states from localStorage on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    try {
+      const savedDraft = localStorage.getItem('resumeDraft');
+      if (savedDraft) {
+        const parsed = JSON.parse(savedDraft);
+
+        // Restore each state if it exists in the saved draft (with null safety)
+        if (parsed.personalInfo) setPersonalInfo(parsed.personalInfo);
+        if (parsed.professionalSummary) setProfessionalSummary(parsed.professionalSummary);
+        if (parsed.workExperience && Array.isArray(parsed.workExperience)) {
+          setWorkExperience(parsed.workExperience);
+        }
+        if (parsed.education && Array.isArray(parsed.education)) {
+          setEducation(parsed.education);
+        }
+        if (parsed.skills && typeof parsed.skills === 'object') {
+          setSkills(parsed.skills);
+        }
+        if (parsed.projects && Array.isArray(parsed.projects)) {
+          setProjects(parsed.projects);
+        }
+        if (parsed.certifications && Array.isArray(parsed.certifications)) {
+          setCertifications(parsed.certifications);
+        }
+        if (parsed.links && typeof parsed.links === 'object') {
+          setLinks(parsed.links);
+        }
+        if (parsed.targetRole) setTargetRole(parsed.targetRole);
+        if (parsed.jobDescription) setJobDescription(parsed.jobDescription);
+
+        // Show toast notification
+        toast({
+          title: '✨ Draft Restored',
+          description: 'Your resume draft has been restored from your last session.',
+        });
+      }
+    } catch (error) {
+      console.error('Error restoring resume draft:', error);
+    }
+  }, []); // Run only once on mount
+
+  // Sync individual form states to combined resumeFormData for auto-save
+  useEffect(() => {
+    setResumeFormData({
+      personalInfo,
+      professionalSummary,
+      workExperience,
+      education,
+      skills,
+      projects,
+      certifications,
+      links,
+      targetRole,
+      jobDescription,
+    });
+  }, [
+    personalInfo,
+    professionalSummary,
+    workExperience,
+    education,
+    skills,
+    projects,
+    certifications,
+    links,
+    targetRole,
+    jobDescription,
+  ]);
 
   const steps: { id: ResumeStep; title: string; icon: any; description: string }[] = [
     {
@@ -275,6 +356,9 @@ export function GuidedResumeGenerator({ onResumeGenerated }: GuidedResumeGenerat
       if (onResumeGenerated) {
         onResumeGenerated(resume);
       }
+
+      // Clear draft after successful generation
+      clearDraft();
 
       toast({
         title: '🎯 ATS-Optimized Resume Generated!',
