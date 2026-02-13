@@ -34,6 +34,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import dynamic from 'next/dynamic';
 
 // Dynamically import QRCodeStyling to avoid SSR issues
@@ -73,44 +74,81 @@ const cornerDotStyles = [
   { value: 'square', label: 'Square' },
 ];
 
+const DEFAULT_QR_DRAFT = {
+  qrType: 'url',
+  qrData: '',
+  dotStyle: 'rounded',
+  cornerSquareStyle: 'extra-rounded',
+  cornerDotStyle: 'dot',
+  dotsColor: '#000000',
+  backgroundColor: '#ffffff',
+  cornerSquareColor: '#000000',
+  cornerDotColor: '#000000',
+  size: 300,
+  margin: 10,
+  emailAddress: '',
+  emailSubject: '',
+  emailBody: '',
+  phoneNumber: '',
+  smsNumber: '',
+  smsMessage: '',
+  wifiSSID: '',
+  wifiPassword: '',
+  wifiEncryption: 'WPA',
+  vcardName: '',
+  vcardPhone: '',
+  vcardEmail: '',
+  vcardOrg: '',
+  vcardUrl: '',
+  latitude: '',
+  longitude: '',
+};
+
 export function QRGenerator() {
-  const [qrType, setQrType] = useState('url');
-  const [qrData, setQrData] = useState('');
+  // Auto-save QR draft to localStorage
+  const [qrDraft, setQrDraft] = useAutoSave('qrDraft', DEFAULT_QR_DRAFT, {
+    debounceMs: 1000,
+  });
+
+  const {
+    qrType,
+    qrData,
+    dotStyle,
+    cornerSquareStyle,
+    cornerDotStyle,
+    dotsColor,
+    backgroundColor,
+    cornerSquareColor,
+    cornerDotColor,
+    size,
+    margin,
+    emailAddress,
+    emailSubject,
+    emailBody,
+    phoneNumber,
+    smsNumber,
+    smsMessage,
+    wifiSSID,
+    wifiPassword,
+    wifiEncryption,
+    vcardName,
+    vcardPhone,
+    vcardEmail,
+    vcardOrg,
+    vcardUrl,
+    latitude,
+    longitude,
+  } = qrDraft;
   const [qrCode, setQrCode] = useState<any>(null);
   const [isGenerated, setIsGenerated] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Styling options
-  const [dotStyle, setDotStyle] = useState('rounded');
-  const [cornerSquareStyle, setCornerSquareStyle] = useState('extra-rounded');
-  const [cornerDotStyle, setCornerDotStyle] = useState('dot');
-  const [dotsColor, setDotsColor] = useState('#000000');
-  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
-  const [cornerSquareColor, setCornerSquareColor] = useState('#000000');
-  const [cornerDotColor, setCornerDotColor] = useState('#000000');
-  const [size, setSize] = useState(300);
-  const [margin, setMargin] = useState(10);
-
-  // Type-specific fields
-  const [emailAddress, setEmailAddress] = useState('');
-  const [emailSubject, setEmailSubject] = useState('');
-  const [emailBody, setEmailBody] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [smsNumber, setSmsNumber] = useState('');
-  const [smsMessage, setSmsMessage] = useState('');
-  const [wifiSSID, setWifiSSID] = useState('');
-  const [wifiPassword, setWifiPassword] = useState('');
-  const [wifiEncryption, setWifiEncryption] = useState('WPA');
-  const [vcardName, setVcardName] = useState('');
-  const [vcardPhone, setVcardPhone] = useState('');
-  const [vcardEmail, setVcardEmail] = useState('');
-  const [vcardOrg, setVcardOrg] = useState('');
-  const [vcardUrl, setVcardUrl] = useState('');
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
-
   const qrRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  const updateQrDraft = (updates: Partial<typeof DEFAULT_QR_DRAFT>) => {
+    setQrDraft({ ...qrDraft, ...updates });
+  };
 
   useEffect(() => {
     // Initialize QR Code only once on client side

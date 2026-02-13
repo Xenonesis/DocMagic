@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/select';
 import { LetterPreview } from '@/components/letter/letter-preview';
 import { useToast } from '@/hooks/use-toast';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { useAuthGuard, PROTECTED_ACTIVITIES } from '@/lib/auth-utils';
 import { ExportAuthDialog } from '@/components/ui/export-auth-dialog';
 import {
@@ -50,13 +51,26 @@ import { SmartSuggestionsPanel } from '@/components/ui/smart-suggestions-panel';
 import { DocumentComparisonPanel } from '@/components/ui/document-comparison-panel';
 import type { UserPreferences } from '@/lib/personalization-service';
 
+const DEFAULT_LETTER_DRAFT = {
+  prompt: '',
+  fromName: '',
+  fromAddress: '',
+  toName: '',
+  toAddress: '',
+  letterType: 'cover',
+};
+
 export function LetterGenerator() {
-  const [prompt, setPrompt] = useState('');
-  const [fromName, setFromName] = useState('');
-  const [fromAddress, setFromAddress] = useState('');
-  const [toName, setToName] = useState('');
-  const [toAddress, setToAddress] = useState('');
-  const [letterType, setLetterType] = useState('cover');
+  // Auto-save letter draft
+  const [letterDraft, setLetterDraft] = useAutoSave('letterDraft', DEFAULT_LETTER_DRAFT, {
+    debounceMs: 1000,
+  });
+
+  const { prompt, fromName, fromAddress, toName, toAddress, letterType } = letterDraft;
+
+  const updateLetterDraft = (updates: Partial<typeof DEFAULT_LETTER_DRAFT>) => {
+    setLetterDraft({ ...letterDraft, ...updates });
+  };
   const [isGenerating, setIsGenerating] = useState(false);
   const [letterData, setLetterData] = useState<any>(null);
   const [isCopying, setIsCopying] = useState(false);
@@ -83,15 +97,15 @@ export function LetterGenerator() {
 
   // Handlers for new features
   const handleVoiceTranscript = (transcript: string) => {
-    setPrompt(prev => prev ? prev + ' ' + transcript : transcript);
+    updateLetterDraft({ prompt: prompt ? prompt + ' ' + transcript : transcript });
   };
 
   const handleTranslated = (translatedContent: string) => {
-    setPrompt(translatedContent);
+    updateLetterDraft({ prompt: translatedContent });
   };
 
   const handlePersonalized = (personalizedContent: string) => {
-    setPrompt(personalizedContent);
+    updateLetterDraft({ prompt: personalizedContent });
   };
 
   const handleSaveVersion = () => {
@@ -384,7 +398,7 @@ ${letterData.content || ''}
                 <FileText className="h-4 w-4 text-muted-foreground" />
                 Letter Type
               </Label>
-              <Select value={letterType} onValueChange={setLetterType}>
+              <Select value={letterType} onValueChange={(value) => updateLetterDraft({ letterType: value })}>
                 <SelectTrigger
                   id="letterType"
                   className="glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20"
@@ -412,7 +426,7 @@ ${letterData.content || ''}
                   id="fromName"
                   placeholder="Your Name"
                   value={fromName}
-                  onChange={(e) => setFromName(e.target.value)}
+                  onChange={(e) => updateLetterDraft({ fromName: e.target.value })}
                   className="glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20"
                   disabled={isGenerating}
                 />
@@ -427,7 +441,7 @@ ${letterData.content || ''}
                   id="toName"
                   placeholder="Recipient Name"
                   value={toName}
-                  onChange={(e) => setToName(e.target.value)}
+                  onChange={(e) => updateLetterDraft({ toName: e.target.value })}
                   className="glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20"
                   disabled={isGenerating}
                 />
@@ -447,7 +461,7 @@ ${letterData.content || ''}
                   id="fromAddress"
                   placeholder="Your Address (Optional)"
                   value={fromAddress}
-                  onChange={(e) => setFromAddress(e.target.value)}
+                  onChange={(e) => updateLetterDraft({ fromAddress: e.target.value })}
                   className="glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20"
                   disabled={isGenerating}
                 />
@@ -462,7 +476,7 @@ ${letterData.content || ''}
                   id="toAddress"
                   placeholder="Recipient Address (Optional)"
                   value={toAddress}
-                  onChange={(e) => setToAddress(e.target.value)}
+                  onChange={(e) => updateLetterDraft({ toAddress: e.target.value })}
                   className="glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20"
                   disabled={isGenerating}
                 />
@@ -499,7 +513,7 @@ ${letterData.content || ''}
                 placeholder="E.g., A cover letter for a software developer position... or use voice input!"
                 className="min-h-[120px] text-base glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20 resize-none"
                 value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
+                onChange={(e) => updateLetterDraft({ prompt: e.target.value })}
                 disabled={isGenerating}
               />
             </div>

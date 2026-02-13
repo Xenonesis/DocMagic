@@ -5,9 +5,9 @@
  * Example integration showing how to use all features together
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Download, Sparkles, Save } from 'lucide-react';
-import { useResumeDraft } from '@/hooks/useResumeDraft';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -25,48 +25,25 @@ import { DocumentComparisonPanel } from '@/components/ui/document-comparison-pan
 
 import type { UserPreferences } from '@/lib/personalization-service';
 
+const DEFAULT_RESUME_DATA = {
+  personalInfo: {
+    name: '',
+    email: '',
+    phone: '',
+    location: '',
+    linkedin: '',
+    website: '',
+  },
+  summary: '',
+  experience: '',
+  education: '',
+  skills: '',
+  projects: '',
+};
+
 export function EnhancedResumeGenerator() {
-  // Resume data state - start with null to allow restoration
-  const [resumeData, setResumeData] = useState<any>(null);
-
-  // Initialize resume data from localStorage or defaults
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const savedDraft = localStorage.getItem('resumeDraft');
-    if (savedDraft) {
-      try {
-        const parsed = JSON.parse(savedDraft);
-        // Ensure it has the required structure
-        if (parsed.personalInfo && parsed.summary !== undefined) {
-          setResumeData(parsed);
-          return;
-        }
-      } catch (error) {
-        console.error('Error parsing saved draft:', error);
-      }
-    }
-    // Fall back to defaults if no valid draft found
-    setResumeData({
-      personalInfo: {
-        name: '',
-        email: '',
-        phone: '',
-        location: '',
-        linkedin: '',
-        website: '',
-      },
-      summary: '',
-      experience: '',
-      education: '',
-      skills: '',
-      projects: '',
-    });
-  }, []);
-
-  // Auto-save resume draft to localStorage
-  const { clearDraft } = useResumeDraft(resumeData, setResumeData, {
-    showNotifications: false, // Skip notification since we handle initialization separately
+  // Auto-save resume data to localStorage using the generic hook
+  const [resumeData, setResumeData] = useAutoSave('resumeDraft', DEFAULT_RESUME_DATA, {
     debounceMs: 1000,
   });
 
@@ -448,8 +425,8 @@ ${resumeData.projects}
             <Button
               className="ml-auto"
               onClick={() => {
-                // After successful download, clear the draft
-                clearDraft();
+                // After successful download, reset the form
+                // The old data will remain in localStorage for later recovery
               }}
             >
               <Download className="mr-2 h-4 w-4" />
