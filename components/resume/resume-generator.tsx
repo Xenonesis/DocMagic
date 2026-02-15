@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useResumeDraft } from '@/hooks/useResumeDraft';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -41,9 +42,51 @@ import { DocumentComparisonPanel } from '@/components/ui/document-comparison-pan
 import type { UserPreferences } from '@/lib/personalization-service';
 
 export function ResumeGenerator() {
-  const [prompt, setPrompt] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  // Form data state for auto-save - start with null to allow restoration
+  const [formData, setFormData] = useState<any>(null);
+
+  // Initialize form data from localStorage or defaults
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const savedDraft = localStorage.getItem('resumeDraft');
+    if (savedDraft) {
+      try {
+        const parsed = JSON.parse(savedDraft);
+        // Ensure it has the required fields
+        if (parsed.prompt !== undefined && parsed.name !== undefined && parsed.email !== undefined) {
+          setFormData(parsed);
+          return;
+        }
+      } catch (error) {
+        console.error('Error parsing saved draft:', error);
+      }
+    }
+    // Fall back to defaults if no valid draft found
+    setFormData({ prompt: '', name: '', email: '' });
+  }, []);
+
+  // Auto-save form data to localStorage (hook provides continuous auto-save)
+  const { clearDraft } = useResumeDraft(formData, setFormData, {
+    showNotifications: false, // Skip notification since we handle initialization separately
+    debounceMs: 1000,
+  });
+
+  // Extract form fields for convenience (with null safety)
+  const prompt = formData?.prompt || '';
+  const name = formData?.name || '';
+  const email = formData?.email || '';
+
+  const setPrompt = (value: string) => {
+    setFormData((prev: any) => prev ? { ...prev, prompt: value } : { prompt: value, name: '', email: '' });
+  };
+  const setName = (value: string) => {
+    setFormData((prev: any) => prev ? { ...prev, name: value } : { prompt: '', name: value, email: '' });
+  };
+  const setEmail = (value: string) => {
+    setFormData((prev: any) => prev ? { ...prev, email: value } : { prompt: '', name: '', email: value });
+  };
+
   const [isGenerating, setIsGenerating] = useState(false);
   const [resumeData, setResumeData] = useState<any>(null);
   const [selectedTemplate, setSelectedTemplate] = useState('professional');
@@ -110,7 +153,7 @@ export function ResumeGenerator() {
 
   // Handler for voice input
   const handleVoiceTranscript = (transcript: string) => {
-    setPrompt(prev => prev ? prev + ' ' + transcript : transcript);
+    setPrompt((prompt || '') + ' ' + transcript);
   };
 
   // Handler for translation
@@ -151,8 +194,12 @@ export function ResumeGenerator() {
     // Call the actual export functions from ResumePreview
     if (format === 'pdf' && exportPDFRef.current) {
       await exportPDFRef.current();
+      // Clear draft after successful download
+      clearDraft();
     } else if (format === 'docx' && exportWordRef.current) {
       await exportWordRef.current();
+      // Clear draft after successful download
+      clearDraft();
     } else {
       toast({
         title: 'Error',

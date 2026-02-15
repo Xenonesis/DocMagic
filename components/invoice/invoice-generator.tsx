@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { ExportAuthDialog } from '@/components/ui/export-auth-dialog';
 import { useAuthGuard, PROTECTED_ACTIVITIES } from '@/lib/auth-utils';
 import { InvoicePreview, InvoiceData, InvoiceItem, computeTotals } from './invoice-preview';
@@ -27,12 +28,28 @@ function uid() {
   return Math.random().toString(36).slice(2, 9);
 }
 
+const DEFAULT_INVOICE_DRAFT = {
+  template: 'clean-blue',
+  currency: 'USD',
+  invoiceNumber: 'INV-0001',
+  issueDate: new Date().toISOString().split('T')[0],
+  dueDate: '',
+  discount: 0,
+  shipping: 0,
+  notes: '',
+};
+
 export function InvoiceGenerator() {
-  const [template, setTemplate] = useState('clean-blue');
-  const [currency, setCurrency] = useState('USD');
-  const [invoiceNumber, setInvoiceNumber] = useState('INV-0001');
-  const [issueDate, setIssueDate] = useState(new Date().toISOString().split('T')[0]);
-  const [dueDate, setDueDate] = useState('');
+  // Auto-save invoice draft
+  const [invoiceDraft, setInvoiceDraft] = useAutoSave('invoiceDraft', DEFAULT_INVOICE_DRAFT, {
+    debounceMs: 1000,
+  });
+
+  const { template, currency, invoiceNumber, issueDate, dueDate, discount, shipping, notes } = invoiceDraft;
+
+  const updateInvoiceDraft = (updates: Partial<typeof DEFAULT_INVOICE_DRAFT>) => {
+    setInvoiceDraft({ ...invoiceDraft, ...updates });
+  };
   const [billFrom, setBillFrom] = useState({
     name: '',
     address: '',
@@ -42,9 +59,6 @@ export function InvoiceGenerator() {
   });
   const [billTo, setBillTo] = useState({ name: '', address: '', email: '', phone: '' });
   const [items, setItems] = useState<InvoiceItem[]>([]);
-  const [discount, setDiscount] = useState(0);
-  const [shipping, setShipping] = useState(0);
-  const [notes, setNotes] = useState('');
 
   const [isExporting, setIsExporting] = useState(false);
   const [showAuthDialog, setShowAuthDialog] = useState(false);
@@ -108,6 +122,7 @@ export function InvoiceGenerator() {
     }
     setIsExporting(true);
     try {
+      const html2canvas = (await import('html2canvas')).default;
       const element = document.getElementById('invoice-preview');
       if (!element) throw new Error('Invoice preview not found');
       const canvas = await html2canvas(element, {
@@ -127,7 +142,7 @@ export function InvoiceGenerator() {
         description: 'Your invoice has been downloaded as PDF.',
       });
     } catch (e) {
-      console.error(e);
+      console.error('Error exporting invoice to PDF:', e);
       toast({ title: 'Export failed', variant: 'destructive' });
     } finally {
       setIsExporting(false);
@@ -145,6 +160,7 @@ export function InvoiceGenerator() {
     }
     setIsExporting(true);
     try {
+      const html2canvas = (await import('html2canvas')).default;
       const element = document.getElementById('invoice-preview');
       if (!element) throw new Error('Invoice preview not found');
       const canvas = await html2canvas(element, {
@@ -167,7 +183,7 @@ export function InvoiceGenerator() {
         description: 'Your invoice has been downloaded as PNG image.',
       });
     } catch (e) {
-      console.error(e);
+      console.error('Error exporting invoice to PNG:', e);
       toast({ title: 'Export failed', variant: 'destructive' });
     } finally {
       setIsExporting(false);

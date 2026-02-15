@@ -29,6 +29,7 @@ import {
   Layers,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { useSubscription } from '@/hooks/use-subscription';
 import { ExportAuthDialog } from '@/components/ui/export-auth-dialog';
 
@@ -58,12 +59,22 @@ const colorSchemes = [
   { value: 'custom', label: 'Custom', colors: '✨' },
 ];
 
+const DEFAULT_ICON_DRAFT = {
+  prompt: '',
+  style: 'flat',
+  size: '512',
+  colorScheme: 'vibrant',
+  customColor: '#3b82f6',
+};
+
 export function IconGenerator() {
-  const [prompt, setPrompt] = useState('');
-  const [style, setStyle] = useState('flat');
-  const [size, setSize] = useState('512');
-  const [colorScheme, setColorScheme] = useState('vibrant');
-  const [customColor, setCustomColor] = useState('#3b82f6');
+  // Auto-save icon draft to localStorage
+  const [iconDraft, setIconDraft] = useAutoSave('iconDraft', DEFAULT_ICON_DRAFT, {
+    debounceMs: 1000,
+  });
+
+  const { prompt, style, size, colorScheme, customColor } = iconDraft;
+
   const [provider, setProvider] = useState<'pollinations' | 'openrouter'>('pollinations');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedIcons, setGeneratedIcons] = useState<string[]>([]);
@@ -79,8 +90,12 @@ export function IconGenerator() {
   const { toast } = useToast();
   const { subscription, isLoading: subscriptionLoading } = useSubscription();
 
+  const updateIconDraft = (updates: Partial<typeof DEFAULT_ICON_DRAFT>) => {
+    setIconDraft({ ...iconDraft, ...updates });
+  };
+
   const handleEnhancePrompt = async () => {
-    if (!prompt.trim()) {
+    if (!prompt?.trim()) {
       toast({
         title: 'No prompt to enhance',
         description: 'Please enter a basic description first',
@@ -110,7 +125,7 @@ export function IconGenerator() {
       const data = await response.json();
 
       if (data.enhancedPrompt) {
-        setPrompt(data.enhancedPrompt);
+        updateIconDraft({ prompt: data.enhancedPrompt });
         toast({
           title: '✨ Prompt Enhanced!',
           description: 'Your description has been improved with AI',
@@ -129,7 +144,7 @@ export function IconGenerator() {
   };
 
   const handleGenerate = async () => {
-    if (!prompt.trim()) {
+    if (!prompt?.trim()) {
       toast({
         title: 'Description Required',
         description: 'Please describe the icon you want to create',
@@ -445,7 +460,7 @@ export function IconGenerator() {
               id="prompt"
               placeholder="E.g., A modern rocket launching into space, minimalist design with blue and orange colors"
               value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
+              onChange={(e) => updateIconDraft({ prompt: e.target.value })}
               className="min-h-[100px] resize-none border-gray-300 focus:border-blue-500 dark:border-gray-600 pr-12"
               disabled={isGenerating}
             />
@@ -508,7 +523,7 @@ export function IconGenerator() {
             <Label htmlFor="style" className="text-sm font-semibold">
               🎨 Icon Style
             </Label>
-            <Select value={style} onValueChange={setStyle} disabled={isGenerating}>
+            <Select value={style} onValueChange={(value) => updateIconDraft({ style: value })} disabled={isGenerating}>
               <SelectTrigger id="style" className="border-gray-300 dark:border-gray-600">
                 <SelectValue placeholder="Select style" />
               </SelectTrigger>
@@ -530,7 +545,7 @@ export function IconGenerator() {
             <Label htmlFor="size" className="text-sm font-semibold">
               📐 Icon Size
             </Label>
-            <Select value={size} onValueChange={setSize} disabled={isGenerating}>
+            <Select value={size} onValueChange={(value) => updateIconDraft({ size: value })} disabled={isGenerating}>
               <SelectTrigger id="size" className="border-gray-300 dark:border-gray-600">
                 <SelectValue placeholder="Select size" />
               </SelectTrigger>
@@ -552,7 +567,7 @@ export function IconGenerator() {
             <Label htmlFor="colorScheme" className="text-sm font-semibold">
               🌈 Color Scheme
             </Label>
-            <Select value={colorScheme} onValueChange={setColorScheme} disabled={isGenerating}>
+            <Select value={colorScheme} onValueChange={(value) => updateIconDraft({ colorScheme: value })} disabled={isGenerating}>
               <SelectTrigger id="colorScheme" className="border-gray-300 dark:border-gray-600">
                 <SelectValue placeholder="Select colors" />
               </SelectTrigger>
@@ -581,14 +596,14 @@ export function IconGenerator() {
                 id="customColor"
                 type="color"
                 value={customColor}
-                onChange={(e) => setCustomColor(e.target.value)}
+                onChange={(e) => updateIconDraft({ customColor: e.target.value })}
                 className="w-20 h-10 cursor-pointer"
                 disabled={isGenerating}
               />
               <Input
                 type="text"
                 value={customColor}
-                onChange={(e) => setCustomColor(e.target.value)}
+                onChange={(e) => updateIconDraft({ customColor: e.target.value })}
                 className="flex-1"
                 placeholder="#3b82f6"
                 disabled={isGenerating}

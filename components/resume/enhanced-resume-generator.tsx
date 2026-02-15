@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { Download, Sparkles, Save } from 'lucide-react';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -24,22 +25,26 @@ import { DocumentComparisonPanel } from '@/components/ui/document-comparison-pan
 
 import type { UserPreferences } from '@/lib/personalization-service';
 
+const DEFAULT_RESUME_DATA = {
+  personalInfo: {
+    name: '',
+    email: '',
+    phone: '',
+    location: '',
+    linkedin: '',
+    website: '',
+  },
+  summary: '',
+  experience: '',
+  education: '',
+  skills: '',
+  projects: '',
+};
+
 export function EnhancedResumeGenerator() {
-  // Resume data state
-  const [resumeData, setResumeData] = useState({
-    personalInfo: {
-      name: '',
-      email: '',
-      phone: '',
-      location: '',
-      linkedin: '',
-      website: '',
-    },
-    summary: '',
-    experience: '',
-    education: '',
-    skills: '',
-    projects: '',
+  // Auto-save resume data to localStorage using the generic hook
+  const [resumeData, setResumeData] = useAutoSave('resumeDraft', DEFAULT_RESUME_DATA, {
+    debounceMs: 1000,
   });
 
   // User preferences for personalization
@@ -125,12 +130,14 @@ ${resumeData.projects}
 
   // Get active field content
   const getActiveFieldContent = () => {
+    if (!resumeData) return '';
     const field = activeField as keyof typeof resumeData;
     return typeof resumeData[field] === 'string' ? resumeData[field] : '';
   };
 
   // Set active field content
   const setActiveFieldContent = (content: string) => {
+    if (!resumeData) return;
     const field = activeField as keyof typeof resumeData;
     if (typeof resumeData[field] === 'string') {
       setResumeData({
@@ -139,6 +146,17 @@ ${resumeData.projects}
       });
     }
   };
+
+  // Loading state while data is being initialized
+  if (!resumeData) {
+    return (
+      <div className="container mx-auto py-8 px-4 max-w-7xl">
+        <div className="text-center">
+          <p className="text-muted-foreground">Loading resume builder...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-7xl">
@@ -404,7 +422,13 @@ ${resumeData.projects}
               originalLabel="Last Saved"
               modifiedLabel="Current"
             />
-            <Button className="ml-auto">
+            <Button
+              className="ml-auto"
+              onClick={() => {
+                // After successful download, reset the form
+                // The old data will remain in localStorage for later recovery
+              }}
+            >
               <Download className="mr-2 h-4 w-4" />
               Download Resume
             </Button>

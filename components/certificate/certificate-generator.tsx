@@ -16,6 +16,7 @@ import {
 import { CertificatePreview } from '@/components/certificate/certificate-preview';
 import { CertificateTemplates } from '@/components/certificate/certificate-templates';
 import { useToast } from '@/hooks/use-toast';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { useAuthGuard, PROTECTED_ACTIVITIES } from '@/lib/auth-utils';
 import { ExportAuthDialog } from '@/components/ui/export-auth-dialog';
 import {
@@ -35,19 +36,45 @@ import {
 } from 'lucide-react';
 // Dynamic imports will be used inside handlers to avoid SSR/prerender issues
 
+const DEFAULT_CERTIFICATE_DRAFT = {
+  recipientName: '',
+  achievement: '',
+  awardedBy: '',
+  date: new Date().toISOString().split('T')[0],
+  organizationName: '',
+  signature: '',
+  template: 'classic-gold',
+  organizationLogo: '',
+  signatureImage: '',
+  fontScale: 100,
+  fontFamily: 'serif',
+  showSeal: true,
+};
+
 export function CertificateGenerator() {
-  const [recipientName, setRecipientName] = useState('');
-  const [achievement, setAchievement] = useState('');
-  const [awardedBy, setAwardedBy] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [organizationName, setOrganizationName] = useState('');
-  const [signature, setSignature] = useState('');
-  const [template, setTemplate] = useState('classic-gold');
-  const [organizationLogo, setOrganizationLogo] = useState<string>('');
-  const [signatureImage, setSignatureImage] = useState<string>('');
-  const [fontScale, setFontScale] = useState<number>(100);
-  const [fontFamily, setFontFamily] = useState<string>('serif');
-  const [showSeal, setShowSeal] = useState<boolean>(true);
+  // Auto-save certificate draft
+  const [certificateDraft, setCertificateDraft] = useAutoSave('certificateDraft', DEFAULT_CERTIFICATE_DRAFT, {
+    debounceMs: 1000,
+  });
+
+  const {
+    recipientName,
+    achievement,
+    awardedBy,
+    date,
+    organizationName,
+    signature,
+    template,
+    organizationLogo,
+    signatureImage,
+    fontScale,
+    fontFamily,
+    showSeal,
+  } = certificateDraft;
+
+  const updateCertificateDraft = (updates: Partial<typeof DEFAULT_CERTIFICATE_DRAFT>) => {
+    setCertificateDraft({ ...certificateDraft, ...updates });
+  };
   const [isGenerating, setIsGenerating] = useState(false);
   const [certificateData, setCertificateData] = useState<any>(null);
   const [isCopying, setIsCopying] = useState(false);
@@ -119,6 +146,7 @@ export function CertificateGenerator() {
 
     setIsExporting(true);
     try {
+      const html2canvas = (await import('html2canvas')).default;
       const element = document.getElementById('certificate-preview');
       if (!element) {
         throw new Error('Certificate preview not found');
@@ -168,6 +196,7 @@ export function CertificateGenerator() {
 
     setIsExporting(true);
     try {
+      const html2canvas = (await import('html2canvas')).default;
       const element = document.getElementById('certificate-preview');
       if (!element) {
         throw new Error('Certificate preview not found');
@@ -238,7 +267,7 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
   };
 
   const handleTemplateSelect = (templateId: string) => {
-    setTemplate(templateId);
+    updateCertificateDraft({ template: templateId });
     toast({
       title: 'Template selected',
       description: 'Certificate template has been updated.',
@@ -316,7 +345,7 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
                     id="recipientName"
                     placeholder="John Doe"
                     value={recipientName}
-                    onChange={(e) => setRecipientName(e.target.value)}
+                    onChange={(e) => updateCertificateDraft({ recipientName: e.target.value })}
                     className="border-yellow-400/30 focus:border-yellow-400"
                   />
                 </div>
@@ -330,7 +359,7 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
                     id="achievement"
                     placeholder="Excellence in Web Development"
                     value={achievement}
-                    onChange={(e) => setAchievement(e.target.value)}
+                    onChange={(e) => updateCertificateDraft({ achievement: e.target.value })}
                     className="border-yellow-400/30 focus:border-yellow-400"
                   />
                 </div>
@@ -378,7 +407,7 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
                     id="awardedBy"
                     placeholder="Jane Smith, CEO"
                     value={awardedBy}
-                    onChange={(e) => setAwardedBy(e.target.value)}
+                    onChange={(e) => updateCertificateDraft({ awardedBy: e.target.value })}
                     className="border-yellow-400/30 focus:border-yellow-400"
                   />
                 </div>
@@ -430,7 +459,7 @@ Date: ${new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'lo
                     id="date"
                     type="date"
                     value={date}
-                    onChange={(e) => setDate(e.target.value)}
+                    onChange={(e) => updateCertificateDraft({ date: e.target.value })}
                     className="border-yellow-400/30 focus:border-yellow-400"
                   />
                 </div>

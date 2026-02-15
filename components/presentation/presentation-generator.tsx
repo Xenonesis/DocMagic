@@ -11,6 +11,7 @@ import { PresentationPreview } from '@/components/presentation/presentation-prev
 import { PresentationTemplates } from '@/components/presentation/presentation-templates';
 import { SlideOutlinePreview } from '@/components/presentation/slide-outline-preview';
 import { useToast } from '@/hooks/use-toast';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { useAuthGuard, PROTECTED_ACTIVITIES } from '@/lib/auth-utils';
 import { ExportAuthDialog } from '@/components/ui/export-auth-dialog';
 import {
@@ -40,13 +41,28 @@ import { useRouter } from 'next/navigation';
 
 type GenerationStep = 'input' | 'outline' | 'theme' | 'generated';
 
+const DEFAULT_PRESENTATION_DRAFT = {
+  prompt: '',
+  selectedTemplate: 'modern-business',
+  pageCount: 5,
+};
+
 export function PresentationGenerator() {
-  const [prompt, setPrompt] = useState('');
+  // Auto-save presentation draft
+  const [presentationDraft, setPresentationDraft] = useAutoSave('presentationDraft', DEFAULT_PRESENTATION_DRAFT, {
+    debounceMs: 1000,
+  });
+
+  const { prompt, selectedTemplate, pageCount } = presentationDraft;
+
+  const updatePresentationDraft = (updates: Partial<typeof DEFAULT_PRESENTATION_DRAFT>) => {
+    setPresentationDraft({ ...presentationDraft, ...updates });
+  };
+
+  // State for generation and display
   const [isGenerating, setIsGenerating] = useState(false);
   const [slides, setSlides] = useState<any[]>([]);
   const [slideOutlines, setSlideOutlines] = useState<any[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState('modern-business');
-  const [pageCount, setPageCount] = useState(5);
   const [isExporting, setIsExporting] = useState(false);
   const [currentStep, setCurrentStep] = useState<GenerationStep>('input');
   const [isSaving, setIsSaving] = useState(false);
@@ -356,7 +372,7 @@ export function PresentationGenerator() {
     setSlides([]);
     setPreviewSlides([]);
     setIsPreviewMode(false);
-    setPrompt('');
+    updatePresentationDraft({ prompt: '' });
     setShareUrl('');
     setPresentationId('');
   };
@@ -630,7 +646,7 @@ export function PresentationGenerator() {
                   placeholder="E.g., Create a startup pitch deck for an AI-powered fitness app targeting millennials, including market analysis, product features, business model, and funding requirements"
                   className="min-h-[140px] text-base glass-effect border-yellow-400/30 focus:border-yellow-400/60 focus:ring-yellow-400/20 resize-none"
                   value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
+                  onChange={(e) => updatePresentationDraft({ prompt: e.target.value })}
                   disabled={isGenerating}
                 />
               </div>
@@ -781,7 +797,7 @@ export function PresentationGenerator() {
 
           <PresentationTemplates
             selectedTemplate={selectedTemplate}
-            onSelectTemplate={setSelectedTemplate}
+            onSelectTemplate={(template) => updatePresentationDraft({ selectedTemplate: template })}
           />
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
